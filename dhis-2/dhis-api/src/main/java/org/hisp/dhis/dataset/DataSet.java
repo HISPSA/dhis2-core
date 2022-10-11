@@ -248,6 +248,8 @@ public class DataSet
     private boolean compulsoryFieldsCompleteOnly;
 
     private ObjectStyle style;
+    
+    private Set<DataElementOperand> greyedFields = new HashSet<>();
 
     // -------------------------------------------------------------------------
     // Constructors
@@ -290,20 +292,10 @@ public class DataSet
         organisationUnit.getDataSets().add( this );
     }
 
-    public void addOrganisationUnits( Set<OrganisationUnit> organisationUnits )
-    {
-        organisationUnits.forEach( this::addOrganisationUnit );
-    }
-
     public boolean removeOrganisationUnit( OrganisationUnit organisationUnit )
     {
         sources.remove( organisationUnit );
         return organisationUnit.getDataSets().remove( this );
-    }
-
-    public void removeOrganisationUnits( Set<OrganisationUnit> organisationUnits )
-    {
-        organisationUnits.forEach( this::removeOrganisationUnit );
     }
 
     public void removeAllOrganisationUnits()
@@ -634,6 +626,7 @@ public class DataSet
     }
 
     @JsonProperty
+    @JsonSerialize( contentAs = BaseIdentifiableObject.class )
     @JacksonXmlElementWrapper( localName = "dataSetElements", namespace = DxfNamespaces.DXF_2_0 )
     @JacksonXmlProperty( localName = "dataSetElement", namespace = DxfNamespaces.DXF_2_0 )
     public Set<DataSetElement> getDataSetElements()
@@ -960,6 +953,19 @@ public class DataSet
     public void setCompulsoryFieldsCompleteOnly( boolean compulsoryFieldsCompleteOnly )
     {
         this.compulsoryFieldsCompleteOnly = compulsoryFieldsCompleteOnly;
+    }
+    
+    @JsonProperty
+    @JacksonXmlElementWrapper( localName = "greyedFields", namespace = DxfNamespaces.DXF_2_0 )
+    @JacksonXmlProperty( localName = "greyedField", namespace = DxfNamespaces.DXF_2_0 )
+    public Set<DataElementOperand> getGreyedFields()
+    {
+        return greyedFields;
+    }
+
+    public void setGreyedFields( Set<DataElementOperand> greyedFields )
+    {
+        this.greyedFields = greyedFields;
     }
 
 }

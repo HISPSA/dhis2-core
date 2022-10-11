@@ -841,6 +841,24 @@
           "underline": false,
           "textColor": "#dedede",
           "textAlign": "CENTER"
+        },
+        "categoryAxisLabel": {
+          "font": "ROBOTO",
+          "fontSize": 12,
+          "bold": false,
+          "italic": true,
+          "underline": false,
+          "textColor": "#dedede",
+          "textAlign": "CENTER"
+        },
+        "targetLineLabel": {
+          "font": "ARIAL",
+          "fontSize": 12,
+          "bold": false,
+          "italic": true,
+          "underline": false,
+          "textColor": "#dedede",
+          "textAlign": "CENTER"
         }
       },
       "colorSet": "color_set_01",
