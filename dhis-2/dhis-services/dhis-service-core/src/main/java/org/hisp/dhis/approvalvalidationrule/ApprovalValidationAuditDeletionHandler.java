@@ -9,6 +9,7 @@ import org.hisp.dhis.period.Period;
 import org.hisp.dhis.system.deletion.DeletionHandler;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
+import org.hisp.dhis.approvalvalidationrule.ApprovalValidationRule;
 
 @Component( "org.hisp.dhis.approvalvalidationrule.ApprovalValidationAuditDeletionHandler" )
 public class ApprovalValidationAuditDeletionHandler
@@ -31,48 +32,53 @@ public class ApprovalValidationAuditDeletionHandler
     // -------------------------------------------------------------------------
 
     @Override
-    public String getClassName()
+    protected void register()
     {
-        return ApprovalValidationAudit.class.getSimpleName();
+        whenDeleting( DataSet.class, this::allowDeleteDataSet );
+        whenDeleting( ApprovalValidationRule.class, this::allowDeleteApprovalValidationRule );
+        whenDeleting( Period.class, this::allowDeletePeriod );
+        whenDeleting( OrganisationUnit.class, this::allowDeleteOrganisationUnit );
+        whenDeleting( CategoryOptionCombo.class, this::allowDeleteCategoryOptionCombo );
     }
-    
-    @Override
+
+ 
+   
     public String allowDeleteDataSet( DataSet dataSet )
     {
         String sql = "SELECT COUNT(*) FROM approvalValidationaudit where dataelementid=" + dataSet.getId();
         
-        return jdbcTemplate.queryForObject( sql, Integer.class ) == 0 ? null : ERROR;
+        return jdbcTemplate.queryForObject( sql, Integer.class ) == 0 ? null : null;
     }
     
-    @Override
+    
     public String allowDeleteApprovalValidationRule( ApprovalValidationRule approvalValidationRule )
     {
         String sql = "SELECT COUNT(*) FROM approvalValidationaudit where approvalvalidationruleid=" + approvalValidationRule.getId();
         
-        return jdbcTemplate.queryForObject( sql, Integer.class ) == 0 ? null : ERROR;
+        return jdbcTemplate.queryForObject( sql, Integer.class ) == 0 ? null : null;
     }
     
-    @Override
+    
     public String allowDeletePeriod( Period period )
     {
         String sql = "SELECT COUNT(*) FROM approvalValidationaudit where periodid=" + period.getId();
         
-        return jdbcTemplate.queryForObject( sql, Integer.class ) == 0 ? null : ERROR;
+        return jdbcTemplate.queryForObject( sql, Integer.class ) == 0 ? null : null;
     }
     
-    @Override
+ 
     public String allowDeleteOrganisationUnit( OrganisationUnit unit )
     {
         String sql = "SELECT COUNT(*) FROM approvalValidationaudit where organisationunitid=" + unit.getId();
         
-        return jdbcTemplate.queryForObject( sql, Integer.class ) == 0 ? null : ERROR;
+        return jdbcTemplate.queryForObject( sql, Integer.class ) == 0 ? null : null;
     }
     
-    @Override
+    
     public String allowDeleteCategoryOptionCombo( CategoryOptionCombo optionCombo )
     {
         String sql = "SELECT COUNT(*) FROM datavalueaudit where attributeoptioncomboid=" + optionCombo.getId();
         
-        return jdbcTemplate.queryForObject( sql, Integer.class ) == 0 ? null : ERROR;
+        return jdbcTemplate.queryForObject( sql, Integer.class ) == 0 ? null : null;
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2004-2021, University of Oslo
+ * Copyright (c) 2004-2022, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -25,40 +25,41 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.hisp.dhis.sms;
+package org.hisp.dhis.programrule.engine;
 
-import static org.junit.Assert.*;
+import java.util.List;
 
-import org.hisp.dhis.system.util.SmsUtils;
-import org.junit.Test;
+import org.hisp.dhis.cache.Cache;
+import org.hisp.dhis.cache.CacheProvider;
+import org.hisp.dhis.program.Program;
+import org.hisp.dhis.programrule.ProgramRule;
+import org.hisp.dhis.programrule.ProgramRuleActionType;
+import org.hisp.dhis.programrule.ProgramRuleService;
+import org.springframework.stereotype.Component;
 
-/**
- * @author Zubair Asghar
- */
-public class SmsUtilsTest
+@Component
+public class ServerSideImplementableRuleService
+    extends ImplementableRuleService
 {
-    @Test
-    public void testSMSTextEncoding()
+    private final Cache<Boolean> programHasRulesCache;
+
+    public ServerSideImplementableRuleService( ProgramRuleService programRuleService,
+        final CacheProvider cacheProvider )
     {
-        assertEquals( "Hi+User", SmsUtils.encode( "Hi User" ) );
-        assertEquals( "Jeg+er+p%C3%A5+universitetet", SmsUtils.encode( "Jeg er på universitetet" ) );
-        assertEquals( "endelig+oppn%C3%A5+m%C3%A5let", SmsUtils.encode( "endelig oppnå målet" ) );
-        assertEquals( "%D8%B4%D9%83%D8%B1%D8%A7+%D9%84%D9%83%D9%85", SmsUtils.encode( "شكرا لكم" ) );
-        assertEquals( " ", SmsUtils.encode( " " ) );
-        assertNull( SmsUtils.encode( null ) );
+        super( programRuleService );
+        this.programHasRulesCache = cacheProvider.createProgramHasRulesCache();
     }
 
-    @Test
-    public void testRemovePhoneNumberPrefix()
+    @Override
+    public List<ProgramRule> getProgramRulesByActionTypes( Program program, String programStageUid )
     {
-        assertEquals( "4740123456", SmsUtils.removePhoneNumberPrefix( "004740123456" ) );
-        assertEquals( "4740123456", SmsUtils.removePhoneNumberPrefix( "+4740123456" ) );
+        return getProgramRulesByActionTypes( program, ProgramRuleActionType.SERVER_SUPPORTED_TYPES,
+            programStageUid );
     }
 
-    @Test
-    public void testBase64Compression()
+    @Override
+    Cache<Boolean> getProgramHasRulesCache()
     {
-        assertTrue( SmsUtils.isBase64( "c2FtcGxlIHNtcyB0ZXh0" ) );
-        assertFalse( SmsUtils.isBase64( "sample sms text" ) );
+        return this.programHasRulesCache;
     }
 }

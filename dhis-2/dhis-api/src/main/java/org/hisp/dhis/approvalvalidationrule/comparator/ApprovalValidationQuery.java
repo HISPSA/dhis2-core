@@ -28,7 +28,7 @@ package org.hisp.dhis.approvalvalidationrule.comparator;
  */
 
 import com.google.common.base.MoreObjects;
-import org.apache.commons.lang.BooleanUtils;
+import org.apache.commons.lang3.BooleanUtils;
 import org.hisp.dhis.common.Pager;
 import org.hisp.dhis.common.PagerUtils;
 

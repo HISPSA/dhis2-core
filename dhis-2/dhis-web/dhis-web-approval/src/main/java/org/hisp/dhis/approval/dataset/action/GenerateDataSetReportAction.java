@@ -253,13 +253,13 @@ public class GenerateDataSetReportAction
 
         if ( formType.isCustom() && type == null )
         {
-            customDataEntryFormCode = dataSetReportService.getCustomDataSetReport( selectedDataSet,
-                newArrayList( selectedPeriod ), selectedOrgunit, dimension, selectedUnitOnly );
+            //customDataEntryFormCode = dataSetReportService.getCustomDataSetReport( selectedDataSet,newArrayList( selectedPeriod ), selectedOrgunit, dimension, selectedUnitOnly );
+            customDataEntryFormCode = dataSetReportService.getCustomDataSetReport( selectedDataSet,selectedPeriod , selectedOrgunit, dimension, selectedUnitOnly );
         }
         else
         {
-            grids = dataSetReportService.getDataSetReportAsGrid( selectedDataSet,
-                newArrayList( selectedPeriod ), selectedOrgunit, dimension, selectedUnitOnly );
+            //grids = dataSetReportService.getDataSetReportAsGrid( selectedDataSet,newArrayList( selectedPeriod ), selectedOrgunit, dimension, selectedUnitOnly );
+            grids = dataSetReportService.getDataSetReportAsGrid( selectedDataSet,selectedPeriod , selectedOrgunit, dimension, selectedUnitOnly );
         }
 
         return type != null ? type : formType.toString();

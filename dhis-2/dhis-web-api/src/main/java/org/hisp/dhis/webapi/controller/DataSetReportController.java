@@ -90,61 +90,65 @@ public class DataSetReportController
     public @ResponseBody String getCustomDataSetReport( HttpServletResponse response,
         @RequestParam String ou,
         @RequestParam String ds,
-        @RequestParam List<String> pe,
+        @RequestParam String pe,
         @RequestParam( required = false ) Set<String> filter,
         @RequestParam( required = false ) boolean selectedUnitOnly )
         throws Exception
     {
         OrganisationUnit orgUnit = getAndValidateOrgUnit( ou );
         DataSet dataSet = getAndValidateDataSet( ds );
-        List<Period> periods = getAndValidatePeriods( pe );
+        //List<Period> periods = getAndValidatePeriods( pe );
+
+        Period period = getAndValidatePeriod( pe );
 
         if ( !dataSet.getFormType().isCustom() )
         {
             throw new WebMessageException(
-                conflict( "Data set form type must be 'custom': " + dataSet.getFormType() ) );
+                    conflict( "Data set form type must be 'custom': " + dataSet.getFormType() ) );
         }
 
         contextUtils.configureResponse( response, CONTENT_TYPE_HTML,
             CacheStrategy.RESPECT_SYSTEM_SETTING );
 
-        return dataSetReportService.getCustomDataSetReport( dataSet, periods, orgUnit, filter, selectedUnitOnly );
+        return dataSetReportService.getCustomDataSetReport( dataSet, period, orgUnit, filter, selectedUnitOnly );
     }
 
     @GetMapping( value = RESOURCE_PATH, produces = APPLICATION_JSON_VALUE )
     public @ResponseBody List<Grid> getDataSetReportAsJson( HttpServletResponse response,
         @RequestParam String ou,
         @RequestParam String ds,
-        @RequestParam List<String> pe,
+                                                            @RequestParam String pe,
         @RequestParam( required = false ) Set<String> filter,
         @RequestParam( required = false ) boolean selectedUnitOnly )
         throws Exception
     {
         OrganisationUnit orgUnit = getAndValidateOrgUnit( ou );
         DataSet dataSet = getAndValidateDataSet( ds );
-        List<Period> periods = getAndValidatePeriods( pe );
+        //List<Period> periods = getAndValidatePeriods( pe );
+        Period period = getAndValidatePeriod( pe );
 
         contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_JSON,
             CacheStrategy.RESPECT_SYSTEM_SETTING );
-        return dataSetReportService.getDataSetReportAsGrid( dataSet, periods, orgUnit, filter, selectedUnitOnly );
+        return dataSetReportService.getDataSetReportAsGrid( dataSet, period, orgUnit, filter, selectedUnitOnly );
     }
 
     @GetMapping( RESOURCE_PATH + ".xls" )
     public void getDataSetReportAsExcel( HttpServletResponse response,
         @RequestParam String ou,
         @RequestParam String ds,
-        @RequestParam List<String> pe,
+                                         @RequestParam String pe,
         @RequestParam( required = false ) Set<String> filter,
         @RequestParam( required = false ) boolean selectedUnitOnly )
         throws Exception
     {
         OrganisationUnit orgUnit = getAndValidateOrgUnit( ou );
         DataSet dataSet = getAndValidateDataSet( ds );
-        List<Period> periods = getAndValidatePeriods( pe );
+        //List<Period> periods = getAndValidatePeriods( pe );
+        Period period = getAndValidatePeriod( pe );
 
         contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_EXCEL,
             CacheStrategy.RESPECT_SYSTEM_SETTING );
-        List<Grid> grids = dataSetReportService.getDataSetReportAsGrid( dataSet, periods, orgUnit, filter,
+        List<Grid> grids = dataSetReportService.getDataSetReportAsGrid( dataSet, period, orgUnit, filter,
             selectedUnitOnly );
         GridUtils.toXls( grids, response.getOutputStream() );
     }
@@ -152,7 +156,7 @@ public class DataSetReportController
     @GetMapping( RESOURCE_PATH + ".pdf" )
     public void getDataSetReportAsPdf( HttpServletResponse response,
         @RequestParam String ds,
-        @RequestParam List<String> pe,
+                                       @RequestParam String pe,
         @RequestParam String ou,
         @RequestParam( required = false ) Set<String> filter,
         @RequestParam( required = false ) boolean selectedUnitOnly )
@@ -160,10 +164,11 @@ public class DataSetReportController
     {
         OrganisationUnit orgUnit = getAndValidateOrgUnit( ou );
         DataSet dataSet = getAndValidateDataSet( ds );
-        List<Period> periods = getAndValidatePeriods( pe );
+        //List<Period> periods = getAndValidatePeriods( pe );
+        Period period = getAndValidatePeriod( pe );
 
         contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_PDF, CacheStrategy.RESPECT_SYSTEM_SETTING );
-        List<Grid> grids = dataSetReportService.getDataSetReportAsGrid( dataSet, periods, orgUnit, filter,
+        List<Grid> grids = dataSetReportService.getDataSetReportAsGrid( dataSet, period, orgUnit, filter,
             selectedUnitOnly );
         GridUtils.toPdf( grids, response.getOutputStream() );
     }
@@ -217,4 +222,19 @@ public class DataSetReportController
 
         return periods;
     }
+
+
+    private Period getAndValidatePeriod( String pe )
+            throws WebMessageException
+    {
+        Period period = PeriodType.getPeriodFromIsoString( pe );
+
+        if ( period == null )
+        {
+            throw new WebMessageException( conflict( "Period does not exist: " + pe ) );
+        }
+
+        return periodService.reloadPeriod( period );
+    }
+
 }

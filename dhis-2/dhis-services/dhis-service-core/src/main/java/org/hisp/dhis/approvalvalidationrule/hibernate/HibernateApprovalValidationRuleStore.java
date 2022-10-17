@@ -59,7 +59,7 @@ import java.util.List;
 @Repository( "org.hisp.dhis.approvalvalidationrule.ApprovalValidationRuleStore" )
 public class HibernateApprovalValidationRuleStore
     extends HibernateIdentifiableObjectStore<ApprovalValidationRule>
-    implements ApprovalValidationRuleStore
+   // implements ApprovalValidationRuleStore
 {
     // -------------------------------------------------------------------------
     // Dependency
@@ -78,7 +78,7 @@ public class HibernateApprovalValidationRuleStore
 
     public HibernateApprovalValidationRuleStore(SessionFactory sessionFactory, JdbcTemplate jdbcTemplate,
 			ApplicationEventPublisher publisher, CurrentUserService currentUserService, DeletedObjectService deletedObjectService, AclService aclService) {
-		super(sessionFactory, jdbcTemplate, publisher, ApprovalValidationRule.class, currentUserService, deletedObjectService, aclService, false);
+		super(sessionFactory, jdbcTemplate, publisher, ApprovalValidationRule.class, currentUserService,  aclService, false);
 	}
 
 	@Override
@@ -103,6 +103,7 @@ public class HibernateApprovalValidationRuleStore
         super.save( approvalValidationRule );
     }
 
+/*
     @Override
     @SuppressWarnings( "unchecked" )
     public List<ApprovalValidationRule> getAllApprovalValidationRules()
@@ -121,5 +122,8 @@ public class HibernateApprovalValidationRuleStore
 
         return criteria.list();
     }
+
+*/
+    
 
 }

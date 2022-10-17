@@ -96,7 +96,7 @@ public class GetGreyFieldsByOrgUnitAction
     	
 		for ( DataElementOperand operand : dataSet.getGreyedFields() )
         {
-            if ( operand != null && operand.getDataElement() != null && operand.getOrganisationUnit() != null )
+            if ( operand  != null && operand.getDataElement() != null && operand.getOrganisationUnit() != null )
             {
             	if(operand.getOrganisationUnit().getUid().equals(organisationUnitId)){
             		greyedFieldsByOrgUnit.put( operand.getDataElement().getUid() + "-" + operand.getCategoryOptionCombo().getUid(), true );

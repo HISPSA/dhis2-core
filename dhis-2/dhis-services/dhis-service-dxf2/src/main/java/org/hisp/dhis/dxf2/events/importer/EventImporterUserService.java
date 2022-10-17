@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2004-2021, University of Oslo
+ * Copyright (c) 2004-2022, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -25,32 +25,30 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.hisp.dhis.security.oidc;
+package org.hisp.dhis.dxf2.events.importer;
 
-import org.hisp.dhis.condition.PropertiesAwareConfigurationCondition;
-import org.hisp.dhis.external.conf.ConfigurationKey;
-import org.springframework.context.annotation.ConditionContext;
-import org.springframework.core.type.AnnotatedTypeMetadata;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.Delegate;
 
-/**
- * @author Morten Svanæs <msvanaes@dhis2.org>
- */
-public class OidcEnabledCondition extends PropertiesAwareConfigurationCondition
+import org.hisp.dhis.artemis.config.UsernameSupplier;
+import org.hisp.dhis.user.CurrentUserService;
+import org.springframework.stereotype.Component;
+
+@RequiredArgsConstructor
+@Component
+public class EventImporterUserService
 {
-    @Override
-    public boolean matches( ConditionContext context, AnnotatedTypeMetadata metadata )
-    {
-        if ( isTestRun( context ) )
-        {
-            return false;
-        }
-        String isEnabled = getConfiguration().getProperty( ConfigurationKey.OIDC_OAUTH2_LOGIN_ENABLED );
-        return isEnabled.equalsIgnoreCase( "on" );
-    }
 
-    @Override
-    public ConfigurationPhase getConfigurationPhase()
+    @NonNull
+    @Delegate
+    private final CurrentUserService currentUserService;
+
+    @NonNull
+    private final UsernameSupplier usernameSupplier;
+
+    public String getAuditUsername()
     {
-        return ConfigurationPhase.PARSE_CONFIGURATION;
+        return usernameSupplier.get();
     }
 }

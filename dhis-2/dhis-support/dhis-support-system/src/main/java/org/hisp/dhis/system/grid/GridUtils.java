@@ -99,6 +99,10 @@ import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.lowagie.text.Document;
 import com.lowagie.text.pdf.PdfPTable;
 
+import org.hisp.dhis.period.Period;
+import org.hisp.dhis.organisationunit.OrganisationUnit;
+import org.hisp.dhis.i18n.I18nFormat;
+
 /**
  * @author Lars Helge Overland
  */
@@ -167,6 +171,8 @@ public class GridUtils
     private static final String ATTR_REF = "ref";
 
     private static final String ATTR_FIELD = "field";
+
+    private static final String SPACE = " ";
 
     /**
      * Writes a PDF representation of the given Grid to the given OutputStream.
@@ -594,8 +600,8 @@ public class GridUtils
      * @param title the title to use for the grids.
      * @return a list of Grids.
      */
-    public static List<Grid> fromHtml( String html, String title )
-        throws Exception
+    public static List<Grid> fromHtml( String html, String title, Period period, OrganisationUnit unit, I18nFormat format )
+            throws Exception
     {
         if ( html == null || html.trim().isEmpty() )
         {
@@ -613,6 +619,7 @@ public class GridUtils
             Grid grid = new ListGrid();
 
             grid.setTitle( title );
+            grid.setSubtitle( unit.getName() + SPACE + format.formatPeriod( period ) );
 
             TableTag table = (TableTag) t;
 
@@ -653,7 +660,7 @@ public class GridUtils
                     if ( firstColumnCount != getColumnCount( row ) ) // Ignore
                     {
                         log.warn( "Ignoring row which has " + row.getColumnCount() + " columns since table has "
-                            + firstColumnCount + " columns" );
+                                + firstColumnCount + " columns" );
                         continue;
                     }
 

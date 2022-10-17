@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2004-2022, University of Oslo
+ * Copyright (c) 2004-2021, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -40,9 +40,7 @@ import org.hisp.dhis.common.DimensionItemType;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.common.EmbeddedObject;
 import org.hisp.dhis.common.IdScheme;
-import org.hisp.dhis.common.ValueType;
-import org.hisp.dhis.common.ValueTypedDimensionalItemObject;
-import org.hisp.dhis.option.OptionSet;
+import org.hisp.dhis.organisationunit.OrganisationUnit;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -61,8 +59,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
  */
 @JacksonXmlRootElement( localName = "dataElementOperand", namespace = DxfNamespaces.DXF_2_0 )
 public class DataElementOperand
-    extends BaseDimensionalItemObject
-    implements EmbeddedObject, ValueTypedDimensionalItemObject
+        extends BaseDimensionalItemObject implements EmbeddedObject
 {
     public static final String SEPARATOR = COMPOSITE_DIM_OBJECT_PLAIN_SEP;
 
@@ -77,6 +74,9 @@ public class DataElementOperand
     private CategoryOptionCombo categoryOptionCombo;
 
     private CategoryOptionCombo attributeOptionCombo;
+
+    private OrganisationUnit organisationUnit;
+
 
     // -------------------------------------------------------------------------
     // Constructors
@@ -98,34 +98,19 @@ public class DataElementOperand
         this.categoryOptionCombo = categoryOptionCombo;
     }
 
+    public DataElementOperand( DataElement dataElement, CategoryOptionCombo categoryOptionCombo, OrganisationUnit organisationUnit )
+    {
+        this.dataElement = dataElement;
+        this.categoryOptionCombo = categoryOptionCombo;
+        this.organisationUnit = organisationUnit;
+    }
+
     public DataElementOperand( DataElement dataElement, CategoryOptionCombo categoryOptionCombo,
-        CategoryOptionCombo attributeOptionCombo )
+                               CategoryOptionCombo attributeOptionCombo )
     {
         this.dataElement = dataElement;
         this.categoryOptionCombo = categoryOptionCombo;
         this.attributeOptionCombo = attributeOptionCombo;
-    }
-
-    // -------------------------------------------------------------------------
-    // ValueTypedDimensionalItemObject
-    // -------------------------------------------------------------------------
-
-    @Override
-    public boolean hasOptionSet()
-    {
-        return dataElement.hasOptionSet();
-    }
-
-    @Override
-    public OptionSet getOptionSet()
-    {
-        return dataElement.getOptionSet();
-    }
-
-    @Override
-    public ValueType getValueType()
-    {
-        return dataElement.getValueType();
     }
 
     // -------------------------------------------------------------------------
@@ -336,6 +321,17 @@ public class DataElementOperand
     }
 
     /**
+     * Indicates whether this operand specifies a data element only with no
+     * option combinations.
+     *
+     * @return true if operand specifies a data element only.
+     */
+    public boolean isTotal()
+    {
+        return categoryOptionCombo == null && attributeOptionCombo == null;
+    }
+
+    /**
      * Indicates whether a category option combination exists which is different
      * from default.
      */
@@ -396,6 +392,17 @@ public class DataElementOperand
         this.attributeOptionCombo = attributeOptionCombo;
     }
 
+    @JsonProperty
+    @JsonSerialize( as = BaseIdentifiableObject.class )
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public OrganisationUnit getOrganisationUnit() {
+        return organisationUnit;
+    }
+
+    public void setOrganisationUnit(OrganisationUnit organisationUnit) {
+        this.organisationUnit = organisationUnit;
+    }
+
     // -------------------------------------------------------------------------
     // hashCode, equals and toString
     // -------------------------------------------------------------------------
@@ -411,27 +418,29 @@ public class DataElementOperand
             return false;
         DataElementOperand that = (DataElementOperand) o;
         return Objects.equals( dataElement, that.dataElement ) &&
-            Objects.equals( categoryOptionCombo, that.categoryOptionCombo ) &&
-            Objects.equals( attributeOptionCombo, that.attributeOptionCombo );
+                Objects.equals( categoryOptionCombo, that.categoryOptionCombo ) &&
+                Objects.equals( attributeOptionCombo, that.attributeOptionCombo ) &&
+                Objects.equals( organisationUnit, that.organisationUnit );
     }
 
     @Override
     public int hashCode()
     {
-        return Objects.hash( super.hashCode(), dataElement, categoryOptionCombo, attributeOptionCombo );
+        return Objects.hash( super.hashCode(), dataElement, categoryOptionCombo, attributeOptionCombo, organisationUnit );
     }
 
     @Override
     public String toString()
     {
         return "{" +
-            "\"class\":\"" + getClass() + "\", " +
-            "\"id\":\"" + id + "\", " +
-            "\"uid\":\"" + uid + "\", " +
-            "\"dataElement\":" + dataElement + ", " +
-            "\"categoryOptionCombo\":" + categoryOptionCombo +
-            "\"attributeOptionCombo\":" + attributeOptionCombo +
-            '}';
+                "\"class\":\"" + getClass() + "\", " +
+                "\"id\":\"" + id + "\", " +
+                "\"uid\":\"" + uid + "\", " +
+                "\"dataElement\":" + dataElement + ", " +
+                "\"categoryOptionCombo\":" + categoryOptionCombo +
+                "\"attributeOptionCombo\":" + attributeOptionCombo +
+                "\"organisationUnit\":" + organisationUnit +
+                '}';
     }
 
     // -------------------------------------------------------------------------

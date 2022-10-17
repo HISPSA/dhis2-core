@@ -374,6 +374,69 @@ public class DefaultDataSetService
     }
 
     @Override
+    @Transactional( readOnly = true )
+    public boolean isLocked( User user, DataSet dataSet, Period period, OrganisationUnit organisationUnit,
+        CategoryOptionCombo attributeOptionCombo, Date now )
+    {
+        return isLocked( user, dataSet, period, organisationUnit, now ) ||
+            dataApprovalService.isApproved( dataSet.getWorkflow(), period, organisationUnit, attributeOptionCombo );
+    }
+
+    @Override
+    @Transactional( readOnly = true )
+    public boolean isLocked( User user, DataSet dataSet, Period period, OrganisationUnit organisationUnit,
+        CategoryOptionCombo attributeOptionCombo, Date now, boolean useOrgUnitChildren )
+    {
+        if ( !useOrgUnitChildren )
+        {
+            return isLocked( user, dataSet, period, organisationUnit, attributeOptionCombo, now );
+        }
+
+        if ( organisationUnit == null || !organisationUnit.hasChild() )
+        {
+            return false;
+        }
+
+        for ( OrganisationUnit child : organisationUnit.getChildren() )
+        {
+            if ( isLocked( user, dataSet, period, child, attributeOptionCombo, now ) )
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    @Override
+    @Transactional( readOnly = true )
+    public boolean isLocked( User user, DataElement dataElement, Period period, OrganisationUnit organisationUnit,
+        CategoryOptionCombo attributeOptionCombo, Date now )
+    {
+        if ( user == null || !user.isAuthorized( Authorities.F_EDIT_EXPIRED.getAuthority() ) )
+        {
+            now = now != null ? now : new Date();
+
+            boolean expired = dataElement.isExpired( period, now );
+
+            if ( expired && lockExceptionStore.getCount( dataElement, period, organisationUnit ) == 0L )
+            {
+                return true;
+            }
+        }
+
+        DataSet dataSet = dataElement.getApprovalDataSet();
+
+        if ( dataSet == null )
+        {
+            return false;
+        }
+
+        return dataApprovalService.isApproved( dataSet.getWorkflow(), period, organisationUnit, attributeOptionCombo );
+    }
+
+
+    @Override
     @Transactional
     public List<LockException> filterLockExceptions( List<String> filters )
     {

@@ -47,6 +47,8 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.Criteria;
+
 import org.hibernate.SessionFactory;
 import org.hisp.dhis.attribute.Attribute;
 import org.hisp.dhis.common.AuditLogUtil;
@@ -959,7 +961,8 @@ public class HibernateIdentifiableObjectStore<T extends BaseIdentifiableObject>
         return getList( builder, parameters );
     }
 
-    // ----------------------------------------------------------------------
+
+        // ----------------------------------------------------------------------
     // JPA support methods
     // ----------------------------------------------------------------------
 
