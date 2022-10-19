@@ -37,6 +37,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
+import org.hisp.dhis.deletedobject.DeletedObjectService;
 import org.hisp.dhis.program.Program;
 import org.hisp.dhis.programrule.*;
 import org.hisp.dhis.query.JpaQueryUtils;
@@ -55,9 +56,9 @@ public class HibernateProgramRuleStore
     implements ProgramRuleStore
 {
     public HibernateProgramRuleStore( SessionFactory sessionFactory, JdbcTemplate jdbcTemplate,
-        ApplicationEventPublisher publisher, CurrentUserService currentUserService, AclService aclService )
+        ApplicationEventPublisher publisher, CurrentUserService currentUserService,   AclService aclService )
     {
-        super( sessionFactory, jdbcTemplate, publisher, ProgramRule.class, currentUserService, aclService, false );
+        super( sessionFactory, jdbcTemplate, publisher, ProgramRule.class, currentUserService,   aclService, false );
     }
 
     @Override

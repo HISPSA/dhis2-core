@@ -34,6 +34,7 @@ import javax.persistence.criteria.Root;
 import org.hibernate.SessionFactory;
 import org.hisp.dhis.common.adapter.BaseIdentifiableObject_;
 import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
+import org.hisp.dhis.deletedobject.DeletedObjectService;
 import org.hisp.dhis.document.Document;
 import org.hisp.dhis.document.DocumentStore;
 import org.hisp.dhis.security.acl.AclService;
@@ -51,9 +52,9 @@ public class HibernateDocumentStore
     extends HibernateIdentifiableObjectStore<Document> implements DocumentStore
 {
     public HibernateDocumentStore( SessionFactory sessionFactory, JdbcTemplate jdbcTemplate,
-        ApplicationEventPublisher publisher, CurrentUserService currentUserService, AclService aclService )
+        ApplicationEventPublisher publisher, CurrentUserService currentUserService,     AclService aclService )
     {
-        super( sessionFactory, jdbcTemplate, publisher, Document.class, currentUserService, aclService, true );
+        super( sessionFactory, jdbcTemplate, publisher, Document.class, currentUserService,    aclService, true );
     }
 
     @Override

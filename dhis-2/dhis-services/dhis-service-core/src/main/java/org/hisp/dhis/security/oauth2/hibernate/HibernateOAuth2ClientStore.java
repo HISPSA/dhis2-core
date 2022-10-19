@@ -31,6 +31,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 
 import org.hibernate.SessionFactory;
 import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
+import org.hisp.dhis.deletedobject.DeletedObjectService;
 import org.hisp.dhis.security.acl.AclService;
 import org.hisp.dhis.security.oauth2.OAuth2Client;
 import org.hisp.dhis.security.oauth2.OAuth2ClientStore;
@@ -48,9 +49,9 @@ public class HibernateOAuth2ClientStore
     implements OAuth2ClientStore
 {
     public HibernateOAuth2ClientStore( SessionFactory sessionFactory, JdbcTemplate jdbcTemplate,
-        ApplicationEventPublisher publisher, CurrentUserService currentUserService, AclService aclService )
+        ApplicationEventPublisher publisher, CurrentUserService currentUserService,   AclService aclService )
     {
-        super( sessionFactory, jdbcTemplate, publisher, OAuth2Client.class, currentUserService, aclService,
+        super( sessionFactory, jdbcTemplate, publisher, OAuth2Client.class, currentUserService,     aclService, 
             true );
     }
 

@@ -41,6 +41,7 @@ import org.hisp.dhis.category.CategoryOptionComboStore;
 import org.hisp.dhis.common.ObjectDeletionRequestedEvent;
 import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
 import org.hisp.dhis.dbms.DbmsManager;
+import org.hisp.dhis.deletedobject.DeletedObjectService;
 import org.hisp.dhis.security.acl.AclService;
 import org.hisp.dhis.user.CurrentUserService;
 import org.springframework.context.ApplicationEventPublisher;
@@ -58,10 +59,10 @@ public class HibernateCategoryOptionComboStore
     private final DbmsManager dbmsManager;
 
     public HibernateCategoryOptionComboStore( SessionFactory sessionFactory, JdbcTemplate jdbcTemplate,
-        ApplicationEventPublisher publisher, CurrentUserService currentUserService,
+        ApplicationEventPublisher publisher, CurrentUserService currentUserService,  
         AclService aclService, DbmsManager dbmsManager )
     {
-        super( sessionFactory, jdbcTemplate, publisher, CategoryOptionCombo.class, currentUserService, aclService,
+        super( sessionFactory, jdbcTemplate, publisher, CategoryOptionCombo.class, currentUserService,  aclService,
             true );
         this.dbmsManager = dbmsManager;
     }

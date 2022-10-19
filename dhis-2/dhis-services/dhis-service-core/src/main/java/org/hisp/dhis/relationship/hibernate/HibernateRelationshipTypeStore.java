@@ -31,6 +31,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 
 import org.hibernate.SessionFactory;
 import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
+import org.hisp.dhis.deletedobject.DeletedObjectService;
 import org.hisp.dhis.relationship.RelationshipType;
 import org.hisp.dhis.relationship.RelationshipTypeStore;
 import org.hisp.dhis.security.acl.AclService;
@@ -48,9 +49,9 @@ public class HibernateRelationshipTypeStore
     implements RelationshipTypeStore
 {
     public HibernateRelationshipTypeStore( SessionFactory sessionFactory, JdbcTemplate jdbcTemplate,
-        ApplicationEventPublisher publisher, CurrentUserService currentUserService, AclService aclService )
+        ApplicationEventPublisher publisher, CurrentUserService currentUserService,   AclService aclService )
     {
-        super( sessionFactory, jdbcTemplate, publisher, RelationshipType.class, currentUserService, aclService, true );
+        super( sessionFactory, jdbcTemplate, publisher, RelationshipType.class, currentUserService,   aclService, true );
     }
 
     @Override

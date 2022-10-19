@@ -64,6 +64,7 @@ import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
 import org.hisp.dhis.commons.collection.CollectionUtils;
 import org.hisp.dhis.commons.util.SqlHelper;
 import org.hisp.dhis.commons.util.TextUtils;
+import org.hisp.dhis.deletedobject.DeletedObjectService;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.query.JpaQueryUtils;
 import org.hisp.dhis.query.Order;
@@ -96,10 +97,10 @@ public class HibernateUserStore
     private final SchemaService schemaService;
 
     public HibernateUserStore( SessionFactory sessionFactory, JdbcTemplate jdbcTemplate,
-        ApplicationEventPublisher publisher, CurrentUserService currentUserService,
+        ApplicationEventPublisher publisher, CurrentUserService currentUserService,   
         AclService aclService, SchemaService schemaService )
     {
-        super( sessionFactory, jdbcTemplate, publisher, User.class, currentUserService, aclService, true );
+        super( sessionFactory, jdbcTemplate, publisher, User.class, currentUserService,   aclService, true );
 
         checkNotNull( schemaService );
         this.schemaService = schemaService;

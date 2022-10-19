@@ -36,6 +36,7 @@ import org.hisp.dhis.category.CategoryCombo;
 import org.hisp.dhis.category.CategoryComboStore;
 import org.hisp.dhis.common.DataDimensionType;
 import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
+import org.hisp.dhis.deletedobject.DeletedObjectService;
 import org.hisp.dhis.security.acl.AclService;
 import org.hisp.dhis.user.CurrentUserService;
 import org.springframework.context.ApplicationEventPublisher;
@@ -52,9 +53,9 @@ public class HibernateCategoryComboStore
 {
     public HibernateCategoryComboStore( SessionFactory sessionFactory, JdbcTemplate jdbcTemplate,
         ApplicationEventPublisher publisher,
-        CurrentUserService currentUserService, AclService aclService )
+        CurrentUserService currentUserService,   AclService aclService )
     {
-        super( sessionFactory, jdbcTemplate, publisher, CategoryCombo.class, currentUserService, aclService, true );
+        super( sessionFactory, jdbcTemplate, publisher, CategoryCombo.class, currentUserService,   aclService, true );
     }
 
     @Override

@@ -67,4 +67,6 @@ public class AttributeValueDeletionHandler
         }
         return DeletionVeto.ACCEPT;
     }
+
+	
 }

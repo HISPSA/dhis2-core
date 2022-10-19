@@ -338,4 +338,102 @@ public class UserQueryParams
         this.canSeeOwnRoles = canSeeOwnUserRoles;
         return this;
     }
+
+	public String getQuery() {
+		return query;
+	}
+
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public boolean isCanManage() {
+		return canManage;
+	}
+
+	public boolean isAuthSubset() {
+		return authSubset;
+	}
+
+	public boolean isDisjointRoles() {
+		return disjointRoles;
+	}
+
+	public Date getLastLogin() {
+		return lastLogin;
+	}
+
+	public Date getInactiveSince() {
+		return inactiveSince;
+	}
+
+	public Date getPasswordLastUpdated() {
+		return passwordLastUpdated;
+	}
+
+	public Integer getInactiveMonths() {
+		return inactiveMonths;
+	}
+
+	public boolean isSelfRegistered() {
+		return selfRegistered;
+	}
+
+	public boolean isNot2FA() {
+		return isNot2FA;
+	}
+
+	public UserInvitationStatus getInvitationStatus() {
+		return invitationStatus;
+	}
+
+	public Set<OrganisationUnit> getOrganisationUnits() {
+		return organisationUnits;
+	}
+
+	public Set<OrganisationUnit> getDataViewOrganisationUnits() {
+		return dataViewOrganisationUnits;
+	}
+
+	public Set<OrganisationUnit> getTeiSearchOrganisationUnits() {
+		return teiSearchOrganisationUnits;
+	}
+
+	public Set<UserGroup> getUserGroups() {
+		return userGroups;
+	}
+
+	public Integer getFirst() {
+		return first;
+	}
+
+	public Integer getMax() {
+		return max;
+	}
+
+	public boolean isUserOrgUnits() {
+		return userOrgUnits;
+	}
+
+	public boolean isIncludeOrgUnitChildren() {
+		return includeOrgUnitChildren;
+	}
+
+	public boolean isPrefetchUserGroups() {
+		return prefetchUserGroups;
+	}
+
+	public Boolean getDisabled() {
+		return disabled;
+	}
+
+	public boolean isCanSeeOwnRoles() {
+		return canSeeOwnRoles;
+	}
+    
+    
 }

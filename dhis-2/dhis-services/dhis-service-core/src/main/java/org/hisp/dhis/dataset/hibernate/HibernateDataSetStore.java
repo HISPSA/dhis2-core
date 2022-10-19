@@ -39,6 +39,7 @@ import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
 import org.hisp.dhis.dataentryform.DataEntryForm;
 import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.dataset.DataSetStore;
+import org.hisp.dhis.deletedobject.DeletedObjectService;
 import org.hisp.dhis.hibernate.JpaQueryParameters;
 import org.hisp.dhis.period.PeriodService;
 import org.hisp.dhis.period.PeriodType;
@@ -65,10 +66,10 @@ public class HibernateDataSetStore
     private final PeriodService periodService;
 
     public HibernateDataSetStore( SessionFactory sessionFactory, JdbcTemplate jdbcTemplate,
-        ApplicationEventPublisher publisher, CurrentUserService currentUserService, AclService aclService,
+        ApplicationEventPublisher publisher, CurrentUserService currentUserService,   AclService aclService,
         PeriodService periodService )
     {
-        super( sessionFactory, jdbcTemplate, publisher, DataSet.class, currentUserService, aclService, true );
+        super( sessionFactory, jdbcTemplate, publisher, DataSet.class, currentUserService,  aclService, true );
 
         checkNotNull( periodService );
 

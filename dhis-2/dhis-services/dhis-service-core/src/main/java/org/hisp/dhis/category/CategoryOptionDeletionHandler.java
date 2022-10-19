@@ -41,7 +41,7 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 public class CategoryOptionDeletionHandler extends DeletionHandler
 {
-    private final IdentifiableObjectManager idObjectManager;
+    private final IdentifiableObjectManager idObjectManager = null;
 
     @Override
     protected void register()
@@ -67,4 +67,6 @@ public class CategoryOptionDeletionHandler extends DeletionHandler
             idObjectManager.updateNoAcl( option );
         }
     }
+
+	
 }

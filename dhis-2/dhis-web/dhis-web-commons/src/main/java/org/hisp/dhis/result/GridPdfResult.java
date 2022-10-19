@@ -49,87 +49,93 @@ import com.opensymphony.xwork2.Result;
  *
  * @author Lars Helge Overland
  */
-public class GridPdfResult
-    implements Result
-{
-    /**
-     * Determines if a de-serialized file is compatible with this class.
-     */
-    private static final long serialVersionUID = 6613101138470779866L;
+public class GridPdfResult implements Result {
+	/**
+	 * Determines if a de-serialized file is compatible with this class.
+	 */
+	private static final long serialVersionUID = 6613101138470779866L;
 
-    private static final String DEFAULT_NAME = "Grid";
+	private static final String DEFAULT_NAME = "Grid";
 
-    // -------------------------------------------------------------------------
-    // Input
-    // -------------------------------------------------------------------------
+	// -------------------------------------------------------------------------
+	// Input
+	// -------------------------------------------------------------------------
 
-    private Grid grid;
+	private Grid grid;
 
-    public void setGrid( Grid grid )
-    {
-        this.grid = grid;
-    }
+	public void setGrid(Grid grid) {
+		this.grid = grid;
+	}
 
-    private List<Grid> grids;
+	private List<Grid> grids;
 
-    public void setGrids( List<Grid> grids )
-    {
-        this.grids = grids;
-    }
+	public void setGrids(List<Grid> grids) {
+		this.grids = grids;
+	}
 
-    private boolean attachment = true;
+	private boolean attachment = true;
 
-    protected boolean isAttachment()
-    {
-        return attachment;
-    }
+	protected boolean isAttachment() {
+		return attachment;
+	}
 
-    // -------------------------------------------------------------------------
-    // Result implementation
-    // -------------------------------------------------------------------------
+	private String selectedNoOfSignatures;
 
-    @Override
-    @SuppressWarnings( "unchecked" )
-    public void execute( ActionInvocation invocation )
-        throws Exception
-    {
-        // ---------------------------------------------------------------------
-        // Get grid
-        // ---------------------------------------------------------------------
+	public void setSelectedNoOfSignatures(String selectedNoOfSignatures) {
+		this.selectedNoOfSignatures = selectedNoOfSignatures;
+	}
 
-        Grid _grid = (Grid) invocation.getStack().findValue( "grid" );
+	// -------------------------------------------------------------------------
+	// Result implementation
+	// -------------------------------------------------------------------------
 
-        grid = _grid != null ? _grid : grid;
+	@Override
+	@SuppressWarnings("unchecked")
+	public void execute(ActionInvocation invocation) throws Exception {
+		// ---------------------------------------------------------------------
+		// Get grid
+		// ---------------------------------------------------------------------
 
-        List<Grid> _grids = (List<Grid>) invocation.getStack().findValue( "grids" );
+		Grid _grid = (Grid) invocation.getStack().findValue("grid");
 
-        grids = _grids != null ? _grids : grids;
+		grid = _grid != null ? _grid : grid;
 
-        // ---------------------------------------------------------------------
-        // Configure response
-        // ---------------------------------------------------------------------
+		List<Grid> _grids = (List<Grid>) invocation.getStack().findValue("grids");
 
-        HttpServletResponse response = ServletActionContext.getResponse();
+		grids = _grids != null ? _grids : grids;
 
-        OutputStream out = response.getOutputStream();
+		String _selectedNoOfSignatures = (String) invocation.getStack().findValue("selectedNoOfSignatures");
 
-        String filename = filenameEncode(
-            defaultIfEmpty( grid != null ? grid.getTitle() : grids.iterator().next().getTitle(), DEFAULT_NAME ) )
-            + ".pdf";
+		selectedNoOfSignatures = _selectedNoOfSignatures != null ? _selectedNoOfSignatures : selectedNoOfSignatures;
 
-        ContextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_PDF, true, filename, isAttachment() );
+		int selectedNoOfSign = 0;
+		if (selectedNoOfSignatures != null) {
+			selectedNoOfSign = Integer.parseInt(selectedNoOfSignatures);
+		}
 
-        // ---------------------------------------------------------------------
-        // Write PDF to output stream
-        // ---------------------------------------------------------------------
+		// ---------------------------------------------------------------------
+		// Configure response
+		// ---------------------------------------------------------------------
 
-        if ( grid != null )
-        {
-            GridUtils.toPdf( grid, out );
-        }
-        else
-        {
-            GridUtils.toPdf( grids, out );
-        }
-    }
+		HttpServletResponse response = ServletActionContext.getResponse();
+
+		OutputStream out = response.getOutputStream();
+
+		String filename = filenameEncode(
+				defaultIfEmpty(grid != null ? grid.getTitle() : grids.iterator().next().getTitle(), DEFAULT_NAME))
+				+ ".pdf";
+
+		ContextUtils.configureResponse(response, ContextUtils.CONTENT_TYPE_PDF, true, filename, isAttachment());
+
+		// ---------------------------------------------------------------------
+		// Write PDF to output stream
+		// ---------------------------------------------------------------------
+
+		if (grid != null) {
+			GridUtils.toPdf(grid, out);
+		} else {
+//			GridUtils.toPdf(grids, out);
+			GridUtils.toPdfCustom( grids, out,selectedNoOfSign );
+		}
+	}
 }

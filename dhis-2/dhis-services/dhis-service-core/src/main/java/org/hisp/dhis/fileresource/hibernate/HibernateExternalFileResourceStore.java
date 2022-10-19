@@ -29,6 +29,7 @@ package org.hisp.dhis.fileresource.hibernate;
 
 import org.hibernate.SessionFactory;
 import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
+import org.hisp.dhis.deletedobject.DeletedObjectService;
 import org.hisp.dhis.fileresource.ExternalFileResource;
 import org.hisp.dhis.fileresource.ExternalFileResourceStore;
 import org.hisp.dhis.security.acl.AclService;
@@ -46,9 +47,9 @@ public class HibernateExternalFileResourceStore
     implements ExternalFileResourceStore
 {
     public HibernateExternalFileResourceStore( SessionFactory sessionFactory, JdbcTemplate jdbcTemplate,
-        ApplicationEventPublisher publisher, CurrentUserService currentUserService, AclService aclService )
+        ApplicationEventPublisher publisher, CurrentUserService currentUserService,   AclService aclService )
     {
-        super( sessionFactory, jdbcTemplate, publisher, ExternalFileResource.class, currentUserService, aclService,
+        super( sessionFactory, jdbcTemplate, publisher, ExternalFileResource.class, currentUserService,   aclService,
             false );
     }
 

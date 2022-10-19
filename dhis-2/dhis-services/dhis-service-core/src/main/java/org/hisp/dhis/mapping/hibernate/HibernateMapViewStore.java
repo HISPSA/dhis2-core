@@ -33,6 +33,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 
 import org.hibernate.SessionFactory;
 import org.hisp.dhis.common.hibernate.HibernateAnalyticalObjectStore;
+import org.hisp.dhis.deletedobject.DeletedObjectService;
 import org.hisp.dhis.mapping.MapView;
 import org.hisp.dhis.mapping.MapViewStore;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroupSet;
@@ -50,9 +51,9 @@ public class HibernateMapViewStore
     extends HibernateAnalyticalObjectStore<MapView> implements MapViewStore
 {
     public HibernateMapViewStore( SessionFactory sessionFactory, JdbcTemplate jdbcTemplate,
-        ApplicationEventPublisher publisher, CurrentUserService currentUserService, AclService aclService )
+        ApplicationEventPublisher publisher, CurrentUserService currentUserService,    AclService aclService )
     {
-        super( sessionFactory, jdbcTemplate, publisher, MapView.class, currentUserService, aclService, true );
+        super( sessionFactory, jdbcTemplate, publisher, MapView.class, currentUserService,   aclService, true );
     }
 
     @Override

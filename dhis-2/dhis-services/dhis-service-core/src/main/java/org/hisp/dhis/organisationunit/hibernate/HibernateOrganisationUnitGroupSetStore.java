@@ -29,6 +29,7 @@ package org.hisp.dhis.organisationunit.hibernate;
 
 import org.hibernate.SessionFactory;
 import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
+import org.hisp.dhis.deletedobject.DeletedObjectService;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroupSet;
 import org.hisp.dhis.organisationunit.OrganisationUnitGroupSetStore;
 import org.hisp.dhis.security.acl.AclService;
@@ -46,9 +47,9 @@ public class HibernateOrganisationUnitGroupSetStore
     implements OrganisationUnitGroupSetStore
 {
     public HibernateOrganisationUnitGroupSetStore( SessionFactory sessionFactory, JdbcTemplate jdbcTemplate,
-        ApplicationEventPublisher publisher, CurrentUserService currentUserService, AclService aclService )
+        ApplicationEventPublisher publisher, CurrentUserService currentUserService,    AclService aclService )
     {
-        super( sessionFactory, jdbcTemplate, publisher, OrganisationUnitGroupSet.class, currentUserService, aclService,
+        super( sessionFactory, jdbcTemplate, publisher, OrganisationUnitGroupSet.class, currentUserService,   aclService,
             true );
     }
 }

@@ -45,6 +45,7 @@ import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.dataset.DataSetService;
 import org.hisp.dhis.datasetreport.DataSetReportService;
 import org.hisp.dhis.dxf2.webmessage.WebMessageException;
+import org.hisp.dhis.dxf2.webmessage.WebMessageUtils;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodService;
@@ -55,8 +56,7 @@ import org.hisp.dhis.webapi.utils.ContextUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author Stian Sandvold
@@ -149,23 +149,51 @@ public class DataSetReportController
         GridUtils.toXls( grids, response.getOutputStream() );
     }
 
-    @GetMapping( RESOURCE_PATH + ".pdf" )
+	/*
+	 * @GetMapping( RESOURCE_PATH + ".pdf" ) public void getDataSetReportAsPdf(
+	 * HttpServletResponse response,
+	 * 
+	 * @RequestParam String ds,
+	 * 
+	 * @RequestParam List<String> pe,
+	 * 
+	 * @RequestParam String ou,
+	 * 
+	 * @RequestParam( required = false ) Set<String> filter,
+	 * 
+	 * @RequestParam( required = false ) boolean selectedUnitOnly ) throws Exception
+	 * { OrganisationUnit orgUnit = getAndValidateOrgUnit( ou ); DataSet dataSet =
+	 * getAndValidateDataSet( ds ); List<Period> periods = getAndValidatePeriods( pe
+	 * );
+	 * 
+	 * contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_PDF,
+	 * CacheStrategy.RESPECT_SYSTEM_SETTING ); List<Grid> grids =
+	 * dataSetReportService.getDataSetReportAsGrid( dataSet, periods, orgUnit,
+	 * filter, selectedUnitOnly ); GridUtils.toPdf( grids,
+	 * response.getOutputStream() );
+	 * 
+	 * }
+	 */
+    
+
+    @RequestMapping( value = RESOURCE_PATH + ".pdf", method = RequestMethod.GET )
     public void getDataSetReportAsPdf( HttpServletResponse response,
         @RequestParam String ds,
-        @RequestParam List<String> pe,
+        @RequestParam String pe,
         @RequestParam String ou,
         @RequestParam( required = false ) Set<String> filter,
-        @RequestParam( required = false ) boolean selectedUnitOnly )
+        @RequestParam( required = false ) boolean selectedUnitOnly,
+        @RequestParam( required = false ) int noOfSignatures )
         throws Exception
     {
         OrganisationUnit orgUnit = getAndValidateOrgUnit( ou );
         DataSet dataSet = getAndValidateDataSet( ds );
-        List<Period> periods = getAndValidatePeriods( pe );
+        Period period = getAndValidatePeriod( pe );
 
         contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_PDF, CacheStrategy.RESPECT_SYSTEM_SETTING );
-        List<Grid> grids = dataSetReportService.getDataSetReportAsGrid( dataSet, periods, orgUnit, filter,
+        List<Grid> grids = dataSetReportService.getDataSetReportAsGrid( dataSet, period, orgUnit, filter,
             selectedUnitOnly );
-        GridUtils.toPdf( grids, response.getOutputStream() );
+        GridUtils.toPdfCustom( grids, response.getOutputStream(), noOfSignatures );
     }
 
     // -------------------------------------------------------------------------
@@ -217,4 +245,16 @@ public class DataSetReportController
 
         return periods;
     }
+    private Period getAndValidatePeriod( String pe )
+            throws WebMessageException
+        {
+            Period period = PeriodType.getPeriodFromIsoString( pe );
+
+            if ( period == null )
+            {
+                throw new WebMessageException( WebMessageUtils.conflict( "Period does not exist: " + pe ) );
+            }
+
+            return periodService.reloadPeriod( period );
+        }
 }

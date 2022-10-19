@@ -42,6 +42,7 @@ import org.apache.commons.lang3.time.DateUtils;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.hisp.dhis.common.hibernate.SoftDeleteHibernateObjectStore;
+import org.hisp.dhis.deletedobject.DeletedObjectService;
 import org.hisp.dhis.event.EventStatus;
 import org.hisp.dhis.program.ProgramInstance;
 import org.hisp.dhis.program.ProgramStage;
@@ -74,9 +75,9 @@ public class HibernateProgramStageInstanceStore
         NotificationTrigger.getAllScheduledTriggers() );
 
     public HibernateProgramStageInstanceStore( SessionFactory sessionFactory, JdbcTemplate jdbcTemplate,
-        ApplicationEventPublisher publisher, CurrentUserService currentUserService, AclService aclService )
+        ApplicationEventPublisher publisher, CurrentUserService currentUserService,   AclService aclService )
     {
-        super( sessionFactory, jdbcTemplate, publisher, ProgramStageInstance.class, currentUserService,
+        super( sessionFactory, jdbcTemplate, publisher, ProgramStageInstance.class, currentUserService,   
             aclService, false );
     }
 

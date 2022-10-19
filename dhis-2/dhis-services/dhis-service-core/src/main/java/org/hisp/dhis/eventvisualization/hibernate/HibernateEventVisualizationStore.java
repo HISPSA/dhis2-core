@@ -43,6 +43,7 @@ import javax.persistence.criteria.Root;
 
 import org.hibernate.SessionFactory;
 import org.hisp.dhis.common.hibernate.HibernateAnalyticalObjectStore;
+import org.hisp.dhis.deletedobject.DeletedObjectService;
 import org.hisp.dhis.eventvisualization.EventVisualization;
 import org.hisp.dhis.eventvisualization.EventVisualizationStore;
 import org.hisp.dhis.hibernate.JpaQueryParameters;
@@ -73,10 +74,10 @@ public class HibernateEventVisualizationStore extends
     }
 
     public HibernateEventVisualizationStore( final SessionFactory sessionFactory, final JdbcTemplate jdbcTemplate,
-        final ApplicationEventPublisher publisher, final CurrentUserService currentUserService,
+        final ApplicationEventPublisher publisher, final CurrentUserService currentUserService,  
         final AclService aclService )
     {
-        super( sessionFactory, jdbcTemplate, publisher, EventVisualization.class, currentUserService,
+        super( sessionFactory, jdbcTemplate, publisher, EventVisualization.class, currentUserService,  
             aclService, true );
     }
 

@@ -34,6 +34,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import org.hibernate.SessionFactory;
 import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
 import org.hisp.dhis.dataset.DataSet;
+import org.hisp.dhis.deletedobject.DeletedObjectService;
 import org.hisp.dhis.program.notification.NotificationTrigger;
 import org.hisp.dhis.security.acl.AclService;
 import org.hisp.dhis.user.CurrentUserService;
@@ -50,9 +51,9 @@ public class HibernateDataSetNotificationTemplateStore
     implements DataSetNotificationTemplateStore
 {
     public HibernateDataSetNotificationTemplateStore( SessionFactory sessionFactory, JdbcTemplate jdbcTemplate,
-        ApplicationEventPublisher publisher, CurrentUserService currentUserService, AclService aclService )
+        ApplicationEventPublisher publisher, CurrentUserService currentUserService,   AclService aclService )
     {
-        super( sessionFactory, jdbcTemplate, publisher, DataSetNotificationTemplate.class, currentUserService,
+        super( sessionFactory, jdbcTemplate, publisher, DataSetNotificationTemplate.class, currentUserService,  
             aclService, true );
     }
 

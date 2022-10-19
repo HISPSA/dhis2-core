@@ -35,6 +35,7 @@ import javax.persistence.criteria.Root;
 
 import org.hibernate.SessionFactory;
 import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
+import org.hisp.dhis.deletedobject.DeletedObjectService;
 import org.hisp.dhis.jdbc.StatementBuilder;
 import org.hisp.dhis.security.acl.AclService;
 import org.hisp.dhis.trackedentity.TrackedEntityAttribute;
@@ -52,10 +53,10 @@ public class HibernateTrackedEntityTypeAttributeStore
     implements TrackedEntityTypeAttributeStore
 {
     public HibernateTrackedEntityTypeAttributeStore( SessionFactory sessionFactory, JdbcTemplate jdbcTemplate,
-        ApplicationEventPublisher publisher, CurrentUserService currentUserService,
+        ApplicationEventPublisher publisher, CurrentUserService currentUserService,   
         AclService aclService, StatementBuilder statementBuilder )
     {
-        super( sessionFactory, jdbcTemplate, publisher, TrackedEntityTypeAttribute.class, currentUserService,
+        super( sessionFactory, jdbcTemplate, publisher, TrackedEntityTypeAttribute.class, currentUserService,   
             aclService, true );
     }
 

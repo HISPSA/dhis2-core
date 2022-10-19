@@ -39,8 +39,8 @@ import lombok.Setter;
  * Contains minimal User info used for ACL check in
  * {@link org.hisp.dhis.common.IdentifiableObjectStore}
  */
-@Getter
-@Setter
+//@Getter
+//@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class CurrentUserGroupInfo
@@ -48,4 +48,22 @@ public class CurrentUserGroupInfo
     private String userUID;
 
     private Set<String> userGroupUIDs = new HashSet<>();
+
+	public String getUserUID() {
+		return userUID;
+	}
+
+	public Set<String> getUserGroupUIDs() {
+		return userGroupUIDs;
+	}
+
+	public void setUserUID(String userUID) {
+		this.userUID = userUID;
+	}
+
+	public void setUserGroupUIDs(Set<String> userGroupUIDs) {
+		this.userGroupUIDs = userGroupUIDs;
+	}
+    
+    
 }

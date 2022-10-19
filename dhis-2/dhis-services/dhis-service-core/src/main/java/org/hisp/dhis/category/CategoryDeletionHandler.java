@@ -72,4 +72,6 @@ public class CategoryDeletionHandler
             idObjectManager.updateNoAcl( category );
         }
     }
+
+	
 }

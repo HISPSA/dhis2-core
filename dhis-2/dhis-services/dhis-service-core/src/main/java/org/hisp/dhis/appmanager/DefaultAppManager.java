@@ -424,7 +424,7 @@ public class DefaultAppManager
         if ( namespace != null && !namespace.isEmpty() )
         {
             datastoreService.deleteNamespace( namespace );
-            log.info( String.format( "Deleted app namespace '%s'", namespace ) );
+             log.info( String.format( "Deleted app namespace '%s'", namespace ) );
         }
     }
 

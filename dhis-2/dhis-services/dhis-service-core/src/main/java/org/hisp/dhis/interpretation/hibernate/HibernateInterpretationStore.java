@@ -31,6 +31,7 @@ import java.util.List;
 
 import org.hibernate.SessionFactory;
 import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
+import org.hisp.dhis.deletedobject.DeletedObjectService;
 import org.hisp.dhis.eventvisualization.EventVisualization;
 import org.hisp.dhis.interpretation.Interpretation;
 import org.hisp.dhis.interpretation.InterpretationStore;
@@ -52,9 +53,9 @@ public class HibernateInterpretationStore
 {
     @Autowired
     public HibernateInterpretationStore( SessionFactory sessionFactory, JdbcTemplate jdbcTemplate,
-        ApplicationEventPublisher publisher, CurrentUserService currentUserService, AclService aclService )
+        ApplicationEventPublisher publisher, CurrentUserService currentUserService,   AclService aclService )
     {
-        super( sessionFactory, jdbcTemplate, publisher, Interpretation.class, currentUserService, aclService, false );
+        super( sessionFactory, jdbcTemplate, publisher, Interpretation.class, currentUserService,   aclService, false );
     }
 
     @Override

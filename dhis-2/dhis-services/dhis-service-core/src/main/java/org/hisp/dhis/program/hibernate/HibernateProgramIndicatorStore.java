@@ -33,6 +33,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 
 import org.hibernate.SessionFactory;
 import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
+import org.hisp.dhis.deletedobject.DeletedObjectService;
 import org.hisp.dhis.program.ProgramIndicator;
 import org.hisp.dhis.program.ProgramIndicatorStore;
 import org.hisp.dhis.security.acl.AclService;
@@ -50,9 +51,9 @@ public class HibernateProgramIndicatorStore
     implements ProgramIndicatorStore
 {
     public HibernateProgramIndicatorStore( SessionFactory sessionFactory, JdbcTemplate jdbcTemplate,
-        ApplicationEventPublisher publisher, CurrentUserService currentUserService, AclService aclService )
+        ApplicationEventPublisher publisher, CurrentUserService currentUserService,    AclService aclService )
     {
-        super( sessionFactory, jdbcTemplate, publisher, ProgramIndicator.class, currentUserService, aclService, true );
+        super( sessionFactory, jdbcTemplate, publisher, ProgramIndicator.class, currentUserService,   aclService, true );
     }
 
     @Override

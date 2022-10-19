@@ -59,6 +59,7 @@ import org.hisp.dhis.deduplication.PotentialDuplicate;
 import org.hisp.dhis.deduplication.PotentialDuplicateConflictException;
 import org.hisp.dhis.deduplication.PotentialDuplicateQuery;
 import org.hisp.dhis.deduplication.PotentialDuplicateStore;
+import org.hisp.dhis.deletedobject.DeletedObjectService;
 import org.hisp.dhis.external.conf.DhisConfigurationProvider;
 import org.hisp.dhis.hibernate.HibernateProxyUtils;
 import org.hisp.dhis.program.ProgramInstance;
@@ -90,12 +91,12 @@ public class HibernatePotentialDuplicateStore
     private final DhisConfigurationProvider config;
 
     public HibernatePotentialDuplicateStore( SessionFactory sessionFactory, JdbcTemplate jdbcTemplate,
-        ApplicationEventPublisher publisher, CurrentUserService currentUserService, AclService aclService,
+        ApplicationEventPublisher publisher, CurrentUserService currentUserService,   AclService aclService,
         TrackedEntityInstanceStore trackedEntityInstanceStore, AuditManager auditManager,
         TrackedEntityAttributeValueAuditStore trackedEntityAttributeValueAuditStore,
         DhisConfigurationProvider config )
     {
-        super( sessionFactory, jdbcTemplate, publisher, PotentialDuplicate.class, currentUserService,
+        super( sessionFactory, jdbcTemplate, publisher, PotentialDuplicate.class, currentUserService,  
             aclService, false );
         this.trackedEntityInstanceStore = trackedEntityInstanceStore;
         this.auditManager = auditManager;

@@ -37,6 +37,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import org.hibernate.SessionFactory;
 import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
 import org.hisp.dhis.dataelement.DataElement;
+import org.hisp.dhis.deletedobject.DeletedObjectService;
 import org.hisp.dhis.program.ProgramStage;
 import org.hisp.dhis.program.ProgramStageDataElement;
 import org.hisp.dhis.program.ProgramStageDataElementStore;
@@ -55,9 +56,9 @@ public class HibernateProgramStageDataElementStore
     implements ProgramStageDataElementStore
 {
     public HibernateProgramStageDataElementStore( SessionFactory sessionFactory, JdbcTemplate jdbcTemplate,
-        ApplicationEventPublisher publisher, CurrentUserService currentUserService, AclService aclService )
+        ApplicationEventPublisher publisher, CurrentUserService currentUserService,   AclService aclService )
     {
-        super( sessionFactory, jdbcTemplate, publisher, ProgramStageDataElement.class, currentUserService, aclService,
+        super( sessionFactory, jdbcTemplate, publisher, ProgramStageDataElement.class, currentUserService,    aclService,
             false );
     }
 

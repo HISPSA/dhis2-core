@@ -121,4 +121,5 @@ public class ConfigurationDeletionHandler
 
         return selfRegRole != null && selfRegRole.equals( userRole ) ? VETO : ACCEPT;
     }
+
 }

@@ -73,4 +73,6 @@ public class CategoryDimensionDeletionHandler
 
         return jdbcTemplate.queryForObject( sql, Integer.class ) == 0 ? ACCEPT : VETO;
     }
+
+	
 }

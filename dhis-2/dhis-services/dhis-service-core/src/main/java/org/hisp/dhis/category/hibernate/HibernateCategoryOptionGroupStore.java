@@ -37,6 +37,7 @@ import org.hisp.dhis.category.CategoryOptionGroup;
 import org.hisp.dhis.category.CategoryOptionGroupSet;
 import org.hisp.dhis.category.CategoryOptionGroupStore;
 import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
+import org.hisp.dhis.deletedobject.DeletedObjectService;
 import org.hisp.dhis.hibernate.JpaQueryParameters;
 import org.hisp.dhis.security.acl.AclService;
 import org.hisp.dhis.user.CurrentUserService;
@@ -53,9 +54,9 @@ public class HibernateCategoryOptionGroupStore
     implements CategoryOptionGroupStore
 {
     public HibernateCategoryOptionGroupStore( SessionFactory sessionFactory, JdbcTemplate jdbcTemplate,
-        ApplicationEventPublisher publisher, CurrentUserService currentUserService, AclService aclService )
+        ApplicationEventPublisher publisher, CurrentUserService currentUserService,     AclService aclService )
     {
-        super( sessionFactory, jdbcTemplate, publisher, CategoryOptionGroup.class, currentUserService, aclService,
+        super( sessionFactory, jdbcTemplate, publisher, CategoryOptionGroup.class, currentUserService,    aclService,
             true );
     }
 

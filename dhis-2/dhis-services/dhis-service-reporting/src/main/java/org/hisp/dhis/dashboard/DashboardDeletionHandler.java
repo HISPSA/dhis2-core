@@ -62,4 +62,6 @@ public class DashboardDeletionHandler extends DeletionHandler
             dashboardService.updateDashboard( dashboard );
         }
     }
+
+	
 }

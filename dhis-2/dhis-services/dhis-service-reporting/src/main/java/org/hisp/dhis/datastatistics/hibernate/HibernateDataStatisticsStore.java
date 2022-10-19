@@ -38,6 +38,7 @@ import org.hisp.dhis.datastatistics.AggregatedStatistics;
 import org.hisp.dhis.datastatistics.DataStatistics;
 import org.hisp.dhis.datastatistics.DataStatisticsStore;
 import org.hisp.dhis.datastatistics.EventInterval;
+import org.hisp.dhis.deletedobject.DeletedObjectService;
 import org.hisp.dhis.security.acl.AclService;
 import org.hisp.dhis.user.CurrentUserService;
 import org.hisp.dhis.util.DateUtils;
@@ -56,9 +57,9 @@ public class HibernateDataStatisticsStore
     implements DataStatisticsStore
 {
     public HibernateDataStatisticsStore( SessionFactory sessionFactory, JdbcTemplate jdbcTemplate,
-        ApplicationEventPublisher publisher, CurrentUserService currentUserService, AclService aclService )
+        ApplicationEventPublisher publisher, CurrentUserService currentUserService,     AclService aclService )
     {
-        super( sessionFactory, jdbcTemplate, publisher, DataStatistics.class, currentUserService, aclService, false );
+        super( sessionFactory, jdbcTemplate, publisher, DataStatistics.class, currentUserService,    aclService, false );
     }
 
     // -------------------------------------------------------------------------

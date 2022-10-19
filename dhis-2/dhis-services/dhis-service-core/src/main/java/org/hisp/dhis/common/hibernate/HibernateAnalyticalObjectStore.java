@@ -36,6 +36,7 @@ import org.hisp.dhis.common.AnalyticalObjectStore;
 import org.hisp.dhis.common.BaseAnalyticalObject;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataset.DataSet;
+import org.hisp.dhis.deletedobject.DeletedObjectService;
 import org.hisp.dhis.indicator.Indicator;
 import org.hisp.dhis.legend.LegendSet;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
@@ -59,10 +60,10 @@ public class HibernateAnalyticalObjectStore<T extends BaseAnalyticalObject>
 {
     public HibernateAnalyticalObjectStore( SessionFactory sessionFactory, JdbcTemplate jdbcTemplate,
         ApplicationEventPublisher publisher,
-        Class<T> clazz, CurrentUserService currentUserService, AclService aclService,
+        Class<T> clazz, CurrentUserService currentUserService,   AclService aclService,
         boolean cacheable )
     {
-        super( sessionFactory, jdbcTemplate, publisher, clazz, currentUserService, aclService, cacheable );
+        super( sessionFactory, jdbcTemplate, publisher, clazz, currentUserService,  aclService, cacheable );
     }
 
     // TODO program indicator, tracked entity attribute

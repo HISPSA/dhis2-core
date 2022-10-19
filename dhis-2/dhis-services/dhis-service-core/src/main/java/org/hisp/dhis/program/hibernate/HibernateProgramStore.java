@@ -35,6 +35,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.query.NativeQuery;
 import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
 import org.hisp.dhis.dataentryform.DataEntryForm;
+import org.hisp.dhis.deletedobject.DeletedObjectService;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramStore;
@@ -57,9 +58,9 @@ public class HibernateProgramStore
     implements ProgramStore
 {
     public HibernateProgramStore( SessionFactory sessionFactory, JdbcTemplate jdbcTemplate,
-        ApplicationEventPublisher publisher, CurrentUserService currentUserService, AclService aclService )
+        ApplicationEventPublisher publisher, CurrentUserService currentUserService,   AclService aclService )
     {
-        super( sessionFactory, jdbcTemplate, publisher, Program.class, currentUserService, aclService, true );
+        super( sessionFactory, jdbcTemplate, publisher, Program.class, currentUserService,   aclService, true );
 
     }
     // -------------------------------------------------------------------------

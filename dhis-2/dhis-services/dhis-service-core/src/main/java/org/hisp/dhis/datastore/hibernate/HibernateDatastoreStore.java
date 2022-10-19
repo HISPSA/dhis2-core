@@ -45,6 +45,7 @@ import org.hisp.dhis.datastore.DatastoreEntry;
 import org.hisp.dhis.datastore.DatastoreFields;
 import org.hisp.dhis.datastore.DatastoreQuery;
 import org.hisp.dhis.datastore.DatastoreStore;
+import org.hisp.dhis.deletedobject.DeletedObjectService;
 import org.hisp.dhis.security.acl.AclService;
 import org.hisp.dhis.user.CurrentUserService;
 import org.springframework.context.ApplicationEventPublisher;
@@ -60,9 +61,9 @@ public class HibernateDatastoreStore
     implements DatastoreStore
 {
     public HibernateDatastoreStore( SessionFactory sessionFactory, JdbcTemplate jdbcTemplate,
-        ApplicationEventPublisher publisher, CurrentUserService currentUserService, AclService aclService )
+        ApplicationEventPublisher publisher, CurrentUserService currentUserService,   AclService aclService )
     {
-        super( sessionFactory, jdbcTemplate, publisher, DatastoreEntry.class, currentUserService, aclService,
+        super( sessionFactory, jdbcTemplate, publisher, DatastoreEntry.class, currentUserService,  aclService,
             true );
     }
 

@@ -34,6 +34,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 
 import org.hibernate.SessionFactory;
 import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
+import org.hisp.dhis.deletedobject.DeletedObjectService;
 import org.hisp.dhis.metadata.version.MetadataVersion;
 import org.hisp.dhis.metadata.version.MetadataVersionStore;
 import org.hisp.dhis.security.acl.AclService;
@@ -53,9 +54,9 @@ public class HibernateMetadataVersionStore
     implements MetadataVersionStore
 {
     public HibernateMetadataVersionStore( SessionFactory sessionFactory, JdbcTemplate jdbcTemplate,
-        ApplicationEventPublisher publisher, CurrentUserService currentUserService, AclService aclService )
+        ApplicationEventPublisher publisher, CurrentUserService currentUserService,   AclService aclService )
     {
-        super( sessionFactory, jdbcTemplate, publisher, MetadataVersion.class, currentUserService, aclService, false );
+        super( sessionFactory, jdbcTemplate, publisher, MetadataVersion.class, currentUserService,   aclService, false );
     }
 
     @Override

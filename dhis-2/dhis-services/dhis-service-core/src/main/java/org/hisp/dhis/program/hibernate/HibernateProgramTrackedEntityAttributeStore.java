@@ -35,6 +35,7 @@ import javax.persistence.criteria.Root;
 
 import org.hibernate.SessionFactory;
 import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
+import org.hisp.dhis.deletedobject.DeletedObjectService;
 import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramTrackedEntityAttribute;
 import org.hisp.dhis.program.ProgramTrackedEntityAttributeStore;
@@ -54,9 +55,9 @@ public class HibernateProgramTrackedEntityAttributeStore
     implements ProgramTrackedEntityAttributeStore
 {
     public HibernateProgramTrackedEntityAttributeStore( SessionFactory sessionFactory, JdbcTemplate jdbcTemplate,
-        ApplicationEventPublisher publisher, CurrentUserService currentUserService, AclService aclService )
+        ApplicationEventPublisher publisher, CurrentUserService currentUserService,   AclService aclService )
     {
-        super( sessionFactory, jdbcTemplate, publisher, ProgramTrackedEntityAttribute.class, currentUserService,
+        super( sessionFactory, jdbcTemplate, publisher, ProgramTrackedEntityAttribute.class, currentUserService,   
             aclService, true );
     }
 

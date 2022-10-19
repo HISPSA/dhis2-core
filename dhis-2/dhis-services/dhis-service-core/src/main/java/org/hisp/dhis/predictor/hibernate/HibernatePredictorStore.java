@@ -31,6 +31,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.hibernate.SessionFactory;
 import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
+import org.hisp.dhis.deletedobject.DeletedObjectService;
 import org.hisp.dhis.period.PeriodService;
 import org.hisp.dhis.predictor.Predictor;
 import org.hisp.dhis.predictor.PredictorStore;
@@ -51,10 +52,10 @@ public class HibernatePredictorStore
     private final PeriodService periodService;
 
     public HibernatePredictorStore( SessionFactory sessionFactory, JdbcTemplate jdbcTemplate,
-        ApplicationEventPublisher publisher, CurrentUserService currentUserService, AclService aclService,
+        ApplicationEventPublisher publisher, CurrentUserService currentUserService,   AclService aclService,
         PeriodService periodService )
     {
-        super( sessionFactory, jdbcTemplate, publisher, Predictor.class, currentUserService, aclService, false );
+        super( sessionFactory, jdbcTemplate, publisher, Predictor.class, currentUserService,    aclService, false );
 
         checkNotNull( periodService );
 

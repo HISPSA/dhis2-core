@@ -322,4 +322,22 @@ public class Sharing
         String metadata = access.substring( 0, 2 );
         return metadata + metadata + access.substring( 4 );
     }
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
+	public String getOwner() {
+		return owner;
+	}
+
+	public String getPublicAccess() {
+		return publicAccess;
+	}
+
+	public boolean isExternal() {
+		return external;
+	}
+    
+    
 }

@@ -38,6 +38,12 @@ import org.hisp.dhis.common.GenericStore;
 import org.hisp.dhis.user.CurrentUserGroupInfo;
 import org.hisp.dhis.user.User;
 
+import org.hibernate.Criteria;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hisp.dhis.common.GenericStore;
+//import org.hisp.dhis.user.User;
+//import org.hisp.dhis.user.UserInfo;
+
 /**
  * Interface which extends GenericStore and exposes support methods for
  * retrieving criteria.
@@ -68,4 +74,24 @@ public interface InternalHibernateGenericStore<T>
         CurrentUserGroupInfo groupInfo, String access );
 
     List<Function<Root<T>, Predicate>> getDataSharingPredicates( CriteriaBuilder builder, User user, String access );
+    
+    Criteria getCriteria();
+
+    Criteria getSharingCriteria();
+
+    Criteria getSharingCriteria( User user );
+
+    DetachedCriteria getDataSharingDetachedCriteria( User user );
+
+    Criteria getExecutableCriteria( DetachedCriteria detachedCriteria );
+
+    DetachedCriteria getSharingDetachedCriteria();
+
+    DetachedCriteria getSharingDetachedCriteria( String access );
+
+    DetachedCriteria getDataSharingDetachedCriteria( String access );
+
+    DetachedCriteria getSharingDetachedCriteria( User user );
+    
+   
 }

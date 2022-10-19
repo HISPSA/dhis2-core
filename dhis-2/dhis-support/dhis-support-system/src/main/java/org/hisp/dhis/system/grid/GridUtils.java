@@ -38,6 +38,7 @@ import static org.hisp.dhis.system.util.PDFUtils.getTextCell;
 import static org.hisp.dhis.system.util.PDFUtils.getTitleCell;
 import static org.hisp.dhis.system.util.PDFUtils.openDocument;
 import static org.hisp.dhis.system.util.PDFUtils.resetPaddings;
+import static org.hisp.dhis.system.util.PDFUtils.*;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -77,6 +78,9 @@ import org.hisp.dhis.common.Reference;
 import org.hisp.dhis.commons.collection.ListUtils;
 import org.hisp.dhis.commons.util.Encoder;
 import org.hisp.dhis.commons.util.TextUtils;
+import org.hisp.dhis.i18n.I18nFormat;
+import org.hisp.dhis.organisationunit.OrganisationUnit;
+import org.hisp.dhis.period.Period;
 import org.hisp.dhis.system.util.CodecUtils;
 import org.hisp.dhis.system.util.MathUtils;
 import org.hisp.dhis.system.velocity.VelocityManager;
@@ -97,6 +101,7 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
 import com.csvreader.CsvWriter;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.lowagie.text.Document;
+import com.lowagie.text.Element;
 import com.lowagie.text.pdf.PdfPTable;
 
 /**
@@ -167,6 +172,12 @@ public class GridUtils
     private static final String ATTR_REF = "ref";
 
     private static final String ATTR_FIELD = "field";
+    
+    private static final String SPACE = " ";
+
+    private static final String SIGNOFF_DAILY = "\nSigned of by\nName (PRINT):\t_______________________________________________\t\t\t\tSignature:\t_______________________________________________\t\t\t\tPosition:\t_______________________________________________\t\t\t\tDate:\t_________________________";
+    private static final String SIGNOFF_MONTHLY = "\nSigned of by\nName (PRINT):\t__________________________\t\t\t\tSignature:\t__________________________\t\t\t\tPosition:\t__________________________\t\t\t\tDate:\t____________";
+
 
     /**
      * Writes a PDF representation of the given Grid to the given OutputStream.
@@ -205,6 +216,45 @@ public class GridUtils
             closeDocument( document );
         }
     }
+    
+    /**
+     * Writes a PDF representation of the given list of Grids to the given OutputStream.
+     */
+    public static void toPdfCustom( List<Grid> grids, OutputStream out, int selectedNoOfSignatures )
+    {
+        if ( hasNonEmptyGrid( grids ) )
+        {            
+        	boolean gridsReport = false;
+            
+            for ( Grid grid : grids )
+            {            	
+            	System.out.println(grid.getWidth());
+            	
+            	if(grid.getWidth() > 2){
+            		gridsReport  = true;
+            		break;
+            	}            	
+            }
+            
+            Document document = openDocument( out, gridsReport );
+            
+            for ( Grid grid : grids )
+            {            	
+            	if(gridsReport)
+            	{            		
+            		toPdfInternalDaily( grid, document, 40F );
+            	}else{
+            		toPdfInternalMontlhy( grid, document, 40F );
+            	}
+            	
+            }
+
+            addPdfTimestampCustom( document, false, selectedNoOfSignatures, gridsReport );
+
+            closeDocument( document );
+        }
+    }
+
 
     private static void toPdfInternal( Grid grid, Document document, float spacing )
     {
@@ -245,6 +295,142 @@ public class GridUtils
 
         addTableToDocument( document, table );
     }
+    
+    private static void toPdfInternalMontlhy( Grid grid, Document document, float spacing )
+    {
+    	if ( grid == null || grid.getVisibleWidth() == 0 )
+        {
+            return;
+        }
+        try {
+    		
+				PdfPTable table = new PdfPTable( grid.getVisibleWidth() );
+
+				int headerwidths[] = getHeaderWidth(grid.getVisibleWidth());
+				table.setHeaderRows(4);
+				table.setKeepTogether( false );
+				table.setWidths(headerwidths);
+				table.setWidthPercentage(100);
+				table.getDefaultCell().setPadding(3);
+				table.getDefaultCell().setBorderWidth(2);
+				table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
+				
+				table.addCell( resetPaddings( getTitleCell( grid.getTitle(), grid.getVisibleWidth() ), 0, 30, 0, 0 ) );
+				
+				if ( StringUtils.isNotEmpty( grid.getSubtitle() ) )
+				{
+				    table.addCell( getSubtitleCell( grid.getSubtitle(), grid.getVisibleWidth() ) );
+				    table.addCell( getEmptyCell( grid.getVisibleWidth(), 30 ) );
+				}
+				
+				for ( GridHeader header : grid.getVisibleHeaders() )
+				{
+					table.addCell( header.getName() );
+				}				
+				
+				int i = 1; 
+				for ( List<Object> row : grid.getVisibleRows() )
+				{
+					if (i % 2 == 1) {
+						table.getDefaultCell().setGrayFill(0.9f);
+					}
+				    for ( Object col : row )
+				    {
+				        String text = col != null ? String.valueOf( col ) : EMPTY;
+				        table.addCell( text );
+				    }
+				    if (i % 2 == 1) {
+				    	table.getDefaultCell().setGrayFill(1);
+					}
+				    
+				    i++;
+				}
+				
+				addTableToDocument( document, table );
+        } catch (Exception de) {
+			de.printStackTrace();
+		}
+    }
+    
+    private static void toPdfInternalDaily( Grid grid, Document document, float spacing )
+    {
+    			
+        if ( grid == null || grid.getVisibleWidth() == 0 )
+        {
+            return;
+        }
+        try {
+    		
+				PdfPTable table = new PdfPTable( grid.getVisibleWidth() );
+
+				int headerwidths[] = getHeaderWidth(grid.getVisibleWidth());
+				table.setSpacingBefore(15f);
+				table.setSpacingAfter(15f);
+				table.setHeaderRows(4);
+				table.setKeepTogether( false );
+				table.setWidths(headerwidths);
+				table.setWidthPercentage(100);
+				table.getDefaultCell().setPadding(3);
+				table.getDefaultCell().setBorderWidth(2);
+				table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
+				
+				table.addCell( resetPaddings( getTitleCell( grid.getTitle(), grid.getVisibleWidth() ), 0, 30, 0, 0 ) );
+				
+				if ( StringUtils.isNotEmpty( grid.getSubtitle() ) )
+				{
+				    table.addCell( getSubtitleCell( grid.getSubtitle(), grid.getVisibleWidth() ) );
+				    table.addCell( getEmptyCell( grid.getVisibleWidth(), 30 ) );
+				}
+				
+				for ( GridHeader header : grid.getVisibleHeaders() )
+				{
+					if(header.getName().startsWith("input"))
+					{
+						table.addCell( "Data element" );
+					}else{
+						table.addCell( header.getName() );
+					}
+				}				
+				
+				int i = 1; 
+				for ( List<Object> row : grid.getVisibleRows() )
+				{
+					if (i % 2 == 1) {
+						table.getDefaultCell().setGrayFill(0.9f);
+					}
+
+					int j = 1; 
+				    for ( Object col : row )
+				    {
+				    	String text = col != null ? String.valueOf( col ) : EMPTY;
+				    	
+				    	if (j == 1) {
+							table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
+							table.addCell( text );
+				    		
+				    	}else {
+				    		table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
+				    		table.addCell( text );
+				    	}				        
+				        
+				        j++;
+				    }
+					
+				    if (i % 2 == 1) {
+				    	table.getDefaultCell().setGrayFill(1);
+					}
+				    
+				    i++;
+				}
+				
+				addTableToDocument( document, table );
+        
+	    } catch (Exception de) {
+			de.printStackTrace();
+		}
+    }
+	    
+   
 
     private static void addPdfTimestamp( Document document, boolean paddingTop )
     {
@@ -253,6 +439,25 @@ public class GridUtils
         table.addCell( getTextCell( getGeneratedString() ) );
         addTableToDocument( document, table );
     }
+    
+    private static void addPdfTimestampCustom( Document document, boolean paddingTop, int selectedNoOfSignatures, boolean dailyReport )
+    {
+    	PdfPTable table = new PdfPTable(1);
+        table.addCell( getEmptyCell( 1, ( paddingTop ? 30 : 0 ) ) );
+        table.addCell( getTextCell( getGeneratedString() ) );
+        
+        if(selectedNoOfSignatures >= 1){
+        	for(int i= 0; i< selectedNoOfSignatures; i++)
+        	{
+        		if(dailyReport){
+        			table.addCell( getTextCell( SIGNOFF_DAILY ) );
+        		}else{
+        			table.addCell( getTextCellMonthlyCustom( SIGNOFF_MONTHLY ) );
+        		}       		
+        	}
+        }
+        addTableToDocument( document, table );
+    } 
 
     /**
      * Writes a XLS (Excel workbook) representation of the given list of Grids
@@ -613,6 +818,105 @@ public class GridUtils
             Grid grid = new ListGrid();
 
             grid.setTitle( title );
+
+            TableTag table = (TableTag) t;
+
+            TableRow[] rows = table.getRows();
+
+            Integer firstColumnCount = null;
+
+            for ( TableRow row : rows )
+            {
+                if ( getColumnCount( row ) == 0 ) // Ignore if no cells
+                {
+                    log.warn( "Ignoring row with no columns" );
+                    continue;
+                }
+
+                Node[] cells = row.getChildren().extractAllNodesThatMatch( HTML_ROW_FILTER ).toNodeArray();
+
+                if ( firstColumnCount == null ) // First row becomes header
+                {
+                    firstColumnCount = getColumnCount( row );
+
+                    for ( Node c : cells )
+                    {
+                        TagNode cell = (TagNode) c;
+
+                        grid.addHeader( new GridHeader( getValue( cell ), false, false ) );
+
+                        Integer colSpan = MathUtils.parseInt( cell.getAttribute( "colspan" ) );
+
+                        if ( colSpan != null && colSpan > 1 )
+                        {
+                            grid.addEmptyHeaders( (colSpan - 1) );
+                        }
+                    }
+                }
+                else // Rest becomes rows
+                {
+                    if ( firstColumnCount != getColumnCount( row ) ) // Ignore
+                    {
+                        log.warn( "Ignoring row which has " + row.getColumnCount() + " columns since table has "
+                            + firstColumnCount + " columns" );
+                        continue;
+                    }
+
+                    grid.addRow();
+
+                    for ( Node c : cells )
+                    {
+                        // TODO row span
+
+                        TagNode cell = (TagNode) c;
+
+                        grid.addValue( getValue( cell ) );
+
+                        Integer colSpan = MathUtils.parseInt( cell.getAttribute( "colspan" ) );
+
+                        if ( colSpan != null && colSpan > 1 )
+                        {
+                            grid.addEmptyValues( (colSpan - 1) );
+                        }
+                    }
+                }
+            }
+
+            grids.add( grid );
+        }
+
+        return grids;
+    }
+
+    
+    /**
+     * Creates a list of Grids based on the given HTML string. This works only
+     * for table-based HTML documents.
+     *
+     * @param html the HTML string.
+     * @param title the title to use for the grids.
+     * @return a list of Grids.
+     */
+    public static List<Grid> fromHtml( String html, String title, Period period, OrganisationUnit unit, I18nFormat format )
+        throws Exception
+    {
+        if ( html == null || html.trim().isEmpty() )
+        {
+            return null;
+        }
+
+        List<Grid> grids = new ArrayList<>();
+
+        Parser parser = Parser.createParser( html, "UTF-8" );
+
+        Node[] tables = parser.extractAllNodesThatMatch( new TagNameFilter( "table" ) ).toNodeArray();
+
+        for ( Node t : tables )
+        {
+            Grid grid = new ListGrid();
+
+            grid.setTitle( title );
+            grid.setSubtitle( unit.getName() + SPACE + format.formatPeriod( period ) );
 
             TableTag table = (TableTag) t;
 

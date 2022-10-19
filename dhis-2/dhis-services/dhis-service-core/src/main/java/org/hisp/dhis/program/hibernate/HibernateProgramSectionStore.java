@@ -29,6 +29,7 @@ package org.hisp.dhis.program.hibernate;
 
 import org.hibernate.SessionFactory;
 import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
+import org.hisp.dhis.deletedobject.DeletedObjectService;
 import org.hisp.dhis.program.ProgramSection;
 import org.hisp.dhis.program.ProgramSectionStore;
 import org.hisp.dhis.security.acl.AclService;
@@ -46,8 +47,8 @@ public class HibernateProgramSectionStore
     implements ProgramSectionStore
 {
     public HibernateProgramSectionStore( SessionFactory sessionFactory, JdbcTemplate jdbcTemplate,
-        ApplicationEventPublisher publisher, CurrentUserService currentUserService, AclService aclService )
+        ApplicationEventPublisher publisher, CurrentUserService currentUserService,    AclService aclService )
     {
-        super( sessionFactory, jdbcTemplate, publisher, ProgramSection.class, currentUserService, aclService, true );
+        super( sessionFactory, jdbcTemplate, publisher, ProgramSection.class, currentUserService,    aclService, true );
     }
 }

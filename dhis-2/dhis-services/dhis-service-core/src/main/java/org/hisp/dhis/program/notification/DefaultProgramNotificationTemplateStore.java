@@ -36,6 +36,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.NativeQuery;
 import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
+import org.hisp.dhis.deletedobject.DeletedObjectService;
 import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramStage;
 import org.hisp.dhis.security.acl.AclService;
@@ -59,9 +60,9 @@ public class DefaultProgramNotificationTemplateStore
     private static final String PROGRAM_STAGE_ID = "psid";
 
     public DefaultProgramNotificationTemplateStore( SessionFactory sessionFactory, JdbcTemplate jdbcTemplate,
-        ApplicationEventPublisher publisher, CurrentUserService currentUserService, AclService aclService )
+        ApplicationEventPublisher publisher, CurrentUserService currentUserService,   AclService aclService )
     {
-        super( sessionFactory, jdbcTemplate, publisher, ProgramNotificationTemplate.class, currentUserService,
+        super( sessionFactory, jdbcTemplate, publisher, ProgramNotificationTemplate.class, currentUserService,  
             aclService, true );
     }
 

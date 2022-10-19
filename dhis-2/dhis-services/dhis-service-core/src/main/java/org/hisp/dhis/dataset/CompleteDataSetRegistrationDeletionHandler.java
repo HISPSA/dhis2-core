@@ -88,4 +88,6 @@ public class CompleteDataSetRegistrationDeletionHandler extends DeletionHandler
         Integer count = jdbcTemplate.queryForObject( sql, Integer.class );
         return count == null || count == 0 ? ACCEPT : VETO;
     }
+
+	
 }

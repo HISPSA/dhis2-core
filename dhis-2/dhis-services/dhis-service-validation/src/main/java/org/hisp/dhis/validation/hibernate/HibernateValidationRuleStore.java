@@ -35,6 +35,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 
 import org.hibernate.SessionFactory;
 import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
+import org.hisp.dhis.deletedobject.DeletedObjectService;
 import org.hisp.dhis.period.PeriodService;
 import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.security.acl.AclService;
@@ -61,10 +62,10 @@ public class HibernateValidationRuleStore
     private final PeriodService periodService;
 
     public HibernateValidationRuleStore( SessionFactory sessionFactory, JdbcTemplate jdbcTemplate,
-        ApplicationEventPublisher publisher, CurrentUserService currentUserService, AclService aclService,
+        ApplicationEventPublisher publisher, CurrentUserService currentUserService,    AclService aclService,
         PeriodService periodService )
     {
-        super( sessionFactory, jdbcTemplate, publisher, ValidationRule.class, currentUserService, aclService, true );
+        super( sessionFactory, jdbcTemplate, publisher, ValidationRule.class, currentUserService,   aclService, true );
 
         checkNotNull( periodService );
 

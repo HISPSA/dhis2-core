@@ -62,4 +62,6 @@ public class CategoryOptionGroupDeletionHandler
             categoryService.updateCategoryOptionGroup( group );
         }
     }
+
+	
 }

@@ -78,6 +78,7 @@ import org.hisp.dhis.common.QueryOperator;
 import org.hisp.dhis.common.hibernate.SoftDeleteHibernateObjectStore;
 import org.hisp.dhis.commons.collection.CollectionUtils;
 import org.hisp.dhis.commons.util.SqlHelper;
+import org.hisp.dhis.deletedobject.DeletedObjectService;
 import org.hisp.dhis.dxf2.events.event.EventContext;
 import org.hisp.dhis.event.EventStatus;
 import org.hisp.dhis.jdbc.StatementBuilder;
@@ -150,10 +151,10 @@ public class HibernateTrackedEntityInstanceStore
     private final StatementBuilder statementBuilder;
 
     public HibernateTrackedEntityInstanceStore( SessionFactory sessionFactory, JdbcTemplate jdbcTemplate,
-        ApplicationEventPublisher publisher, CurrentUserService currentUserService,
+        ApplicationEventPublisher publisher, CurrentUserService currentUserService,   
         AclService aclService, OrganisationUnitStore organisationUnitStore, StatementBuilder statementBuilder )
     {
-        super( sessionFactory, jdbcTemplate, publisher, TrackedEntityInstance.class, currentUserService, aclService,
+        super( sessionFactory, jdbcTemplate, publisher, TrackedEntityInstance.class, currentUserService,   aclService,
             false );
 
         checkNotNull( statementBuilder );

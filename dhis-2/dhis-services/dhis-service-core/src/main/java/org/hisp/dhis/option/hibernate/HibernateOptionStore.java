@@ -32,6 +32,7 @@ import java.util.List;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
+import org.hisp.dhis.deletedobject.DeletedObjectService;
 import org.hisp.dhis.option.Option;
 import org.hisp.dhis.option.OptionStore;
 import org.hisp.dhis.security.acl.AclService;
@@ -49,9 +50,9 @@ public class HibernateOptionStore
     implements OptionStore
 {
     public HibernateOptionStore( SessionFactory sessionFactory, JdbcTemplate jdbcTemplate,
-        ApplicationEventPublisher publisher, CurrentUserService currentUserService, AclService aclService )
+        ApplicationEventPublisher publisher, CurrentUserService currentUserService,  AclService aclService )
     {
-        super( sessionFactory, jdbcTemplate, publisher, Option.class, currentUserService, aclService, true );
+        super( sessionFactory, jdbcTemplate, publisher, Option.class, currentUserService,   aclService, true );
     }
     // -------------------------------------------------------------------------
     // Implementation methods

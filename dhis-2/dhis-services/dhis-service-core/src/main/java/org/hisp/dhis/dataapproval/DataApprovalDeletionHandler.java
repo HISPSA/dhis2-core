@@ -82,4 +82,6 @@ public class DataApprovalDeletionHandler
 
         return jdbcTemplate.queryForObject( sql, Integer.class ) == 0 ? ACCEPT : VETO;
     }
+
+	
 }

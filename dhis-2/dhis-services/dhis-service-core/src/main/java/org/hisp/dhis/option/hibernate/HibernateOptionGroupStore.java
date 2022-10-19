@@ -34,6 +34,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import org.hibernate.SessionFactory;
 import org.hisp.dhis.common.DataDimensionType;
 import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
+import org.hisp.dhis.deletedobject.DeletedObjectService;
 import org.hisp.dhis.option.OptionGroup;
 import org.hisp.dhis.option.OptionGroupSet;
 import org.hisp.dhis.option.OptionGroupStore;
@@ -52,9 +53,9 @@ public class HibernateOptionGroupStore
     implements OptionGroupStore
 {
     public HibernateOptionGroupStore( SessionFactory sessionFactory, JdbcTemplate jdbcTemplate,
-        ApplicationEventPublisher publisher, CurrentUserService currentUserService, AclService aclService )
+        ApplicationEventPublisher publisher, CurrentUserService currentUserService,   AclService aclService )
     {
-        super( sessionFactory, jdbcTemplate, publisher, OptionGroup.class, currentUserService, aclService, true );
+        super( sessionFactory, jdbcTemplate, publisher, OptionGroup.class, currentUserService,   aclService, true );
     }
 
     @Override

@@ -31,6 +31,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 
 import org.hibernate.SessionFactory;
 import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
+import org.hisp.dhis.deletedobject.DeletedObjectService;
 import org.hisp.dhis.organisationunit.OrganisationUnitLevel;
 import org.hisp.dhis.organisationunit.OrganisationUnitLevelStore;
 import org.hisp.dhis.security.acl.AclService;
@@ -48,9 +49,9 @@ public class HibernateOrganisationUnitLevelStore
     implements OrganisationUnitLevelStore
 {
     public HibernateOrganisationUnitLevelStore( SessionFactory sessionFactory, JdbcTemplate jdbcTemplate,
-        ApplicationEventPublisher publisher, CurrentUserService currentUserService, AclService aclService )
+        ApplicationEventPublisher publisher, CurrentUserService currentUserService,    AclService aclService )
     {
-        super( sessionFactory, jdbcTemplate, publisher, OrganisationUnitLevel.class, currentUserService, aclService,
+        super( sessionFactory, jdbcTemplate, publisher, OrganisationUnitLevel.class, currentUserService,    aclService,
             true );
     }
 

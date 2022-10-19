@@ -35,6 +35,7 @@ import org.hibernate.SessionFactory;
 import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
 import org.hisp.dhis.dataapproval.DataApprovalLevel;
 import org.hisp.dhis.dataapproval.DataApprovalLevelStore;
+import org.hisp.dhis.deletedobject.DeletedObjectService;
 import org.hisp.dhis.security.acl.AclService;
 import org.hisp.dhis.user.CurrentUserService;
 import org.springframework.context.ApplicationEventPublisher;
@@ -50,9 +51,9 @@ public class HibernateDataApprovalLevelStore
     implements DataApprovalLevelStore
 {
     public HibernateDataApprovalLevelStore( SessionFactory sessionFactory, JdbcTemplate jdbcTemplate,
-        ApplicationEventPublisher publisher, CurrentUserService currentUserService, AclService aclService )
+        ApplicationEventPublisher publisher, CurrentUserService currentUserService,     AclService aclService )
     {
-        super( sessionFactory, jdbcTemplate, publisher, DataApprovalLevel.class, currentUserService, aclService, true );
+        super( sessionFactory, jdbcTemplate, publisher, DataApprovalLevel.class, currentUserService,   aclService, true );
     }
     // -------------------------------------------------------------------------
     // DataApprovalLevelStore implementation

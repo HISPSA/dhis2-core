@@ -31,6 +31,7 @@ import org.hibernate.SessionFactory;
 import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
 import org.hisp.dhis.dataelement.DataElementGroupSet;
 import org.hisp.dhis.dataelement.DataElementGroupSetStore;
+import org.hisp.dhis.deletedobject.DeletedObjectService;
 import org.hisp.dhis.security.acl.AclService;
 import org.hisp.dhis.user.CurrentUserService;
 import org.springframework.context.ApplicationEventPublisher;
@@ -45,9 +46,9 @@ public class HibernateDataElementGroupSetStore
     DataElementGroupSetStore
 {
     public HibernateDataElementGroupSetStore( SessionFactory sessionFactory, JdbcTemplate jdbcTemplate,
-        ApplicationEventPublisher publisher, CurrentUserService currentUserService, AclService aclService )
+        ApplicationEventPublisher publisher, CurrentUserService currentUserService,   AclService aclService )
     {
-        super( sessionFactory, jdbcTemplate, publisher, DataElementGroupSet.class, currentUserService, aclService,
+        super( sessionFactory, jdbcTemplate, publisher, DataElementGroupSet.class, currentUserService,   aclService,
             false );
     }
 }

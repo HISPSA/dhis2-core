@@ -43,6 +43,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.hibernate.SessionFactory;
 import org.hisp.dhis.common.IdentifiableObject;
 import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
+import org.hisp.dhis.deletedobject.DeletedObjectService;
 import org.hisp.dhis.hibernate.JpaQueryParameters;
 import org.hisp.dhis.program.ProgramInstance;
 import org.hisp.dhis.program.ProgramStageInstance;
@@ -74,9 +75,9 @@ public class HibernateRelationshipStore extends HibernateIdentifiableObjectStore
     private static final String PROGRAM_STAGE_INSTANCE = "programStageInstance";
 
     public HibernateRelationshipStore( SessionFactory sessionFactory, JdbcTemplate jdbcTemplate,
-        ApplicationEventPublisher publisher, CurrentUserService currentUserService, AclService aclService )
+        ApplicationEventPublisher publisher, CurrentUserService currentUserService,   AclService aclService )
     {
-        super( sessionFactory, jdbcTemplate, publisher, Relationship.class, currentUserService, aclService, true );
+        super( sessionFactory, jdbcTemplate, publisher, Relationship.class, currentUserService,   aclService, true );
     }
 
     @Override

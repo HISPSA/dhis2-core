@@ -36,6 +36,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.hibernate.SessionFactory;
 import org.hisp.dhis.common.Grid;
 import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
+import org.hisp.dhis.deletedobject.DeletedObjectService;
 import org.hisp.dhis.jdbc.StatementBuilder;
 import org.hisp.dhis.security.acl.AclService;
 import org.hisp.dhis.setting.SettingKey;
@@ -76,12 +77,12 @@ public class HibernateSqlViewStore
     private final SystemSettingManager systemSettingManager;
 
     public HibernateSqlViewStore( SessionFactory sessionFactory, JdbcTemplate jdbcTemplate,
-        ApplicationEventPublisher publisher, CurrentUserService currentUserService,
+        ApplicationEventPublisher publisher, CurrentUserService currentUserService,   
         AclService aclService, StatementBuilder statementBuilder,
         @Qualifier( "readOnlyJdbcTemplate" ) JdbcTemplate readOnlyJdbcTemplate,
         SystemSettingManager systemSettingManager )
     {
-        super( sessionFactory, jdbcTemplate, publisher, SqlView.class, currentUserService, aclService, false );
+        super( sessionFactory, jdbcTemplate, publisher, SqlView.class, currentUserService,   aclService, false );
 
         checkNotNull( statementBuilder );
         checkNotNull( readOnlyJdbcTemplate );

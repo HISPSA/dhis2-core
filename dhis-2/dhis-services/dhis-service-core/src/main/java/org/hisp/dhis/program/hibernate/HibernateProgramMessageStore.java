@@ -35,6 +35,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
 import org.hisp.dhis.commons.util.SqlHelper;
+import org.hisp.dhis.deletedobject.DeletedObjectService;
 import org.hisp.dhis.hibernate.JpaQueryParameters;
 import org.hisp.dhis.program.message.ProgramMessage;
 import org.hisp.dhis.program.message.ProgramMessageQueryParams;
@@ -54,9 +55,9 @@ public class HibernateProgramMessageStore
     implements ProgramMessageStore
 {
     public HibernateProgramMessageStore( SessionFactory sessionFactory, JdbcTemplate jdbcTemplate,
-        ApplicationEventPublisher publisher, CurrentUserService currentUserService, AclService aclService )
+        ApplicationEventPublisher publisher, CurrentUserService currentUserService,    AclService aclService )
     {
-        super( sessionFactory, jdbcTemplate, publisher, ProgramMessage.class, currentUserService, aclService, true );
+        super( sessionFactory, jdbcTemplate, publisher, ProgramMessage.class, currentUserService,  aclService, true );
     }
 
     // -------------------------------------------------------------------------

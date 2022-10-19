@@ -33,6 +33,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 
 import org.hibernate.SessionFactory;
 import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
+import org.hisp.dhis.deletedobject.DeletedObjectService;
 import org.hisp.dhis.hibernate.JpaQueryParameters;
 import org.hisp.dhis.query.JpaQueryUtils;
 import org.hisp.dhis.security.acl.AclService;
@@ -49,9 +50,9 @@ public class HibernateIncomingSmsStore extends HibernateIdentifiableObjectStore<
     implements IncomingSmsStore
 {
     public HibernateIncomingSmsStore( SessionFactory sessionFactory, JdbcTemplate jdbcTemplate,
-        ApplicationEventPublisher publisher, CurrentUserService currentUserService, AclService aclService )
+        ApplicationEventPublisher publisher, CurrentUserService currentUserService,    AclService aclService )
     {
-        super( sessionFactory, jdbcTemplate, publisher, IncomingSms.class, currentUserService, aclService, true );
+        super( sessionFactory, jdbcTemplate, publisher, IncomingSms.class, currentUserService,    aclService, true );
     }
 
     // -------------------------------------------------------------------------

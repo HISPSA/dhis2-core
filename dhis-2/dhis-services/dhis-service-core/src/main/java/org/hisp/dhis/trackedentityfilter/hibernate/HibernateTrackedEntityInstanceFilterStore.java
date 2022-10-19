@@ -33,6 +33,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 
 import org.hibernate.SessionFactory;
 import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
+import org.hisp.dhis.deletedobject.DeletedObjectService;
 import org.hisp.dhis.program.Program;
 import org.hisp.dhis.security.acl.AclService;
 import org.hisp.dhis.trackedentityfilter.TrackedEntityInstanceFilter;
@@ -50,9 +51,9 @@ public class HibernateTrackedEntityInstanceFilterStore
     extends HibernateIdentifiableObjectStore<TrackedEntityInstanceFilter> implements TrackedEntityInstanceFilterStore
 {
     public HibernateTrackedEntityInstanceFilterStore( SessionFactory sessionFactory, JdbcTemplate jdbcTemplate,
-        ApplicationEventPublisher publisher, CurrentUserService currentUserService, AclService aclService )
+        ApplicationEventPublisher publisher, CurrentUserService currentUserService,   AclService aclService )
     {
-        super( sessionFactory, jdbcTemplate, publisher, TrackedEntityInstanceFilter.class, currentUserService,
+        super( sessionFactory, jdbcTemplate, publisher, TrackedEntityInstanceFilter.class, currentUserService,   
             aclService, true );
     }
 

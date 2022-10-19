@@ -36,6 +36,7 @@ import org.hibernate.SessionFactory;
 import org.hisp.dhis.attribute.Attribute;
 import org.hisp.dhis.attribute.AttributeStore;
 import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
+import org.hisp.dhis.deletedobject.DeletedObjectService;
 import org.hisp.dhis.security.acl.AclService;
 import org.hisp.dhis.user.CurrentUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,9 +55,9 @@ public class HibernateAttributeStore
     @Autowired
     public HibernateAttributeStore( SessionFactory sessionFactory, JdbcTemplate jdbcTemplate,
         ApplicationEventPublisher publisher,
-        CurrentUserService currentUserService, AclService aclService )
+        CurrentUserService currentUserService,   AclService aclService )
     {
-        super( sessionFactory, jdbcTemplate, publisher, Attribute.class, currentUserService, aclService, true );
+        super( sessionFactory, jdbcTemplate, publisher, Attribute.class, currentUserService,   aclService, true );
     }
 
     @Override

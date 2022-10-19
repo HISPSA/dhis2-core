@@ -204,7 +204,11 @@ public class DefaultSchemaService
         register( new AccessSchemaDescriptor() );
         register( new ObjectStyleSchemaDescriptor() );
         register( new RelationshipConstraintSchemaDescriptor() );
-        register( new RelationshipItemSchemaDescriptor() );
+        register( new RelationshipItemSchemaDescriptor() );        
+        register( new VisualizationSchemaDescriptor() );
+        
+        register( new ApprovalValidationRuleSchemaDescriptor() );
+        register( new ApprovalValidationSchemaDescriptor() );
     }
 
     private final Map<Class<?>, Schema> classSchemaMap = new HashMap<>();
@@ -223,12 +227,17 @@ public class DefaultSchemaService
     public DefaultSchemaService( PropertyIntrospectorService propertyIntrospectorService,
         SessionFactory sessionFactory )
     {
+    	 this.propertyIntrospectorService = propertyIntrospectorService;
+         this.sessionFactory = sessionFactory;
+    	try {
         checkNotNull( propertyIntrospectorService );
         checkNotNull( sessionFactory );
 
-        this.propertyIntrospectorService = propertyIntrospectorService;
-        this.sessionFactory = sessionFactory;
+       
         init();
+    	}catch(Exception e) {
+    		e.printStackTrace();
+    	}
     }
 
     @Override

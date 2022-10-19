@@ -32,6 +32,7 @@ import java.util.Set;
 
 import org.hibernate.SessionFactory;
 import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
+import org.hisp.dhis.deletedobject.DeletedObjectService;
 import org.hisp.dhis.fileresource.FileResource;
 import org.hisp.dhis.fileresource.FileResourceDomain;
 import org.hisp.dhis.fileresource.FileResourceStore;
@@ -56,9 +57,9 @@ public class HibernateFileResourceStore
         .build();
 
     public HibernateFileResourceStore( SessionFactory sessionFactory, JdbcTemplate jdbcTemplate,
-        ApplicationEventPublisher publisher, CurrentUserService currentUserService, AclService aclService )
+        ApplicationEventPublisher publisher, CurrentUserService currentUserService,   AclService aclService )
     {
-        super( sessionFactory, jdbcTemplate, publisher, FileResource.class, currentUserService, aclService, false );
+        super( sessionFactory, jdbcTemplate, publisher, FileResource.class, currentUserService,   aclService, false );
     }
 
     @Override

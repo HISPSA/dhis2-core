@@ -29,6 +29,7 @@ package org.hisp.dhis.program.hibernate;
 
 import org.hibernate.SessionFactory;
 import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
+import org.hisp.dhis.deletedobject.DeletedObjectService;
 import org.hisp.dhis.program.ProgramTrackedEntityAttributeGroup;
 import org.hisp.dhis.program.ProgramTrackedEntityAttributeGroupStore;
 import org.hisp.dhis.security.acl.AclService;
@@ -46,9 +47,9 @@ public class HibernateProgramTrackedEntityAttributeGroupStore
     implements ProgramTrackedEntityAttributeGroupStore
 {
     public HibernateProgramTrackedEntityAttributeGroupStore( SessionFactory sessionFactory, JdbcTemplate jdbcTemplate,
-        ApplicationEventPublisher publisher, CurrentUserService currentUserService, AclService aclService )
+        ApplicationEventPublisher publisher, CurrentUserService currentUserService,    AclService aclService )
     {
-        super( sessionFactory, jdbcTemplate, publisher, ProgramTrackedEntityAttributeGroup.class, currentUserService,
+        super( sessionFactory, jdbcTemplate, publisher, ProgramTrackedEntityAttributeGroup.class, currentUserService,   
             aclService, true );
     }
 }

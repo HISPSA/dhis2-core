@@ -29,6 +29,7 @@ package org.hisp.dhis.user.hibernate;
 
 import org.hibernate.SessionFactory;
 import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
+import org.hisp.dhis.deletedobject.DeletedObjectService;
 import org.hisp.dhis.security.acl.AclService;
 import org.hisp.dhis.user.CurrentUserService;
 import org.hisp.dhis.user.User;
@@ -45,10 +46,10 @@ public class HibernateUserGroupStore extends HibernateIdentifiableObjectStore<Us
     public HibernateUserGroupStore( SessionFactory sessionFactory,
         JdbcTemplate jdbcTemplate,
         ApplicationEventPublisher publisher,
-        CurrentUserService currentUserService,
+        CurrentUserService currentUserService,   
         AclService aclService )
     {
-        super( sessionFactory, jdbcTemplate, publisher, UserGroup.class, currentUserService, aclService, true );
+        super( sessionFactory, jdbcTemplate, publisher, UserGroup.class, currentUserService,   aclService, true );
     }
 
     @Override

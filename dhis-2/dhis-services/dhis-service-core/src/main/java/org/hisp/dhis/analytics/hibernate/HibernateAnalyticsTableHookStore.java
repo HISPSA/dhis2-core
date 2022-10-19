@@ -37,6 +37,7 @@ import org.hisp.dhis.analytics.AnalyticsTableHookStore;
 import org.hisp.dhis.analytics.AnalyticsTablePhase;
 import org.hisp.dhis.analytics.AnalyticsTableType;
 import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
+import org.hisp.dhis.deletedobject.DeletedObjectService;
 import org.hisp.dhis.resourcetable.ResourceTableType;
 import org.hisp.dhis.security.acl.AclService;
 import org.hisp.dhis.user.CurrentUserService;
@@ -55,9 +56,9 @@ public class HibernateAnalyticsTableHookStore
 {
     public HibernateAnalyticsTableHookStore( SessionFactory sessionFactory, JdbcTemplate jdbcTemplate,
         ApplicationEventPublisher publisher,
-        CurrentUserService currentUserService, AclService aclService )
+        CurrentUserService currentUserService,    AclService aclService )
     {
-        super( sessionFactory, jdbcTemplate, publisher, AnalyticsTableHook.class, currentUserService, aclService,
+        super( sessionFactory, jdbcTemplate, publisher, AnalyticsTableHook.class, currentUserService,   aclService,
             false );
     }
 

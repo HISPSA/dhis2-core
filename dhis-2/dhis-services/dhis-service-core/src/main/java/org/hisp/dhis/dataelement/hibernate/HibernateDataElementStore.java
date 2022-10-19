@@ -38,6 +38,7 @@ import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
 import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataelement.DataElementDomain;
 import org.hisp.dhis.dataelement.DataElementStore;
+import org.hisp.dhis.deletedobject.DeletedObjectService;
 import org.hisp.dhis.hibernate.JpaQueryParameters;
 import org.hisp.dhis.security.acl.AclService;
 import org.hisp.dhis.user.CurrentUserService;
@@ -55,9 +56,9 @@ public class HibernateDataElementStore
     implements DataElementStore
 {
     public HibernateDataElementStore( SessionFactory sessionFactory, JdbcTemplate jdbcTemplate,
-        ApplicationEventPublisher publisher, CurrentUserService currentUserService, AclService aclService )
+        ApplicationEventPublisher publisher, CurrentUserService currentUserService,  AclService aclService )
     {
-        super( sessionFactory, jdbcTemplate, publisher, DataElement.class, currentUserService, aclService, false );
+        super( sessionFactory, jdbcTemplate, publisher, DataElement.class, currentUserService,    aclService, false );
     }
 
     // -------------------------------------------------------------------------

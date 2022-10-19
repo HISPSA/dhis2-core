@@ -34,6 +34,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import org.hibernate.SessionFactory;
 import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
 import org.hisp.dhis.dataentryform.DataEntryForm;
+import org.hisp.dhis.deletedobject.DeletedObjectService;
 import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramStage;
 import org.hisp.dhis.program.ProgramStageStore;
@@ -54,9 +55,9 @@ public class HibernateProgramStageStore
     implements ProgramStageStore
 {
     public HibernateProgramStageStore( SessionFactory sessionFactory, JdbcTemplate jdbcTemplate,
-        ApplicationEventPublisher publisher, CurrentUserService currentUserService, AclService aclService )
+        ApplicationEventPublisher publisher, CurrentUserService currentUserService,   AclService aclService )
     {
-        super( sessionFactory, jdbcTemplate, publisher, ProgramStage.class, currentUserService, aclService, true );
+        super( sessionFactory, jdbcTemplate, publisher, ProgramStage.class, currentUserService,   aclService, true );
     }
     // -------------------------------------------------------------------------
     // Implemented methods

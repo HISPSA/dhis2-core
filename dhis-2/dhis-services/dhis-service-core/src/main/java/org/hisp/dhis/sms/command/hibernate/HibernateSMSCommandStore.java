@@ -35,6 +35,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
 import org.hisp.dhis.dataset.DataSet;
+import org.hisp.dhis.deletedobject.DeletedObjectService;
 import org.hisp.dhis.query.JpaQueryUtils;
 import org.hisp.dhis.security.acl.AclService;
 import org.hisp.dhis.sms.command.SMSCommand;
@@ -49,9 +50,9 @@ public class HibernateSMSCommandStore
     extends HibernateIdentifiableObjectStore<SMSCommand> implements SMSCommandStore
 {
     public HibernateSMSCommandStore( SessionFactory sessionFactory, JdbcTemplate jdbcTemplate,
-        ApplicationEventPublisher publisher, CurrentUserService currentUserService, AclService aclService )
+        ApplicationEventPublisher publisher, CurrentUserService currentUserService,   AclService aclService )
     {
-        super( sessionFactory, jdbcTemplate, publisher, SMSCommand.class, currentUserService, aclService, true );
+        super( sessionFactory, jdbcTemplate, publisher, SMSCommand.class, currentUserService,   aclService, true );
     }
 
     @Override

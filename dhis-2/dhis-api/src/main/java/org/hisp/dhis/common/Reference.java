@@ -51,4 +51,22 @@ public class Reference implements Serializable
     @JacksonXmlElementWrapper( localName = "node", namespace = DxfNamespaces.DXF_2_0 )
     @JacksonXmlProperty( localName = "node", namespace = DxfNamespaces.DXF_2_0 )
     private transient JsonNode node;
+
+	public String getUuid() {
+		return uuid;
+	}
+
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
+	}
+
+	public JsonNode getNode() {
+		return node;
+	}
+
+	public void setNode(JsonNode node) {
+		this.node = node;
+	}
+
+	
 }

@@ -86,4 +86,6 @@ public class CategoryComboDeletionHandler
             idObjectManager.updateNoAcl( categoryCombo );
         }
     }
+
+	
 }

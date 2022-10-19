@@ -61,6 +61,25 @@ public class PDFUtils
     {
         return openDocument( outputStream, PageSize.A4 );
     }
+    
+    /**
+     * Creates a document.
+     *
+     * @param outputStream The output stream to write the document content.
+     * @return A Document.
+     */
+    public static Document openDocument( OutputStream outputStream, boolean dailyReport )
+    {
+    	Rectangle pageSize = null;
+    	if(dailyReport)
+    	{
+    		pageSize = PageSize.A2;
+    	}else{
+    		pageSize = PageSize.A4;
+    	}
+
+    	return openDocument( outputStream, pageSize );
+    }
 
     /**
      * Creates a document.
@@ -210,6 +229,12 @@ public class PDFUtils
     {
         return getCell( text, 1, getFont( 9 ), ALIGN_LEFT );
     }
+    
+    public static PdfPCell getTextCellMonthlyCustom( String text )
+    {
+        return getCell( text, 1, getFont( 6 ), ALIGN_LEFT );
+    }
+
 
     public static PdfPCell getTextCell( Object object )
     {
@@ -231,6 +256,23 @@ public class PDFUtils
         cell.setPaddingRight( right );
 
         return cell;
+    }
+    
+    public static int[] getHeaderWidth(int width)
+    {
+    	//int headerwidths[] = { 90, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20 };
+    	int heading = 90;
+		int col = 20;
+    	int[] headerwidths = new int[width];
+    	for (int i = 0; i < width; i++) {    		
+    		if(i == 0){
+    			headerwidths[i] = heading;
+    		}else{
+    			headerwidths[i] = col;
+    		}  	    
+    	}
+    	
+    	return headerwidths;
     }
 
     /**

@@ -45,6 +45,7 @@ import org.hisp.dhis.common.QueryFilter;
 import org.hisp.dhis.common.QueryItem;
 import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
 import org.hisp.dhis.commons.util.SqlHelper;
+import org.hisp.dhis.deletedobject.DeletedObjectService;
 import org.hisp.dhis.jdbc.StatementBuilder;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.program.Program;
@@ -72,10 +73,10 @@ public class HibernateTrackedEntityAttributeStore
     private final StatementBuilder statementBuilder;
 
     public HibernateTrackedEntityAttributeStore( SessionFactory sessionFactory, JdbcTemplate jdbcTemplate,
-        ApplicationEventPublisher publisher, CurrentUserService currentUserService,
+        ApplicationEventPublisher publisher, CurrentUserService currentUserService,   
         AclService aclService, StatementBuilder statementBuilder )
     {
-        super( sessionFactory, jdbcTemplate, publisher, TrackedEntityAttribute.class, currentUserService, aclService,
+        super( sessionFactory, jdbcTemplate, publisher, TrackedEntityAttribute.class, currentUserService,   aclService,
             true );
         this.statementBuilder = statementBuilder;
     }

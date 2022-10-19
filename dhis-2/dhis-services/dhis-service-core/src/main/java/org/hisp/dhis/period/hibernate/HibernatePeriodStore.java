@@ -46,6 +46,7 @@ import org.hisp.dhis.common.exception.InvalidIdentifierReferenceException;
 import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
 import org.hisp.dhis.commons.util.DebugUtils;
 import org.hisp.dhis.dbms.DbmsUtils;
+import org.hisp.dhis.deletedobject.DeletedObjectService;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodStore;
 import org.hisp.dhis.period.PeriodType;
@@ -72,10 +73,10 @@ public class HibernatePeriodStore
     private final Cache<Long> periodIdCache;
 
     public HibernatePeriodStore( SessionFactory sessionFactory, JdbcTemplate jdbcTemplate,
-        ApplicationEventPublisher publisher, CurrentUserService currentUserService, AclService aclService,
+        ApplicationEventPublisher publisher, CurrentUserService currentUserService,   AclService aclService,
         CacheProvider cacheProvider )
     {
-        super( sessionFactory, jdbcTemplate, publisher, Period.class, currentUserService, aclService, true );
+        super( sessionFactory, jdbcTemplate, publisher, Period.class, currentUserService,   aclService, true );
 
         transientIdentifiableProperties = true;
         this.periodIdCache = cacheProvider.createPeriodIdCache();

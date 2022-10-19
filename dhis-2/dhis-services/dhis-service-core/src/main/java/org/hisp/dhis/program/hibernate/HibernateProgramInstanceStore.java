@@ -60,6 +60,7 @@ import org.hisp.dhis.common.ObjectDeletionRequestedEvent;
 import org.hisp.dhis.common.OrganisationUnitSelectionMode;
 import org.hisp.dhis.common.hibernate.SoftDeleteHibernateObjectStore;
 import org.hisp.dhis.commons.util.SqlHelper;
+import org.hisp.dhis.deletedobject.DeletedObjectService;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.program.Program;
 import org.hisp.dhis.program.ProgramInstance;
@@ -97,9 +98,9 @@ public class HibernateProgramInstanceStore
         NotificationTrigger.getAllScheduledTriggers() );
 
     public HibernateProgramInstanceStore( SessionFactory sessionFactory, JdbcTemplate jdbcTemplate,
-        ApplicationEventPublisher publisher, CurrentUserService currentUserService, AclService aclService )
+        ApplicationEventPublisher publisher, CurrentUserService currentUserService,   AclService aclService )
     {
-        super( sessionFactory, jdbcTemplate, publisher, ProgramInstance.class, currentUserService, aclService, true );
+        super( sessionFactory, jdbcTemplate, publisher, ProgramInstance.class, currentUserService,    aclService, true );
     }
 
     @Override

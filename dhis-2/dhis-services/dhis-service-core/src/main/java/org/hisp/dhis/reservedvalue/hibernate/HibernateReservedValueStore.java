@@ -76,8 +76,7 @@ public class HibernateReservedValueStore
     {
         List<String> availableValues = getIfAvailable( reservedValue, values, ownerObject );
 
-        return availableValues.stream()
-            .map( value -> reservedValue.toBuilder().value( value ).build() ).collect( Collectors.toList() );
+        return availableValues.stream().map( value -> reservedValue.toBuilder().value( value ).build() ).collect( Collectors.toList() );
     }
 
     @Override

@@ -29,6 +29,7 @@ package org.hisp.dhis.trackedentity.hibernate;
 
 import org.hibernate.SessionFactory;
 import org.hisp.dhis.common.hibernate.HibernateIdentifiableObjectStore;
+import org.hisp.dhis.deletedobject.DeletedObjectService;
 import org.hisp.dhis.security.acl.AclService;
 import org.hisp.dhis.trackedentity.TrackedEntityType;
 import org.hisp.dhis.trackedentity.TrackedEntityTypeStore;
@@ -46,8 +47,8 @@ public class HibernateTrackedEntityTypeStore
     implements TrackedEntityTypeStore
 {
     public HibernateTrackedEntityTypeStore( SessionFactory sessionFactory, JdbcTemplate jdbcTemplate,
-        ApplicationEventPublisher publisher, CurrentUserService currentUserService, AclService aclService )
+        ApplicationEventPublisher publisher, CurrentUserService currentUserService,   AclService aclService )
     {
-        super( sessionFactory, jdbcTemplate, publisher, TrackedEntityType.class, currentUserService, aclService, true );
+        super( sessionFactory, jdbcTemplate, publisher, TrackedEntityType.class, currentUserService,   aclService, true );
     }
 }
