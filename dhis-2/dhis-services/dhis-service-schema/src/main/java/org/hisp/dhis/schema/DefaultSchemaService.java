@@ -205,8 +205,7 @@ public class DefaultSchemaService
         register( new ObjectStyleSchemaDescriptor() );
         register( new RelationshipConstraintSchemaDescriptor() );
         register( new RelationshipItemSchemaDescriptor() );        
-        register( new VisualizationSchemaDescriptor() );
-        
+        register( new VisualizationSchemaDescriptor() );        
         register( new ApprovalValidationRuleSchemaDescriptor() );
         register( new ApprovalValidationSchemaDescriptor() );
     }
