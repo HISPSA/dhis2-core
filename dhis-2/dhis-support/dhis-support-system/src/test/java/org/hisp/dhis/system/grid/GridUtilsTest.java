@@ -56,7 +56,8 @@ class GridUtilsTest
     {
         String html = IOUtils.toString( new ClassPathResource( "customform.html" ).getInputStream(),
             StandardCharsets.UTF_8 );
-        List<Grid> grids = GridUtils.fromHtml( html, "TitleA" );
+       // List<Grid> grids = GridUtils.fromHtml( html, "TitleA" );
+        List<Grid> grids = GridUtils.fromHtml( html, "TitleA", null, null, null );
         assertNotNull( grids );
         assertEquals( 6, grids.size() );
         assertEquals( "TitleA", grids.get( 0 ).getTitle() );

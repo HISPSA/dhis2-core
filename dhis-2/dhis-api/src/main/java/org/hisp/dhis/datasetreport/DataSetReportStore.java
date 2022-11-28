@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.period.Period;
@@ -98,4 +99,30 @@ public interface DataSetReportStore
      */
     Map<String, Object> getAggregatedIndicatorValues( DataSet dataSet, List<Period> periods, OrganisationUnit unit,
         Set<String> filters );
+    
+    /**
+     * Get a mapping from dimensional identifiers to aggregated total values.
+     * 
+     * @param dataElements the data elements.
+     * @param period the period.
+     * @param unit the organisation unit.
+     * @param dimensions the dimensions on the analytics dimension format, e.g.
+     *        <dim-id>:<dim-item>;<dim-item>
+     * @return a mapping from dimensional identifiers to aggregated total values.
+     */
+   // Map<String, Object> getAggregatedGrandTotals( List<DataElement> dataElements, Period period, OrganisationUnit unit, Set<String> dimensions );
+    
+    /**
+     * Get a mapping from dimensional identifiers to aggregated total values.
+     * 
+     * @param dataElements the data elements.
+     * @param periods the periods.
+     * @param unit the organisation unit.
+     * @param dimensions the dimensions on the analytics dimension format, e.g.
+     *        <dim-id>:<dim-item>;<dim-item>
+     * @return a mapping from dimensional identifiers to aggregated total values.
+     */
+    Map<String, Object> getAggregatedGrandTotals( List<DataElement> dataElements, List<Period> periods, OrganisationUnit unit, Set<String> dimensions );
+
+
 }

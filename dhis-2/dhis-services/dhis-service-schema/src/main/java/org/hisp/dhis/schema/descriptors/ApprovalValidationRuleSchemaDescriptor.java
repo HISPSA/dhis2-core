@@ -1,5 +1,13 @@
+package org.hisp.dhis.schema.descriptors;
+
+import org.hisp.dhis.approvalvalidationrule.ApprovalValidationRule;
+import org.hisp.dhis.schema.Schema;
+import org.hisp.dhis.schema.SchemaDescriptor;
+import org.hisp.dhis.security.Authority;
+import org.hisp.dhis.security.AuthorityType;
+
 /*
- * Copyright (c) 2004-2022, University of Oslo
+ * Copyright (c) 2004-2018, University of Oslo
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -25,43 +33,40 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.hisp.dhis.schema.descriptors;
-
-import org.hisp.dhis.dataset.DataSet;
-import org.hisp.dhis.schema.Schema;
-import org.hisp.dhis.schema.SchemaDescriptor;
-import org.hisp.dhis.security.Authority;
-import org.hisp.dhis.security.AuthorityType;
 
 import com.google.common.collect.Lists;
 
 /**
- * @author Morten Olav Hansen <mortenoh@gmail.com>
+ * @author Mike Nelushi
  */
-public class DataSetSchemaDescriptor implements SchemaDescriptor
+public class ApprovalValidationRuleSchemaDescriptor implements SchemaDescriptor
 {
-    public static final String SINGULAR = "dataSet";
+    public static final String SINGULAR = "approvalValidationRule";
 
-    public static final String PLURAL = "dataSets";
+    public static final String PLURAL = "approvalValidationRules";
 
     public static final String API_ENDPOINT = "/" + PLURAL;
 
+    
+    
     @Override
     public Schema getSchema()
     {
-        Schema schema = new Schema( DataSet.class, SINGULAR, PLURAL );
+        Schema schema = new Schema( ApprovalValidationRule.class, SINGULAR, PLURAL );
         schema.setRelativeApiEndpoint( API_ENDPOINT );
-        schema.setOrder( 1310 );
-        schema.setDataShareable( true );
+        schema.setOrder( 1390 );
 
-        schema.add( new Authority( AuthorityType.CREATE_PUBLIC, Lists.newArrayList( "F_DATASET_PUBLIC_ADD" ) ) );
-        schema.add( new Authority( AuthorityType.CREATE_PRIVATE, Lists.newArrayList( "F_DATASET_PRIVATE_ADD" ) ) );
-        schema.add( new Authority( AuthorityType.DELETE, Lists.newArrayList( "F_DATASET_DELETE" ) ) );
+//        schema.getAuthorities().add( new Authority( AuthorityType.CREATE_PUBLIC, Lists.newArrayList( "F_APPROVAL_VALIDATIONRULE_PUBLIC_ADD" ) ) );
+//        schema.getAuthorities().add( new Authority( AuthorityType.CREATE_PRIVATE, Lists.newArrayList( "F_APPROVAL_VALIDATIONRULE_PRIVATE_ADD" ) ) );
+//        schema.getAuthorities().add( new Authority( AuthorityType.DELETE, Lists.newArrayList( "F_APPROVAL_VALIDATIONRULE_DELETE" ) ) );
 
-        schema.add( new Authority(AuthorityType.CREATE_PUBLIC,	Lists.newArrayList("F_DATAELEMENTS_BY_ORGANISATIONUNIT_PUBLIC_ADD")) );
-        schema.add( new Authority(AuthorityType.CREATE_PRIVATE,	Lists.newArrayList("F_DATAELEMENTS_BY_ORGANISATIONUNIT_PRIVATE_ADD")) );
-        schema.add( new Authority(AuthorityType.DELETE, Lists.newArrayList("F_DATAELEMENTS_BY_ORGANISATIONUNIT_DELETE")) );
-
+        
+        
+        schema.add( new Authority( AuthorityType.CREATE_PUBLIC, Lists.newArrayList( "F_APPROVAL_VALIDATIONRULE_PUBLIC_ADD" ) ) );
+        schema.add( new Authority( AuthorityType.CREATE_PRIVATE, Lists.newArrayList( "F_APPROVAL_VALIDATIONRULE_PRIVATE_ADD" ) )  );
+        schema.add( new Authority( AuthorityType.DELETE, Lists.newArrayList( "F_APPROVAL_VALIDATIONRULE_DELETE" ) ) );
+        
+        
         return schema;
     }
 }

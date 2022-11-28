@@ -46,6 +46,7 @@ import java.util.stream.Collectors;
 import org.hisp.dhis.category.CategoryCombo;
 import org.hisp.dhis.category.CategoryOption;
 import org.hisp.dhis.category.CategoryOptionCombo;
+import org.hisp.dhis.category.CategoryService;
 import org.hisp.dhis.common.Grid;
 import org.hisp.dhis.common.GridHeader;
 import org.hisp.dhis.common.GridValue;
@@ -55,6 +56,7 @@ import org.hisp.dhis.dataelement.DataElement;
 import org.hisp.dhis.dataentryform.DataEntryForm;
 import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.dataset.DataSetElement;
+import org.hisp.dhis.dataset.DataSetService;
 import org.hisp.dhis.dataset.FormType;
 import org.hisp.dhis.dataset.Section;
 import org.hisp.dhis.dataset.comparator.SectionOrderComparator;
@@ -84,6 +86,10 @@ public class DefaultDataSetReportService
     private static final String DEFAULT_HEADER = "Value";
 
     private static final String TOTAL_HEADER = "Total";
+    
+    private static final String MONTH_TOTAL_HEADER = "MonthTotal";
+    
+    private static final String GRAND_TOTAL_HEADER = "GrandTotal";
 
     private static final String SPACE = " ";
 
@@ -100,18 +106,26 @@ public class DefaultDataSetReportService
     private final DataSetReportStore dataSetReportStore;
 
     private final I18nManager i18nManager;
+    
+    private final CategoryService categoryService;
+
+    private final DataSetService dataSetService;
 
     public DefaultDataSetReportService( DataValueService dataValueService, DataSetReportStore dataSetReportStore,
-        I18nManager i18nManager )
+        I18nManager i18nManager, CategoryService categoryService, DataSetService dataSetService )
     {
 
         checkNotNull( dataSetReportStore );
         checkNotNull( dataValueService );
         checkNotNull( i18nManager );
+        checkNotNull( categoryService );
+        checkNotNull( dataSetService );
 
         this.dataValueService = dataValueService;
         this.dataSetReportStore = dataSetReportStore;
         this.i18nManager = i18nManager;
+        this.categoryService = categoryService;
+        this.dataSetService = dataSetService;
     }
 
     // -------------------------------------------------------------------------
@@ -163,11 +177,16 @@ public class DefaultDataSetReportService
     private List<Grid> getCustomDataSetReportAsGrid( DataSet dataSet, List<Period> periods, OrganisationUnit unit,
         Set<String> filters, boolean selectedUnitOnly )
     {
-        String html = getCustomDataSetReport( dataSet, periods, unit, filters, selectedUnitOnly );
+    	I18nFormat format = i18nManager.getI18nFormat();
+
+      //  String html = getCustomDataSetReport( dataSet, period, unit, filters, selectedUnitOnly );
+    	
+    	String html = getCustomDataSetReport( dataSet, periods, unit, filters, selectedUnitOnly );
 
         try
         {
-            return GridUtils.fromHtml( html, dataSet.getName() );
+            //return GridUtils.fromHtml( html, dataSet.getName() );
+            return GridUtils.fromHtml( html, dataSet.getName(), periods.get(0), unit, format );
         }
         catch ( Exception ex )
         {
@@ -190,6 +209,20 @@ public class DefaultDataSetReportService
 
         List<Grid> grids = new ArrayList<>();
 
+        List<CategoryCombo> categoryCos = new ArrayList<>( categoryService.getAllCategoryCombos() );
+        List<DataSet> dataSets = new ArrayList<>( dataSetService.getAllDataSets() );
+
+
+        List<DataElement> dataElementsAll = new ArrayList<>();
+
+        for ( DataSet dataSt : dataSets ) 
+        {
+            dataElementsAll.addAll( dataSt.getDataElements() );
+        }
+
+        Map<String, Object> dataSetValueMap = dataSetReportStore.getAggregatedGrandTotals( dataElementsAll,
+            periods, unit, filters );
+        
         // ---------------------------------------------------------------------
         // Create a grid for each section
         // ---------------------------------------------------------------------
@@ -198,9 +231,21 @@ public class DefaultDataSetReportService
         {
             for ( CategoryCombo categoryCombo : section.getCategoryCombos() )
             {
-                Grid grid = new ListGrid().setTitle( section.getName() + SPACE + categoryCombo.getName() )
-                    .setSubtitle( unit.getName() + SPACE + formatPeriods( periods, format ) );
+//                Grid grid = new ListGrid().setTitle( section.getName() + SPACE + categoryCombo.getName() )
+//                    .setSubtitle( unit.getName() + SPACE + formatPeriods( periods, format ) );
 
+                String sectionName = "";
+                if(section.getName().equals( "DaysInMonth" )) {
+                    sectionName = dataSet.getName();
+                }else {
+                    sectionName = section.getName();
+                }
+                
+                Grid grid = new ListGrid().setTitle( sectionName + SPACE + categoryCombo.getName() )
+                        .setSubtitle( unit.getName() + SPACE + formatPeriods( periods, format ) );
+                
+//                Grid grid = new ListGrid().setTitle( sectionName + SPACE + categoryCombo.getName() )
+//                    .setSubtitle( unit.getName() + SPACE + format.formatPeriods( periods ) );
                 // -----------------------------------------------------------------
                 // Grid headers
                 // -----------------------------------------------------------------
@@ -227,6 +272,16 @@ public class DefaultDataSetReportService
                 {
                     grid.addHeader( new GridHeader( TOTAL_HEADER, false, false ) );
                 }
+                
+                if ( categoryCombo.doTotal() && !selectedUnitOnly ) // MonthTotal
+                {
+                    grid.addHeader( new GridHeader( MONTH_TOTAL_HEADER, false, false ) );
+                }
+
+                if ( categoryCombo.doTotal() && !selectedUnitOnly ) // GrandTotal
+                {
+                    grid.addHeader( new GridHeader( GRAND_TOTAL_HEADER, false, false ) );
+                }
 
                 // -----------------------------------------------------------------
                 // Grid values
@@ -244,13 +299,16 @@ public class DefaultDataSetReportService
                                                                                          // element
                                                                                          // name
 
+                    int totalOptionCoValue = 0;
                     for ( CategoryOptionCombo optionCombo : optionCombos ) // Values
                     {
                         Map<Object, Object> attributes = new HashMap<>();
                         attributes.put( ATTR_DE, dataElement.getUid() );
                         attributes.put( ATTR_CO, optionCombo.getUid() );
 
-                        Object value;
+                        //Object value;
+                        
+                        Object value = null;
 
                         if ( selectedUnitOnly )
                         {
@@ -260,6 +318,11 @@ public class DefaultDataSetReportService
                         {
                             value = valueMap.get( dataElement.getUid() + SEPARATOR + optionCombo.getUid() );
                         }
+                        
+
+                        int val = value != null ? (int) Double.parseDouble( value.toString() ) : 0;
+
+                        totalOptionCoValue += val;
 
                         grid.addValue( new GridValue( value, attributes ) );
                     }
@@ -277,7 +340,56 @@ public class DefaultDataSetReportService
 
                     if ( categoryCombo.doTotal() && !selectedUnitOnly ) // Total
                     {
-                        Object value = totalMap.get( String.valueOf( dataElement.getUid() ) );
+//                        Object value = totalMap.get( String.valueOf( dataElement.getUid() ) );
+//
+//                        grid.addValue( new GridValue( value ) );
+                        grid.addValue( new GridValue( totalOptionCoValue ) );
+                    }
+                    
+                    Object monthTotalValue = null;
+                    if ( categoryCombo.doTotal() && !selectedUnitOnly ) // MonthTotal
+                    {
+
+                        int counter = 0;
+                        int total = 0;
+
+                        Object valueDs = null;
+
+                        List<CategoryOptionCombo> optionCombosMonthTotal = categoryService
+                            .getCategoryComboByName( "MonthTotal" ).getSortedOptionCombos();
+
+                        Map<String, Object> dataMap = new HashMap<>();
+
+                        if ( !dataSetValueMap.isEmpty() )
+                        {
+                            for ( CategoryOptionCombo optionCombo : optionCombosMonthTotal ) // Values
+                            {
+                                valueDs = dataSetValueMap
+                                    .get( dataElement.getUid() + SEPARATOR + optionCombo.getUid() );                                   
+
+                                int val = valueDs != null ? (int) Double.parseDouble( valueDs.toString() ) : 0;
+
+                                if(!dataMap.containsKey(dataElement.getUid() + SEPARATOR + optionCombo.getUid()+ SEPARATOR + val)){                                        
+
+                                    total += val;
+
+                                    dataMap.put( dataElement.getUid() + SEPARATOR + optionCombo.getUid()+ SEPARATOR + val, valueDs );
+                                }                                    
+                            }
+                        }
+
+                        monthTotalValue = total;
+
+                        grid.addValue( new GridValue( monthTotalValue ) );
+                    }
+
+                    if ( categoryCombo.doTotal() && !selectedUnitOnly ) // GrandTotal
+                    {
+
+                        Object value = null;
+                        int monthTotalValueF = monthTotalValue != null ? (int) monthTotalValue : 0;
+
+                        value = monthTotalValueF + totalOptionCoValue;
 
                         grid.addValue( new GridValue( value ) );
                     }
