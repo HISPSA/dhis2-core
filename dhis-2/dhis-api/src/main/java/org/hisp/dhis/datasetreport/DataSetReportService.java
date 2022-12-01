@@ -70,4 +70,20 @@ public interface DataSetReportService
      */
     List<Grid> getDataSetReportAsGrid( DataSet dataSet, List<Period> periods, OrganisationUnit orgUnit,
         Set<String> dimensions, boolean selectedUnitOnly );
+    
+    /**
+     * Generates a list of Grids representing a data set report. The data elements
+     * are grouped and sorted by their section in the data set.
+     * 
+     * @param dataSet the data set.
+     * @param period the period.
+     * @param unit the organisation unit.
+     * @param dimensions mapping between dimension identifiers and dimension option identifiers.
+     * @param selectedUnitOnly indicators whether to use captured or aggregated data. 
+     * @param format the i18n format.
+     * @param i18n the i18n object.
+     * @return a Grid.
+     */
+    //List<Grid> getSectionDataSetReport( DataSet dataSet, Period period, OrganisationUnit unit, Set<String> filters, boolean selectedUnitOnly );
+    List<Grid> getSectionDataSetReport( DataSet dataSet, List<Period> periods, OrganisationUnit unit, Set<String> filters, boolean selectedUnitOnly );
 }

@@ -57,6 +57,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.stereotype.*;
+import org.springframework.web.bind.annotation.*;
+
 
 /**
  * @author Stian Sandvold
@@ -86,6 +90,7 @@ public class DataSetReportController
     @Autowired
     IdentifiableObjectManager idObjectManager;
 
+    /*
     @GetMapping( value = RESOURCE_PATH + "/custom", produces = CONTENT_TYPE_HTML )
     public @ResponseBody String getCustomDataSetReport( HttpServletResponse response,
         @RequestParam String ou,
@@ -110,6 +115,29 @@ public class DataSetReportController
 
         return dataSetReportService.getCustomDataSetReport( dataSet, periods, orgUnit, filter, selectedUnitOnly );
     }
+    */
+    
+    @RequestMapping( value = RESOURCE_PATH+ "/custom", method = RequestMethod.GET, produces = "application/json" )
+    public @ResponseBody List<Grid> getSectionDataSetReportAsJson( HttpServletResponse response,
+        @RequestParam String ds,
+//        @RequestParam String pe,
+        @RequestParam List<String> pe,
+        @RequestParam String ou,
+        @RequestParam( required = false ) Set<String> filter,
+        @RequestParam( required = false ) boolean selectedUnitOnly,
+        @RequestParam( required = false ) int noOfSignatures )
+        throws Exception
+    {
+        OrganisationUnit orgUnit = getAndValidateOrgUnit( ou );
+        DataSet dataSet = getAndValidateDataSet( ds );
+        //Period period = getAndValidatePeriod( pe );
+        List<Period> periods = getAndValidatePeriods( pe );
+        //filter = ObjectUtils.firstNonNull( filter, dimension );
+
+        contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_JSON,
+            CacheStrategy.RESPECT_SYSTEM_SETTING );
+        return dataSetReportService.getSectionDataSetReport( dataSet, periods, orgUnit, filter, selectedUnitOnly );
+    }
 
     @GetMapping( value = RESOURCE_PATH, produces = APPLICATION_JSON_VALUE )
     public @ResponseBody List<Grid> getDataSetReportAsJson( HttpServletResponse response,
@@ -117,7 +145,8 @@ public class DataSetReportController
         @RequestParam String ds,
         @RequestParam List<String> pe,
         @RequestParam( required = false ) Set<String> filter,
-        @RequestParam( required = false ) boolean selectedUnitOnly )
+        @RequestParam( required = false ) boolean selectedUnitOnly,
+        @RequestParam( required = false ) int noOfSignatures )
         throws Exception
     {
         OrganisationUnit orgUnit = getAndValidateOrgUnit( ou );
@@ -135,7 +164,8 @@ public class DataSetReportController
         @RequestParam String ds,
         @RequestParam List<String> pe,
         @RequestParam( required = false ) Set<String> filter,
-        @RequestParam( required = false ) boolean selectedUnitOnly )
+        @RequestParam( required = false ) boolean selectedUnitOnly,
+        @RequestParam( required = false ) int noOfSignatures )
         throws Exception
     {
         OrganisationUnit orgUnit = getAndValidateOrgUnit( ou );
@@ -155,7 +185,8 @@ public class DataSetReportController
         @RequestParam List<String> pe,
         @RequestParam String ou,
         @RequestParam( required = false ) Set<String> filter,
-        @RequestParam( required = false ) boolean selectedUnitOnly )
+        @RequestParam( required = false ) boolean selectedUnitOnly,
+        @RequestParam( required = false ) int noOfSignatures )
         throws Exception
     {
         OrganisationUnit orgUnit = getAndValidateOrgUnit( ou );
@@ -165,7 +196,8 @@ public class DataSetReportController
         contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_PDF, CacheStrategy.RESPECT_SYSTEM_SETTING );
         List<Grid> grids = dataSetReportService.getDataSetReportAsGrid( dataSet, periods, orgUnit, filter,
             selectedUnitOnly );
-        GridUtils.toPdf( grids, response.getOutputStream() );
+//        GridUtils.toPdf( grids, response.getOutputStream() );
+        GridUtils.toPdfCustom( grids, response.getOutputStream(), noOfSignatures );
     }
 
     // -------------------------------------------------------------------------

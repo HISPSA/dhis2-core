@@ -73,10 +73,25 @@ public class PDFUtils
     {
         try
         {
-            Document document = new Document( pageSize );
+//            Document document = new Document( pageSize );
+//
+//            PdfWriter.getInstance( document, outputStream );
 
-            PdfWriter.getInstance( document, outputStream );
+            Document document = null;
+        	if(pageSize.equals(PageSize.A2)){
+        		document = new Document( pageSize.rotate(), 10, 10, 10, 50);
+        	}else{
+        		document = new Document( pageSize );
+        	}
 
+            PdfWriter writer = PdfWriter.getInstance( document, outputStream );
+
+            if(pageSize.equals(PageSize.A2)){
+            	writer.setPageEvent(new LandScapeFooter());
+            }else{
+            	writer.setPageEvent(new PortraitFooter());
+            }
+            
             document.open();
 
             return document;
@@ -85,6 +100,25 @@ public class PDFUtils
         {
             throw new RuntimeException( "Failed to open PDF document", ex );
         }
+    }
+    
+    /**
+     * Creates a document.
+     *
+     * @param outputStream The output stream to write the document content.
+     * @return A Document.
+     */
+    public static Document openDocument( OutputStream outputStream, boolean dailyReport )
+    {
+    	Rectangle pageSize = null;
+    	if(dailyReport)
+    	{
+    		pageSize = PageSize.A2;
+    	}else{
+    		pageSize = PageSize.A4;
+    	}
+
+    	return openDocument( outputStream, pageSize );
     }
 
     /**
@@ -217,6 +251,12 @@ public class PDFUtils
 
         return getCell( text, 1, getFont( 9 ), ALIGN_LEFT );
     }
+    
+    //custom
+    public static PdfPCell getTextCellMonthlyCustom( String text )
+    {
+        return getCell( text, 1, getFont( 6 ), ALIGN_LEFT );
+    }
 
     public static PdfPCell getItalicCell( String text )
     {
@@ -231,6 +271,23 @@ public class PDFUtils
         cell.setPaddingRight( right );
 
         return cell;
+    }
+    
+    public static int[] getHeaderWidth(int width)
+    {
+    	//int headerwidths[] = { 90, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20 };
+    	int heading = 90;
+		int col = 20;
+    	int[] headerwidths = new int[width];
+    	for (int i = 0; i < width; i++) {    		
+    		if(i == 0){
+    			headerwidths[i] = heading;
+    		}else{
+    			headerwidths[i] = col;
+    		}  	    
+    	}
+
+    	return headerwidths;
     }
 
     /**
