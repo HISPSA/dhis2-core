@@ -86,6 +86,7 @@ public class DataSetReportController
     @Autowired
     IdentifiableObjectManager idObjectManager;
 
+    /*
     @GetMapping( value = RESOURCE_PATH + "/custom", produces = CONTENT_TYPE_HTML )
     public @ResponseBody String getCustomDataSetReport( HttpServletResponse response,
         @RequestParam String ou,
@@ -110,6 +111,8 @@ public class DataSetReportController
 
         return dataSetReportService.getCustomDataSetReport( dataSet, periods, orgUnit, filter, selectedUnitOnly );
     }
+    
+    */
 
     @GetMapping( value = RESOURCE_PATH, produces = APPLICATION_JSON_VALUE )
     public @ResponseBody List<Grid> getDataSetReportAsJson( HttpServletResponse response,
@@ -117,7 +120,8 @@ public class DataSetReportController
         @RequestParam String ds,
         @RequestParam List<String> pe,
         @RequestParam( required = false ) Set<String> filter,
-        @RequestParam( required = false ) boolean selectedUnitOnly )
+        @RequestParam( required = false ) boolean selectedUnitOnly,
+        @RequestParam( required = false ) int noOfSignatures )
         throws Exception
     {
         OrganisationUnit orgUnit = getAndValidateOrgUnit( ou );
@@ -135,7 +139,8 @@ public class DataSetReportController
         @RequestParam String ds,
         @RequestParam List<String> pe,
         @RequestParam( required = false ) Set<String> filter,
-        @RequestParam( required = false ) boolean selectedUnitOnly )
+        @RequestParam( required = false ) boolean selectedUnitOnly,
+        @RequestParam( required = false ) int noOfSignatures )
         throws Exception
     {
         OrganisationUnit orgUnit = getAndValidateOrgUnit( ou );
@@ -155,7 +160,8 @@ public class DataSetReportController
         @RequestParam List<String> pe,
         @RequestParam String ou,
         @RequestParam( required = false ) Set<String> filter,
-        @RequestParam( required = false ) boolean selectedUnitOnly )
+        @RequestParam( required = false ) boolean selectedUnitOnly,
+        @RequestParam( required = false ) int noOfSignatures )
         throws Exception
     {
         OrganisationUnit orgUnit = getAndValidateOrgUnit( ou );
@@ -165,7 +171,8 @@ public class DataSetReportController
         contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_PDF, CacheStrategy.RESPECT_SYSTEM_SETTING );
         List<Grid> grids = dataSetReportService.getDataSetReportAsGrid( dataSet, periods, orgUnit, filter,
             selectedUnitOnly );
-        GridUtils.toPdf( grids, response.getOutputStream() );
+//        GridUtils.toPdf( grids, response.getOutputStream() );
+        GridUtils.toPdfCustom( grids, response.getOutputStream(), noOfSignatures );
     }
 
     // -------------------------------------------------------------------------
