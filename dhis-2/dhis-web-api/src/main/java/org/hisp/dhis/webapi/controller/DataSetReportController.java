@@ -29,6 +29,7 @@ package org.hisp.dhis.webapi.controller;
 
 import static org.hisp.dhis.dxf2.webmessage.WebMessageUtils.conflict;
 import static org.hisp.dhis.webapi.utils.ContextUtils.CONTENT_TYPE_HTML;
+import static org.hisp.dhis.webapi.utils.ContextUtils.CONTENT_TYPE_JSON;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 import java.util.ArrayList;
@@ -57,6 +58,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.stereotype.*;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author Stian Sandvold
@@ -113,6 +117,30 @@ public class DataSetReportController
     }
     
     */
+    //@RequestMapping( value = RESOURCE_PATH+ "/custom", method = RequestMethod.GET, produces = "application/json" )
+    @GetMapping( value = RESOURCE_PATH + "/custom", produces = CONTENT_TYPE_JSON )
+    public @ResponseBody List<Grid> getSectionDataSetReportAsJson( HttpServletResponse response,
+            @RequestParam String ds,
+//            @RequestParam String pe,
+            @RequestParam List<String> pe,
+            @RequestParam String ou,
+            @RequestParam( required = false ) Set<String> filter,
+            @RequestParam( required = false ) boolean selectedUnitOnly,
+            @RequestParam( required = false ) int noOfSignatures )
+            throws Exception
+        {
+            OrganisationUnit orgUnit = getAndValidateOrgUnit( ou );
+            DataSet dataSet = getAndValidateDataSet( ds );
+            //Period period = getAndValidatePeriod( pe );
+            List<Period> periods = getAndValidatePeriods( pe );
+            //filter = ObjectUtils.firstNonNull( filter, dimension );
+
+            contextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_JSON,
+                CacheStrategy.RESPECT_SYSTEM_SETTING );
+            return dataSetReportService.getSectionDataSetReport( dataSet, periods, orgUnit, filter, selectedUnitOnly );
+        }
+
+
 
     @GetMapping( value = RESOURCE_PATH, produces = APPLICATION_JSON_VALUE )
     public @ResponseBody List<Grid> getDataSetReportAsJson( HttpServletResponse response,
