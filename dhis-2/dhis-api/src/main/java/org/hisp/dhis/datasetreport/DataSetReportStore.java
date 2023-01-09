@@ -105,7 +105,7 @@ public interface DataSetReportStore
      * Get a mapping from dimensional identifiers to aggregated total values.
      * 
      * @param dataElements the data elements.
-     * @param period the period.
+     * @param periods the periods.
      * @param unit the organisation unit.
      * @param dimensions the dimensions on the analytics dimension format, e.g.
      *        <dim-id>:<dim-item>;<dim-item>

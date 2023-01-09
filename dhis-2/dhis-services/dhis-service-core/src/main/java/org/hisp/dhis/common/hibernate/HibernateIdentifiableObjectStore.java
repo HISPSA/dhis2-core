@@ -43,6 +43,15 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Disjunction;
+import org.hibernate.criterion.Property;
+import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.Subqueries;
+import org.hibernate.Criteria;
+import org.hibernate.SessionFactory;
+import org.springframework.util.Assert;
+
 import lombok.extern.slf4j.Slf4j;
 
 import org.apache.commons.lang3.ObjectUtils;
@@ -122,6 +131,53 @@ public class HibernateIdentifiableObjectStore<T extends BaseIdentifiableObject>
         return transientIdentifiableProperties;
     }
 
+    // -------------------------------------------------------------------------
+    // InternalHibernateGenericStore implementation
+    // -------------------------------------------------------------------------
+
+    public final Criteria getDataSharingCriteria()
+    {
+        return getExecutableCriteria(
+            getDataSharingDetachedCriteria( currentUserService.getCurrentUser(), AclService.LIKE_READ_DATA ) );
+    }
+
+    @Override
+    public final Criteria getSharingCriteria( User user )
+    {
+        return getExecutableCriteria(
+            getSharingDetachedCriteria(  user, AclService.LIKE_READ_METADATA ) );
+    }
+
+    @Override
+    public final DetachedCriteria getSharingDetachedCriteria()
+    {
+        return getSharingDetachedCriteria( currentUserService.getCurrentUser(), AclService.LIKE_READ_METADATA );
+    }
+
+    @Override
+    public final DetachedCriteria getSharingDetachedCriteria( String access )
+    {
+        return getSharingDetachedCriteria( currentUserService.getCurrentUser(), access );
+    }
+
+    @Override
+    public final DetachedCriteria getDataSharingDetachedCriteria( String access )
+    {
+        return getDataSharingDetachedCriteria( currentUserService.getCurrentUser(), access );
+    }
+
+    @Override
+    public final DetachedCriteria getSharingDetachedCriteria( User user )
+    {
+        return getSharingDetachedCriteria(  user, AclService.LIKE_READ_METADATA );
+    }
+
+    @Override
+    public final DetachedCriteria getDataSharingDetachedCriteria( User user )
+    {
+        return getDataSharingDetachedCriteria(  user , AclService.LIKE_READ_DATA );
+    }
+    
     // -------------------------------------------------------------------------
     // IdentifiableObjectStore implementation
     // -------------------------------------------------------------------------
@@ -1282,4 +1338,117 @@ public class HibernateIdentifiableObjectStore<T extends BaseIdentifiableObject>
     {
         getSession().flush();
     }
+    
+    @Override
+    public final Criteria getSharingCriteria()
+    {
+        return getExecutableCriteria(
+            getSharingDetachedCriteria( currentUserService.getCurrentUser(), AclService.LIKE_READ_METADATA ) );
+//        return getExecutableCriteria(
+//                getSharingDetachedCriteria( currentUserService.getCurrentUserGroupsInfo(), AclService.LIKE_READ_METADATA ) );
+    }
+
+	 private DetachedCriteria getDataSharingDetachedCriteria( User user, String access )
+	    {
+	        DetachedCriteria criteria = DetachedCriteria.forClass( getClazz(), "c" );
+
+	        if ( user == null || !dataSharingEnabled( user ) )
+	        {
+	            return criteria;
+	        }
+
+	        Assert.notNull( user, "User argument can't be null." );
+
+	        Disjunction disjunction = Restrictions.disjunction();
+
+	        disjunction.add( Restrictions.like( "c.publicAccess", access ) );
+	        disjunction.add( Restrictions.isNull( "c.publicAccess" ) );
+
+	        DetachedCriteria userGroupDetachedCriteria = DetachedCriteria.forClass( getClazz(), "ugdc" );
+	        userGroupDetachedCriteria.createCriteria( "ugdc.userGroupAccesses", "uga" );
+	        userGroupDetachedCriteria.createCriteria( "uga.userGroup", "ug" );
+	        userGroupDetachedCriteria.createCriteria( "ug.members", "ugm" );
+
+	        userGroupDetachedCriteria.add( Restrictions.eqProperty( "ugdc.id", "c.id" ) );
+	        userGroupDetachedCriteria.add( Restrictions.eq( "ugm.id", user.getId() ) );
+	        userGroupDetachedCriteria.add( Restrictions.like( "uga.access", access ) );
+
+	        userGroupDetachedCriteria.setProjection( Property.forName( "uga.id" ) );
+
+	        disjunction.add( Subqueries.exists( userGroupDetachedCriteria ) );
+
+	        DetachedCriteria userDetachedCriteria = DetachedCriteria.forClass( getClazz(), "udc" );
+	        userDetachedCriteria.createCriteria( "udc.userAccesses", "ua" );
+	        userDetachedCriteria.createCriteria( "ua.user", "u" );
+
+	        userDetachedCriteria.add( Restrictions.eqProperty( "udc.id", "c.id" ) );
+	        userDetachedCriteria.add( Restrictions.eq( "u.id", user.getId() ) );
+	        userDetachedCriteria.add( Restrictions.like( "ua.access", access ) );
+
+	        userDetachedCriteria.setProjection( Property.forName( "ua.id" ) );
+
+	        disjunction.add( Subqueries.exists( userDetachedCriteria ) );
+
+	        criteria.add( disjunction );
+
+	        return criteria;
+	    }
+
+		 /**
+	     * Creates a detached criteria with sharing restrictions relative to the
+	     * given user and access string.
+	     *
+	     * @param user the user.
+	     * @param access the access string.
+	     * @return a DetachedCriteria.
+	     */
+	    private DetachedCriteria getSharingDetachedCriteria( User user , String access )
+	    {
+	        DetachedCriteria criteria = DetachedCriteria.forClass( getClazz(), "c" );
+
+	        preProcessDetachedCriteria( criteria );
+
+	        if ( !sharingEnabled( user ) || user == null )
+	        {
+	            return criteria;
+	        }
+
+	        Assert.notNull( user, "User argument can't be null." );
+
+	        Disjunction disjunction = Restrictions.disjunction();
+
+	        disjunction.add( Restrictions.like( "c.publicAccess", access ) );
+	        disjunction.add( Restrictions.isNull( "c.publicAccess" ) );
+	        disjunction.add( Restrictions.isNull( "c.user.id" ) );
+	        disjunction.add( Restrictions.eq( "c.user.id", user.getId() ) );
+
+	        DetachedCriteria userGroupDetachedCriteria = DetachedCriteria.forClass( getClazz(), "ugdc" );
+	        userGroupDetachedCriteria.createCriteria( "ugdc.userGroupAccesses", "uga" );
+	        userGroupDetachedCriteria.createCriteria( "uga.userGroup", "ug" );
+	        userGroupDetachedCriteria.createCriteria( "ug.members", "ugm" );
+
+	        userGroupDetachedCriteria.add( Restrictions.eqProperty( "ugdc.id", "c.id" ) );
+	        userGroupDetachedCriteria.add( Restrictions.eq( "ugm.id", user.getId() ) );
+	        userGroupDetachedCriteria.add( Restrictions.like( "uga.access", access ) );
+
+	        userGroupDetachedCriteria.setProjection( Property.forName( "uga.id" ) );
+
+	        disjunction.add( Subqueries.exists( userGroupDetachedCriteria ) );
+
+	        DetachedCriteria userDetachedCriteria = DetachedCriteria.forClass( getClazz(), "udc" );
+	        userDetachedCriteria.createCriteria( "udc.userAccesses", "ua" );
+	        userDetachedCriteria.createCriteria( "ua.user", "u" );
+
+	        userDetachedCriteria.add( Restrictions.eqProperty( "udc.id", "c.id" ) );
+	        userDetachedCriteria.add( Restrictions.eq( "u.id", user.getId() ) );
+	        userDetachedCriteria.add( Restrictions.like( "ua.access", access ) );
+
+	        userDetachedCriteria.setProjection( Property.forName( "ua.id" ) );
+
+	        disjunction.add( Subqueries.exists( userDetachedCriteria ) );
+
+	        criteria.add( disjunction );
+
+	        return criteria;
+	    }
 }
