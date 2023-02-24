@@ -216,8 +216,9 @@ class AnalyticsControllerTest
         Workbook book = WorkbookFactory.create( is );
         assertThat( book.getSheetAt( 0 ).getRow( 2 ).getCell( 0 ).getStringCellValue(), is( "de1" ) );
         assertThat( book.getSheetAt( 0 ).getRow( 2 ).getCell( 1 ).getStringCellValue(), is( "ou2" ) );
-        assertThat( book.getSheetAt( 0 ).getRow( 2 ).getCell( 2 ).getStringCellValue(), is( "pe1" ) );
-        assertThat( book.getSheetAt( 0 ).getRow( 2 ).getCell( 3 ).getStringCellValue(), is( "3" ) );
+        assertThat( book.getSheetAt( 0 ).getRow( 2 ).getCell( 2 ).getStringCellValue(), is( "pe1" ) );       
+        assertThat( book.getSheetAt( 0 ).getRow( 2 ).getCell( 3 ).getNumericCellValue(), is( 3.0 ) );
+        
     }
 
     @Test
