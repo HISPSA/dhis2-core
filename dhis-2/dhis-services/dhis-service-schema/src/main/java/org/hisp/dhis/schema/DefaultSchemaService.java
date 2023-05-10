@@ -213,6 +213,8 @@ public class DefaultSchemaService
         register( new OutlierAnalysisSchemaDescriptor() );
         register( new ItemConfigSchemaDescriptor() );
         register( new LayoutSchemaDescriptor() );
+        
+        
     }
 
     private final Map<Class<?>, Schema> classSchemaMap = new HashMap<>();

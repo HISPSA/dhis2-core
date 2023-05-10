@@ -48,6 +48,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import org.hisp.dhis.organisationunit.OrganisationUnit;
 
 /**
  * This object can act both as a hydrated persisted object and as a wrapper
@@ -77,6 +78,8 @@ public class DataElementOperand
     private CategoryOptionCombo categoryOptionCombo;
 
     private CategoryOptionCombo attributeOptionCombo;
+    
+    private OrganisationUnit organisationUnit;
 
     // -------------------------------------------------------------------------
     // Constructors
@@ -104,6 +107,13 @@ public class DataElementOperand
         this.dataElement = dataElement;
         this.categoryOptionCombo = categoryOptionCombo;
         this.attributeOptionCombo = attributeOptionCombo;
+    }
+    
+    public DataElementOperand( DataElement dataElement, CategoryOptionCombo categoryOptionCombo, OrganisationUnit organisationUnit )
+    {
+        this.dataElement = dataElement;
+        this.categoryOptionCombo = categoryOptionCombo;
+        this.organisationUnit = organisationUnit;
     }
 
     // -------------------------------------------------------------------------
@@ -395,6 +405,17 @@ public class DataElementOperand
     {
         this.attributeOptionCombo = attributeOptionCombo;
     }
+    
+    @JsonProperty
+    @JsonSerialize( as = BaseIdentifiableObject.class )
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public OrganisationUnit getOrganisationUnit() {
+		return organisationUnit;
+	}
+
+	public void setOrganisationUnit(OrganisationUnit organisationUnit) {
+		this.organisationUnit = organisationUnit;
+	}
 
     // -------------------------------------------------------------------------
     // hashCode, equals and toString
@@ -412,7 +433,8 @@ public class DataElementOperand
         DataElementOperand that = (DataElementOperand) o;
         return Objects.equals( dataElement, that.dataElement ) &&
             Objects.equals( categoryOptionCombo, that.categoryOptionCombo ) &&
-            Objects.equals( attributeOptionCombo, that.attributeOptionCombo );
+            Objects.equals( attributeOptionCombo, that.attributeOptionCombo ) &&
+            Objects.equals( organisationUnit, that.organisationUnit );
     }
 
     @Override
