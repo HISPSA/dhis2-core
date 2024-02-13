@@ -51,6 +51,8 @@ public interface SharingHibernateGenericStore<T> extends InternalHibernateGeneri
    */
   List<Function<Root<T>, Predicate>> getSharingPredicates(CriteriaBuilder builder);
 
+
+
   /**
    * Get List of JPA Query Predicates for checking AclService.LIKE_READ_METADATA sharing access of
    * current {@link CurrentUserDetails}.

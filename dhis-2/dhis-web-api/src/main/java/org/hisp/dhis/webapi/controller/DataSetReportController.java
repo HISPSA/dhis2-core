@@ -165,10 +165,7 @@ public class DataSetReportController {
     List<Grid> grids =
         dataSetReportService.getDataSetReportAsGrid(
             dataSet, periods, orgUnit, filter, selectedUnitOnly);
-    GridUtils.toPdf(
-        CurrentUserUtil.getUserSetting(UserSettingKey.DB_LOCALE),
-        grids,
-        response.getOutputStream());
+    GridUtils.toPdf(CurrentUserUtil.getUserSetting(UserSettingKey.DB_LOCALE), grids, response.getOutputStream());
   }
 
   // -------------------------------------------------------------------------

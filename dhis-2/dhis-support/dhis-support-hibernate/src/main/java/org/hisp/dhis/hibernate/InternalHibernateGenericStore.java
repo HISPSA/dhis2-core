@@ -52,6 +52,8 @@ public interface InternalHibernateGenericStore<T> extends GenericStore<T> {
    */
   List<Function<Root<T>, Predicate>> getSharingPredicates(CriteriaBuilder builder, User user);
 
+
+
   /**
    * Get List of JPA Query Predicates for checking sharing access of current {@link User} based on
    * given access String.
@@ -63,6 +65,8 @@ public interface InternalHibernateGenericStore<T> extends GenericStore<T> {
    */
   List<Function<Root<T>, Predicate>> getSharingPredicates(
       CriteriaBuilder builder, User user, String access);
+
+  List<Function<Root<T>, Predicate>> getSharingPredicates(CriteriaBuilder builder);
 
   /**
    * Get List of JPA Query Predicates for checking AclService.LIKE_READ_DATA sharing access of

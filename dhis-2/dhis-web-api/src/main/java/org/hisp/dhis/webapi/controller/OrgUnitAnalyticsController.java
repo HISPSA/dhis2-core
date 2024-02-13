@@ -116,7 +116,6 @@ public class OrgUnitAnalyticsController {
     contextUtils.configureResponse(
         response, ContextUtils.CONTENT_TYPE_PDF, CacheStrategy.RESPECT_SYSTEM_SETTING);
     Grid grid = analyticsService.getOrgUnitData(params);
-    GridUtils.toPdf(
-        CurrentUserUtil.getUserSetting(UserSettingKey.DB_LOCALE), grid, response.getOutputStream());
+    GridUtils.toPdf(CurrentUserUtil.getUserSetting(UserSettingKey.DB_LOCALE), grid, response.getOutputStream());
   }
 }

@@ -51,8 +51,11 @@ import org.hisp.dhis.user.CurrentUserDetails;
 import org.hisp.dhis.user.CurrentUserGroupInfo;
 import org.hisp.dhis.user.CurrentUserService;
 import org.hisp.dhis.user.User;
+import org.hisp.dhis.user.CurrentUserUtil;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.jdbc.core.JdbcTemplate;
+
+
 
 /**
  * This class contains methods for generating predicates which are used for validating sharing
@@ -227,6 +230,29 @@ public class InternalHibernateGenericStoreImpl<T extends BaseIdentifiableObject>
             currentUserService.getCurrentUserGroupsInfo(user.getUid()),
             AclService.LIKE_READ_DATA);
   }
+
+  /*
+  @Override
+  public List<Function<Root<T>, Predicate>> getSharingPredicates(
+          CriteriaBuilder builder, CurrentUserDetails user, String access) {
+    if (!sharingEnabled(user) || user == null) {
+      return new ArrayList<>();
+    }
+
+    return getSharingPredicates(builder, user.getUid(), user.getUserGroupIds(), access);
+  }
+  */
+
+
+  @Override
+  public List<Function<Root<T>, Predicate>> getSharingPredicates(CriteriaBuilder builder) {
+    return getSharingPredicates(
+            builder, currentUserService.getCurrentUser(), AclService.LIKE_READ_METADATA);
+  }
+
+
+
+
 
   @Override
   public List<Function<Root<T>, Predicate>> getSharingPredicates(
