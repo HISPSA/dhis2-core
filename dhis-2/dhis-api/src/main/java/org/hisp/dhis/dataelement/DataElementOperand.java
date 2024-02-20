@@ -48,6 +48,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 
 /**
@@ -62,8 +63,8 @@ import org.hisp.dhis.organisationunit.OrganisationUnit;
  */
 @JacksonXmlRootElement( localName = "dataElementOperand", namespace = DxfNamespaces.DXF_2_0 )
 public class DataElementOperand
-    extends BaseDimensionalItemObject
-    implements EmbeddedObject, ValueTypedDimensionalItemObject
+        extends BaseDimensionalItemObject
+        implements EmbeddedObject, ValueTypedDimensionalItemObject
 {
     public static final String SEPARATOR = COMPOSITE_DIM_OBJECT_PLAIN_SEP;
 
@@ -78,8 +79,10 @@ public class DataElementOperand
     private CategoryOptionCombo categoryOptionCombo;
 
     private CategoryOptionCombo attributeOptionCombo;
-    
+
     private OrganisationUnit organisationUnit;
+
+
 
     // -------------------------------------------------------------------------
     // Constructors
@@ -102,13 +105,13 @@ public class DataElementOperand
     }
 
     public DataElementOperand( DataElement dataElement, CategoryOptionCombo categoryOptionCombo,
-        CategoryOptionCombo attributeOptionCombo )
+                               CategoryOptionCombo attributeOptionCombo )
     {
         this.dataElement = dataElement;
         this.categoryOptionCombo = categoryOptionCombo;
         this.attributeOptionCombo = attributeOptionCombo;
     }
-    
+
     public DataElementOperand( DataElement dataElement, CategoryOptionCombo categoryOptionCombo, OrganisationUnit organisationUnit )
     {
         this.dataElement = dataElement;
@@ -405,18 +408,17 @@ public class DataElementOperand
     {
         this.attributeOptionCombo = attributeOptionCombo;
     }
-    
+
     @JsonProperty
     @JsonSerialize( as = BaseIdentifiableObject.class )
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public OrganisationUnit getOrganisationUnit() {
-		return organisationUnit;
-	}
+        return organisationUnit;
+    }
 
-	public void setOrganisationUnit(OrganisationUnit organisationUnit) {
-		this.organisationUnit = organisationUnit;
-	}
-
+    public void setOrganisationUnit(OrganisationUnit organisationUnit) {
+        this.organisationUnit = organisationUnit;
+    }
     // -------------------------------------------------------------------------
     // hashCode, equals and toString
     // -------------------------------------------------------------------------
@@ -432,28 +434,29 @@ public class DataElementOperand
             return false;
         DataElementOperand that = (DataElementOperand) o;
         return Objects.equals( dataElement, that.dataElement ) &&
-            Objects.equals( categoryOptionCombo, that.categoryOptionCombo ) &&
-            Objects.equals( attributeOptionCombo, that.attributeOptionCombo ) &&
-            Objects.equals( organisationUnit, that.organisationUnit );
+                Objects.equals( categoryOptionCombo, that.categoryOptionCombo ) &&
+                Objects.equals( attributeOptionCombo, that.attributeOptionCombo ) &&
+                Objects.equals( organisationUnit, that.organisationUnit );
     }
 
     @Override
     public int hashCode()
     {
-        return Objects.hash( super.hashCode(), dataElement, categoryOptionCombo, attributeOptionCombo );
+        return Objects.hash( super.hashCode(), dataElement, categoryOptionCombo, attributeOptionCombo, organisationUnit  );
     }
 
     @Override
     public String toString()
     {
         return "{" +
-            "\"class\":\"" + getClass() + "\", " +
-            "\"id\":\"" + id + "\", " +
-            "\"uid\":\"" + uid + "\", " +
-            "\"dataElement\":" + dataElement + ", " +
-            "\"categoryOptionCombo\":" + categoryOptionCombo +
-            "\"attributeOptionCombo\":" + attributeOptionCombo +
-            '}';
+                "\"class\":\"" + getClass() + "\", " +
+                "\"id\":\"" + id + "\", " +
+                "\"uid\":\"" + uid + "\", " +
+                "\"dataElement\":" + dataElement + ", " +
+                "\"categoryOptionCombo\":" + categoryOptionCombo +
+                "\"attributeOptionCombo\":" + attributeOptionCombo +
+                "\"organisationUnit\":" + organisationUnit +
+                '}';
     }
 
     // -------------------------------------------------------------------------

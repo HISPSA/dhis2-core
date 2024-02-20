@@ -55,7 +55,14 @@ import org.hisp.dhis.user.CurrentUserUtil;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Disjunction;
+import org.hibernate.criterion.Property;
+import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.Subqueries;
+import org.hibernate.Criteria;
+import org.hibernate.SessionFactory;
+import org.springframework.util.Assert;
 
 /**
  * This class contains methods for generating predicates which are used for validating sharing
@@ -266,20 +273,7 @@ public class InternalHibernateGenericStoreImpl<T extends BaseIdentifiableObject>
             AclService.LIKE_READ_METADATA);
   }
 
-  @Override
-  public List<Function<Root<T>, Predicate>> getSharingPredicates(
-      CriteriaBuilder builder, User user, String access) {
-    if (user == null || !sharingEnabled(user)) {
-      return List.of();
-    }
-
-    Set<String> groupIds =
-        currentUserService.getCurrentUserGroupsInfo(user.getUid()).getUserGroupUIDs();
-
-    return getSharingPredicates(builder, user.getUid(), groupIds, access);
-  }
-
-  @Override
+    @Override
   public List<Function<Root<T>, Predicate>> getDataSharingPredicates(
       CriteriaBuilder builder, User user, CurrentUserGroupInfo groupInfo, String access) {
     List<Function<Root<T>, Predicate>> predicates = new ArrayList<>();
@@ -347,13 +341,206 @@ public class InternalHibernateGenericStoreImpl<T extends BaseIdentifiableObject>
     return aclService.isDataClassShareable(clazz) && !user.isSuper();
   }
 
-  private List<Function<Root<T>, Predicate>> getSharingPredicates(
-      CriteriaBuilder builder, User user, CurrentUserGroupInfo groupInfo, String access) {
-    if (user == null || groupInfo == null || !sharingEnabled(user)) {
-      return List.of();
+
+  @Override
+  public final DetachedCriteria getSharingDetachedCriteria( User user )
+  {
+    return getSharingDetachedCriteria(  user, AclService.LIKE_READ_METADATA );
+  }
+
+  public final Criteria getDataSharingCriteria()
+  {
+    return getExecutableCriteria(
+            getDataSharingDetachedCriteria( currentUserService.getCurrentUser(), AclService.LIKE_READ_DATA ) );
+  }
+
+  @Override
+  public final DetachedCriteria getDataSharingDetachedCriteria( String access )
+  {
+    return getDataSharingDetachedCriteria( currentUserService.getCurrentUser(), access );
+  }
+
+  @Override
+  public final DetachedCriteria getSharingDetachedCriteria( String access )
+  {
+    return getSharingDetachedCriteria( currentUserService.getCurrentUser(), access );
+  }
+
+  @Override
+  public final DetachedCriteria getSharingDetachedCriteria()
+  {
+    return getSharingDetachedCriteria( currentUserService.getCurrentUser(), AclService.LIKE_READ_METADATA );
+  }
+  @Override
+  public final DetachedCriteria getDataSharingDetachedCriteria( User user )
+  {
+    return getDataSharingDetachedCriteria(  user , AclService.LIKE_READ_DATA );
+  }
+
+  @Override
+  public final Criteria getSharingCriteria( User user )
+  {
+    return getExecutableCriteria(
+            getSharingDetachedCriteria(  user, AclService.LIKE_READ_METADATA ) );
+  }
+
+  @Override
+  public final Criteria getSharingCriteria()
+  {
+    return getExecutableCriteria(
+            getSharingDetachedCriteria( currentUserService.getCurrentUser(), AclService.LIKE_READ_METADATA ) );
+//        return getExecutableCriteria(
+//                getSharingDetachedCriteria( currentUserService.getCurrentUserGroupsInfo(), AclService.LIKE_READ_METADATA ) );
+  }
+
+  @Override
+  public final List<Function<Root<T>, Predicate>> getDataSharingPredicates( CriteriaBuilder builder, String access )
+  {
+    return getDataSharingPredicates( builder, currentUserService.getCurrentUser(),
+            currentUserService.getCurrentUserGroupsInfo(), access );
+  }
+
+
+
+
+  @Override
+  public final List<Function<Root<T>, Predicate>> getDataSharingPredicates( CriteriaBuilder builder )
+  {
+    return getDataSharingPredicates( builder, currentUserService.getCurrentUser(),
+            currentUserService.getCurrentUserGroupsInfo(), AclService.LIKE_READ_DATA );
+  }
+
+  @Override
+  public  List<Function<Root<T>, Predicate>> getSharingPredicates( CriteriaBuilder builder, String access )
+  {
+    User user = currentUserService.getCurrentUser();
+    return getSharingPredicates( builder, user, currentUserService.getCurrentUserGroupsInfo( user.getUid() ),
+            access );
+  }
+
+  @Override
+  public List<Function<Root<T>, Predicate>> getSharingPredicates( CriteriaBuilder builder, User user,
+                                                                  CurrentUserGroupInfo groupInfo, String access )
+  {
+    if ( !sharingEnabled( user ) || user == null || groupInfo == null )
+    {
+      return new ArrayList<>();
     }
 
-    return getSharingPredicates(
-        builder, groupInfo.getUserUID(), groupInfo.getUserGroupUIDs(), access);
+    return getSharingPredicates( builder, groupInfo.getUserUID(), groupInfo.getUserGroupUIDs(), access );
   }
+
+
+  @Override
+  public List<Function<Root<T>, Predicate>> getSharingPredicates( CriteriaBuilder builder, User user, String access )
+  {
+    if ( !sharingEnabled( user ) || user == null )
+    {
+      return new ArrayList<>();
+    }
+
+    Set<String> groupIds = user.getGroups().stream().map( g -> g.getUid() ).collect( Collectors.toSet() );
+
+    return getSharingPredicates( builder, user.getUid(), groupIds, access );
+  }
+
+  private DetachedCriteria getSharingDetachedCriteria( User user , String access )
+  {
+    DetachedCriteria criteria = DetachedCriteria.forClass( getClazz(), "c" );
+
+    preProcessDetachedCriteria( criteria );
+
+    if ( !sharingEnabled( user ) || user == null )
+    {
+      return criteria;
+    }
+
+    Assert.notNull( user, "User argument can't be null." );
+
+    Disjunction disjunction = Restrictions.disjunction();
+
+    disjunction.add( Restrictions.like( "c.publicAccess", access ) );
+    disjunction.add( Restrictions.isNull( "c.publicAccess" ) );
+    disjunction.add( Restrictions.isNull( "c.user.id" ) );
+    disjunction.add( Restrictions.eq( "c.user.id", user.getId() ) );
+
+    DetachedCriteria userGroupDetachedCriteria = DetachedCriteria.forClass( getClazz(), "ugdc" );
+    userGroupDetachedCriteria.createCriteria( "ugdc.userGroupAccesses", "uga" );
+    userGroupDetachedCriteria.createCriteria( "uga.userGroup", "ug" );
+    userGroupDetachedCriteria.createCriteria( "ug.members", "ugm" );
+
+    userGroupDetachedCriteria.add( Restrictions.eqProperty( "ugdc.id", "c.id" ) );
+    userGroupDetachedCriteria.add( Restrictions.eq( "ugm.id", user.getId() ) );
+    userGroupDetachedCriteria.add( Restrictions.like( "uga.access", access ) );
+
+    userGroupDetachedCriteria.setProjection( Property.forName( "uga.id" ) );
+
+    disjunction.add( Subqueries.exists( userGroupDetachedCriteria ) );
+
+    DetachedCriteria userDetachedCriteria = DetachedCriteria.forClass( getClazz(), "udc" );
+    userDetachedCriteria.createCriteria( "udc.userAccesses", "ua" );
+    userDetachedCriteria.createCriteria( "ua.user", "u" );
+
+    userDetachedCriteria.add( Restrictions.eqProperty( "udc.id", "c.id" ) );
+    userDetachedCriteria.add( Restrictions.eq( "u.id", user.getId() ) );
+    userDetachedCriteria.add( Restrictions.like( "ua.access", access ) );
+
+    userDetachedCriteria.setProjection( Property.forName( "ua.id" ) );
+
+    disjunction.add( Subqueries.exists( userDetachedCriteria ) );
+
+    criteria.add( disjunction );
+
+    return criteria;
+  }
+
+  private DetachedCriteria getDataSharingDetachedCriteria( User user, String access )
+  {
+    DetachedCriteria criteria = DetachedCriteria.forClass( getClazz(), "c" );
+
+    if ( user == null || !dataSharingEnabled( user ) )
+    {
+      return criteria;
+    }
+
+    Assert.notNull( user, "User argument can't be null." );
+
+    Disjunction disjunction = Restrictions.disjunction();
+
+    disjunction.add( Restrictions.like( "c.publicAccess", access ) );
+    disjunction.add( Restrictions.isNull( "c.publicAccess" ) );
+
+    DetachedCriteria userGroupDetachedCriteria = DetachedCriteria.forClass( getClazz(), "ugdc" );
+    userGroupDetachedCriteria.createCriteria( "ugdc.userGroupAccesses", "uga" );
+    userGroupDetachedCriteria.createCriteria( "uga.userGroup", "ug" );
+    userGroupDetachedCriteria.createCriteria( "ug.members", "ugm" );
+
+    userGroupDetachedCriteria.add( Restrictions.eqProperty( "ugdc.id", "c.id" ) );
+    userGroupDetachedCriteria.add( Restrictions.eq( "ugm.id", user.getId() ) );
+    userGroupDetachedCriteria.add( Restrictions.like( "uga.access", access ) );
+
+    userGroupDetachedCriteria.setProjection( Property.forName( "uga.id" ) );
+
+    disjunction.add( Subqueries.exists( userGroupDetachedCriteria ) );
+
+    DetachedCriteria userDetachedCriteria = DetachedCriteria.forClass( getClazz(), "udc" );
+    userDetachedCriteria.createCriteria( "udc.userAccesses", "ua" );
+    userDetachedCriteria.createCriteria( "ua.user", "u" );
+
+    userDetachedCriteria.add( Restrictions.eqProperty( "udc.id", "c.id" ) );
+    userDetachedCriteria.add( Restrictions.eq( "u.id", user.getId() ) );
+    userDetachedCriteria.add( Restrictions.like( "ua.access", access ) );
+
+    userDetachedCriteria.setProjection( Property.forName( "ua.id" ) );
+
+    disjunction.add( Subqueries.exists( userDetachedCriteria ) );
+
+    criteria.add( disjunction );
+
+    return criteria;
+  }
+
+
+
+
 }

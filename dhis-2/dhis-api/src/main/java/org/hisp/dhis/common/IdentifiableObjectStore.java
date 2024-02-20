@@ -417,6 +417,7 @@ public interface IdentifiableObjectStore<T> extends GenericStore<T> {
   @Nonnull
   List<T> getDataReadAll(@CheckForNull User user);
 
+
   @Nonnull
   List<T> getDataWriteAll();
 
@@ -459,4 +460,6 @@ public interface IdentifiableObjectStore<T> extends GenericStore<T> {
    * @return TRUE if objects exist. FALSE otherwise.
    */
   boolean existsByUser(@Nonnull User user, final Set<String> checkProperties);
+
+  List<T> getDataReadAll( int first, int max );
 }

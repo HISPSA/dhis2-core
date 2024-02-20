@@ -82,8 +82,8 @@ import com.google.common.collect.Sets;
  */
 @JacksonXmlRootElement( localName = "dataSet", namespace = DxfNamespaces.DXF_2_0 )
 public class DataSet
-    extends BaseDimensionalItemObject
-    implements VersionedObject, MetadataObject, InterpretableObject
+        extends BaseDimensionalItemObject
+        implements VersionedObject, MetadataObject, InterpretableObject
 {
     public static final int NO_EXPIRY = 0;
 
@@ -248,7 +248,7 @@ public class DataSet
     private boolean compulsoryFieldsCompleteOnly;
 
     private ObjectStyle style;
-    
+
     private Set<DataElementOperand> greyedFields = new HashSet<>();
 
     // -------------------------------------------------------------------------
@@ -479,7 +479,7 @@ public class DataSet
     public Set<DataElement> getDataElements()
     {
         return ImmutableSet.copyOf(
-            dataSetElements.stream().map( DataSetElement::getDataElement ).collect( Collectors.toSet() ) );
+                dataSetElements.stream().map( DataSetElement::getDataElement ).collect( Collectors.toSet() ) );
     }
 
     public Set<DataElement> getDataElementsInSections()
@@ -560,7 +560,7 @@ public class DataSet
         DateTime date = now != null ? new DateTime( now ) : new DateTime();
 
         return expiryDays != DataSet.NO_EXPIRY &&
-            new DateTime( period.getEndDate() ).plusDays( expiryDays ).isBefore( date );
+                new DateTime( period.getEndDate() ).plusDays( expiryDays ).isBefore( date );
     }
 
     /**
@@ -576,9 +576,9 @@ public class DataSet
     public boolean isDataInputPeriodAndDateAllowed( Period period, Date date )
     {
         return dataInputPeriods.isEmpty() || dataInputPeriods.stream()
-            .map( dataInputPeriod -> dataInputPeriod.isPeriodAndDateValid( period, date ) )
-            .reduce( ( a, b ) -> a || b )
-            .orElse( true );
+                .map( dataInputPeriod -> dataInputPeriod.isPeriodAndDateValid( period, date ) )
+                .reduce( ( a, b ) -> a || b )
+                .orElse( true );
     }
 
     // -------------------------------------------------------------------------
@@ -963,7 +963,7 @@ public class DataSet
     {
         this.compulsoryFieldsCompleteOnly = compulsoryFieldsCompleteOnly;
     }
-    
+
     @JsonProperty
     @JacksonXmlElementWrapper( localName = "greyedFields", namespace = DxfNamespaces.DXF_2_0 )
     @JacksonXmlProperty( localName = "greyedField", namespace = DxfNamespaces.DXF_2_0 )

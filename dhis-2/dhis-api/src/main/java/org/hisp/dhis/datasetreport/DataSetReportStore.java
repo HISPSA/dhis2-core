@@ -54,7 +54,7 @@ public interface DataSetReportStore
      * @return a mapping from dimensional identifiers to aggregated values.
      */
     Map<String, Object> getAggregatedValues( DataSet dataSet, List<Period> periods, OrganisationUnit unit,
-        Set<String> filters );
+                                             Set<String> filters );
 
     /**
      * Get a mapping from dimensional identifiers to aggregated sub-total
@@ -69,7 +69,7 @@ public interface DataSetReportStore
      *         values.
      */
     Map<String, Object> getAggregatedSubTotals( DataSet dataSet, List<Period> periods, OrganisationUnit unit,
-        Set<String> filters );
+                                                Set<String> filters );
 
     /**
      * Get a mapping from dimensional identifiers to aggregated total values.
@@ -83,7 +83,7 @@ public interface DataSetReportStore
      *         values.
      */
     Map<String, Object> getAggregatedTotals( DataSet dataSet, List<Period> periods, OrganisationUnit unit,
-        Set<String> filters );
+                                             Set<String> filters );
 
     /**
      * Get a mapping from dimensional identifiers to aggregated indicator
@@ -98,11 +98,12 @@ public interface DataSetReportStore
      *         values.
      */
     Map<String, Object> getAggregatedIndicatorValues( DataSet dataSet, List<Period> periods, OrganisationUnit unit,
-        Set<String> filters );
-    
+                                                      Set<String> filters );
+
+
     /**
      * Get a mapping from dimensional identifiers to aggregated total values.
-     * 
+     *
      * @param dataElements the data elements.
      * @param periods the periods.
      * @param unit the organisation unit.
@@ -112,5 +113,4 @@ public interface DataSetReportStore
      */
 //    Map<String, Object> getAggregatedGrandTotals( List<DataElement> dataElements, Period period, OrganisationUnit unit, Set<String> dimensions );
     Map<String, Object> getAggregatedGrandTotals( List<DataElement> dataElements, List<Period> periods, OrganisationUnit unit, Set<String> dimensions );
-
 }

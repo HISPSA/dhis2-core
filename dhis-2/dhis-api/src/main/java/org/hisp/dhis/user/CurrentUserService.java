@@ -100,6 +100,7 @@ public class CurrentUserService {
     return user == null ? null : getCurrentUserGroupsInfo(user.getUid());
   }
 
+
   @Transactional(readOnly = true)
   public CurrentUserGroupInfo getCurrentUserGroupsInfo(String userUID) {
     return currentUserGroupInfoCache.get(userUID, key -> userStore.getCurrentUserGroupInfo(key));
@@ -113,4 +114,6 @@ public class CurrentUserService {
       // Ignore if key doesn't exist
     }
   }
+
+
 }
