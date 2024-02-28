@@ -165,7 +165,7 @@ public interface IdentifiableObjectStore<T> extends GenericStore<T> {
    */
   @CheckForNull
   T getByUniqueAttributeValue(
-      @Nonnull Attribute attribute, @Nonnull String value, @CheckForNull User user);
+          @Nonnull Attribute attribute, @Nonnull String value, @CheckForNull User user);
 
   /**
    * Retrieves a List of all objects (sorted on name).
@@ -417,6 +417,7 @@ public interface IdentifiableObjectStore<T> extends GenericStore<T> {
   @Nonnull
   List<T> getDataReadAll(@CheckForNull User user);
 
+
   @Nonnull
   List<T> getDataWriteAll();
 
@@ -459,4 +460,6 @@ public interface IdentifiableObjectStore<T> extends GenericStore<T> {
    * @return TRUE if objects exist. FALSE otherwise.
    */
   boolean existsByUser(@Nonnull User user, final Set<String> checkProperties);
+
+  List<T> getDataReadAll( int first, int max );
 }
