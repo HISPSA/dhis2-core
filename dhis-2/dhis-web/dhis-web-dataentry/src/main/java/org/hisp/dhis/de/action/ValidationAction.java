@@ -29,12 +29,7 @@ package org.hisp.dhis.de.action;
 
 import com.google.common.collect.Sets;
 import com.opensymphony.xwork2.Action;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 import lombok.extern.slf4j.Slf4j;
 import org.hisp.dhis.category.CategoryOptionCombo;
 import org.hisp.dhis.category.CategoryService;
@@ -218,7 +213,7 @@ public class ValidationAction implements Action {
       List<DeflatedDataValue> values =
           new ArrayList<>(
               minMaxOutlierAnalysisService.analyse(
-                  organisationUnit,
+                  Sets.newHashSet(organisationUnit),
                   dataSet.getDataElements(),
                   Sets.newHashSet(period),
                   null,

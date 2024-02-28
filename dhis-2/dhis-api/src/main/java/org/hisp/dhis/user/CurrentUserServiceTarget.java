@@ -25,23 +25,24 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.hisp.dhis.de.action;
-
-import com.opensymphony.xwork2.Action;
+package org.hisp.dhis.user;
 
 /**
- * @author Lars Helge Overland
+ * OBS! This should not become a part of the dhis-api module!
+ * <p>
+ * Added to managed bean implementation classes (not their interface) which are
+ * provided with a {@link CurrentUserService} during testing.
+ *
+ * @author Jan Bernitt
  */
-public class PageInitAction
-    implements Action
+public interface CurrentUserServiceTarget
 {
-    // -------------------------------------------------------------------------
-    // Action implementation
-    // -------------------------------------------------------------------------
 
-    @Override
-    public String execute()
-    {
-        return SUCCESS;
-    }
+    /**
+     * This is only a workaround until a better solution is found.
+     *
+     * @param currentUserService dynamically update {@link CurrentUserService}
+     *        during testing
+     */
+    void setCurrentUserService( CurrentUserService currentUserService );
 }

@@ -312,10 +312,10 @@ class DimensionServiceTest extends TransactionalIntegrationTest {
     itemIdB = new DimensionalItemId(DATA_ELEMENT_OPERAND, deA.getUid(), cocA.getUid());
     itemIdC = new DimensionalItemId(DATA_ELEMENT_OPERAND, deA.getUid(), null, cocA.getUid());
     itemIdD =
-        new DimensionalItemId(DATA_ELEMENT_OPERAND, deA.getUid(), cocA.getUid(), cocA.getUid());
+            new DimensionalItemId(DATA_ELEMENT_OPERAND, deA.getUid(), cocA.getUid(), cocA.getUid());
     itemIdE =
-        new DimensionalItemId(
-            REPORTING_RATE, dsA.getUid(), ReportingRateMetric.REPORTING_RATE.name());
+            new DimensionalItemId(
+                    REPORTING_RATE, dsA.getUid(), ReportingRateMetric.REPORTING_RATE.name());
     itemIdF = new DimensionalItemId(PROGRAM_DATA_ELEMENT, prA.getUid(), deA.getUid());
     itemIdG = new DimensionalItemId(PROGRAM_ATTRIBUTE, prA.getUid(), teaA.getUid());
     itemIdH = new DimensionalItemId(PROGRAM_INDICATOR, piA.getUid());
@@ -329,16 +329,16 @@ class DimensionServiceTest extends TransactionalIntegrationTest {
     itemIds.add(itemIdG);
     itemIds.add(itemIdH);
     itemMap =
-        ImmutableMap.<DimensionalItemId, DimensionalItemObject>builder()
-            .put(itemIdA, itemObjectA)
-            .put(itemIdB, itemObjectB)
-            .put(itemIdC, itemObjectC)
-            .put(itemIdD, itemObjectD)
-            .put(itemIdE, itemObjectE)
-            .put(itemIdF, itemObjectF)
-            .put(itemIdG, itemObjectG)
-            .put(itemIdH, itemObjectH)
-            .build();
+            ImmutableMap.<DimensionalItemId, DimensionalItemObject>builder()
+                    .put(itemIdA, itemObjectA)
+                    .put(itemIdB, itemObjectB)
+                    .put(itemIdC, itemObjectC)
+                    .put(itemIdD, itemObjectD)
+                    .put(itemIdE, itemObjectE)
+                    .put(itemIdF, itemObjectF)
+                    .put(itemIdG, itemObjectG)
+                    .put(itemIdH, itemObjectH)
+                    .build();
   }
 
   @Test
@@ -357,26 +357,26 @@ class DimensionServiceTest extends TransactionalIntegrationTest {
   void testMergeAnalyticalObjectA() {
     Visualization visualization = new Visualization();
     visualization
-        .getColumns()
-        .add(
-            new BaseDimensionalObject(
-                DimensionalObject.DATA_X_DIM_ID,
-                DimensionType.DATA_X,
-                Lists.newArrayList(deA, deB)));
+            .getColumns()
+            .add(
+                    new BaseDimensionalObject(
+                            DimensionalObject.DATA_X_DIM_ID,
+                            DimensionType.DATA_X,
+                            Lists.newArrayList(deA, deB)));
     visualization
-        .getRows()
-        .add(
-            new BaseDimensionalObject(
-                DimensionalObject.ORGUNIT_DIM_ID,
-                DimensionType.ORGANISATION_UNIT,
-                Lists.newArrayList(ouA, ouB, ouC, ouD, ouE)));
+            .getRows()
+            .add(
+                    new BaseDimensionalObject(
+                            DimensionalObject.ORGUNIT_DIM_ID,
+                            DimensionType.ORGANISATION_UNIT,
+                            Lists.newArrayList(ouA, ouB, ouC, ouD, ouE)));
     visualization
-        .getFilters()
-        .add(
-            new BaseDimensionalObject(
-                DimensionalObject.PERIOD_DIM_ID,
-                DimensionType.PERIOD,
-                Lists.newArrayList(peA, peB)));
+            .getFilters()
+            .add(
+                    new BaseDimensionalObject(
+                            DimensionalObject.PERIOD_DIM_ID,
+                            DimensionType.PERIOD,
+                            Lists.newArrayList(peA, peB)));
     dimensionService.mergeAnalyticalObject(visualization);
     assertEquals(2, visualization.getDataDimensionItems().size());
     assertEquals(2, visualization.getPeriods().size());
@@ -388,26 +388,26 @@ class DimensionServiceTest extends TransactionalIntegrationTest {
     // Given
     EventVisualization eventVisualization = new EventVisualization("any");
     eventVisualization
-        .getColumns()
-        .add(
-            new BaseDimensionalObject(
-                DimensionalObject.DATA_X_DIM_ID,
-                DimensionType.DATA_X,
-                Lists.newArrayList(deA, deB)));
+            .getColumns()
+            .add(
+                    new BaseDimensionalObject(
+                            DimensionalObject.DATA_X_DIM_ID,
+                            DimensionType.DATA_X,
+                            Lists.newArrayList(deA, deB)));
     eventVisualization
-        .getRows()
-        .add(
-            new BaseDimensionalObject(
-                DimensionalObject.ORGUNIT_DIM_ID,
-                DimensionType.ORGANISATION_UNIT,
-                Lists.newArrayList(ouA, ouB, ouC, ouD, ouE)));
+            .getRows()
+            .add(
+                    new BaseDimensionalObject(
+                            DimensionalObject.ORGUNIT_DIM_ID,
+                            DimensionType.ORGANISATION_UNIT,
+                            Lists.newArrayList(ouA, ouB, ouC, ouD, ouE)));
     eventVisualization
-        .getFilters()
-        .add(
-            new BaseDimensionalObject(
-                DimensionalObject.PERIOD_DIM_ID,
-                DimensionType.PERIOD,
-                Lists.newArrayList(peA, peB)));
+            .getFilters()
+            .add(
+                    new BaseDimensionalObject(
+                            DimensionalObject.PERIOD_DIM_ID,
+                            DimensionType.PERIOD,
+                            Lists.newArrayList(peA, peB)));
     // When
     dimensionService.mergeAnalyticalObject(eventVisualization);
     // Then
@@ -420,23 +420,23 @@ class DimensionServiceTest extends TransactionalIntegrationTest {
   void testMergeAnalyticalObjectB() {
     Visualization visualization = new Visualization();
     BaseDimensionalObject deCDim =
-        new BaseDimensionalObject(
-            deC.getUid(), DimensionType.PROGRAM_DATA_ELEMENT, null, null, null, psA, "EQ:uidA");
+            new BaseDimensionalObject(
+                    deC.getUid(), DimensionType.PROGRAM_DATA_ELEMENT, null, null, null, psA, "EQ:uidA");
     visualization.getColumns().add(deCDim);
     visualization
-        .getRows()
-        .add(
-            new BaseDimensionalObject(
-                DimensionalObject.ORGUNIT_DIM_ID,
-                DimensionType.ORGANISATION_UNIT,
-                Lists.newArrayList(ouA, ouB, ouC)));
+            .getRows()
+            .add(
+                    new BaseDimensionalObject(
+                            DimensionalObject.ORGUNIT_DIM_ID,
+                            DimensionType.ORGANISATION_UNIT,
+                            Lists.newArrayList(ouA, ouB, ouC)));
     visualization
-        .getFilters()
-        .add(
-            new BaseDimensionalObject(
-                DimensionalObject.PERIOD_DIM_ID,
-                DimensionType.PERIOD,
-                Lists.newArrayList(peA, peB)));
+            .getFilters()
+            .add(
+                    new BaseDimensionalObject(
+                            DimensionalObject.PERIOD_DIM_ID,
+                            DimensionType.PERIOD,
+                            Lists.newArrayList(peA, peB)));
     dimensionService.mergeAnalyticalObject(visualization);
     assertEquals(1, visualization.getDataElementDimensions().size());
     assertEquals(2, visualization.getPeriods().size());
@@ -451,23 +451,23 @@ class DimensionServiceTest extends TransactionalIntegrationTest {
     // Given
     EventVisualization eventVisualization = new EventVisualization("any");
     BaseDimensionalObject deCDim =
-        new BaseDimensionalObject(
-            deC.getUid(), DimensionType.PROGRAM_DATA_ELEMENT, null, null, null, psA, "EQ:uidA");
+            new BaseDimensionalObject(
+                    deC.getUid(), DimensionType.PROGRAM_DATA_ELEMENT, null, null, null, psA, "EQ:uidA");
     eventVisualization.getColumns().add(deCDim);
     eventVisualization
-        .getRows()
-        .add(
-            new BaseDimensionalObject(
-                DimensionalObject.ORGUNIT_DIM_ID,
-                DimensionType.ORGANISATION_UNIT,
-                Lists.newArrayList(ouA, ouB, ouC)));
+            .getRows()
+            .add(
+                    new BaseDimensionalObject(
+                            DimensionalObject.ORGUNIT_DIM_ID,
+                            DimensionType.ORGANISATION_UNIT,
+                            Lists.newArrayList(ouA, ouB, ouC)));
     eventVisualization
-        .getFilters()
-        .add(
-            new BaseDimensionalObject(
-                DimensionalObject.PERIOD_DIM_ID,
-                DimensionType.PERIOD,
-                Lists.newArrayList(peA, peB)));
+            .getFilters()
+            .add(
+                    new BaseDimensionalObject(
+                            DimensionalObject.PERIOD_DIM_ID,
+                            DimensionType.PERIOD,
+                            Lists.newArrayList(peA, peB)));
     // When
     dimensionService.mergeAnalyticalObject(eventVisualization);
     // Then
@@ -475,7 +475,7 @@ class DimensionServiceTest extends TransactionalIntegrationTest {
     assertEquals(2, eventVisualization.getPeriods().size());
     assertEquals(3, eventVisualization.getOrganisationUnits().size());
     TrackedEntityDataElementDimension teDeDim =
-        eventVisualization.getDataElementDimensions().get(0);
+            eventVisualization.getDataElementDimensions().get(0);
     assertEquals(deC, teDeDim.getDataElement());
     assertEquals(psA, teDeDim.getProgramStage());
   }
@@ -484,24 +484,24 @@ class DimensionServiceTest extends TransactionalIntegrationTest {
   void testMergeAnalyticalObjectUserOrgUnit() {
     Visualization visualization = new Visualization();
     visualization
-        .getColumns()
-        .add(
-            new BaseDimensionalObject(
-                DimensionalObject.DATA_X_DIM_ID,
-                DimensionType.DATA_X,
-                Lists.newArrayList(deA, deB)));
+            .getColumns()
+            .add(
+                    new BaseDimensionalObject(
+                            DimensionalObject.DATA_X_DIM_ID,
+                            DimensionType.DATA_X,
+                            Lists.newArrayList(deA, deB)));
     visualization
-        .getRows()
-        .add(
-            new BaseDimensionalObject(
-                DimensionalObject.ORGUNIT_DIM_ID,
-                DimensionType.ORGANISATION_UNIT,
-                Lists.newArrayList(ouUser)));
+            .getRows()
+            .add(
+                    new BaseDimensionalObject(
+                            DimensionalObject.ORGUNIT_DIM_ID,
+                            DimensionType.ORGANISATION_UNIT,
+                            Lists.newArrayList(ouUser)));
     visualization
-        .getFilters()
-        .add(
-            new BaseDimensionalObject(
-                DimensionalObject.PERIOD_DIM_ID, DimensionType.PERIOD, Lists.newArrayList(peA)));
+            .getFilters()
+            .add(
+                    new BaseDimensionalObject(
+                            DimensionalObject.PERIOD_DIM_ID, DimensionType.PERIOD, Lists.newArrayList(peA)));
     dimensionService.mergeAnalyticalObject(visualization);
     assertEquals(2, visualization.getDataDimensionItems().size());
     assertEquals(1, visualization.getPeriods().size());
@@ -514,24 +514,24 @@ class DimensionServiceTest extends TransactionalIntegrationTest {
     // Given
     EventVisualization eventVisualization = new EventVisualization("any");
     eventVisualization
-        .getColumns()
-        .add(
-            new BaseDimensionalObject(
-                DimensionalObject.DATA_X_DIM_ID,
-                DimensionType.DATA_X,
-                Lists.newArrayList(deA, deB)));
+            .getColumns()
+            .add(
+                    new BaseDimensionalObject(
+                            DimensionalObject.DATA_X_DIM_ID,
+                            DimensionType.DATA_X,
+                            Lists.newArrayList(deA, deB)));
     eventVisualization
-        .getRows()
-        .add(
-            new BaseDimensionalObject(
-                DimensionalObject.ORGUNIT_DIM_ID,
-                DimensionType.ORGANISATION_UNIT,
-                Lists.newArrayList(ouUser)));
+            .getRows()
+            .add(
+                    new BaseDimensionalObject(
+                            DimensionalObject.ORGUNIT_DIM_ID,
+                            DimensionType.ORGANISATION_UNIT,
+                            Lists.newArrayList(ouUser)));
     eventVisualization
-        .getFilters()
-        .add(
-            new BaseDimensionalObject(
-                DimensionalObject.PERIOD_DIM_ID, DimensionType.PERIOD, Lists.newArrayList(peA)));
+            .getFilters()
+            .add(
+                    new BaseDimensionalObject(
+                            DimensionalObject.PERIOD_DIM_ID, DimensionType.PERIOD, Lists.newArrayList(peA)));
     // When
     dimensionService.mergeAnalyticalObject(eventVisualization);
     // Then
@@ -545,24 +545,24 @@ class DimensionServiceTest extends TransactionalIntegrationTest {
   void testMergeAnalyticalObjectOrgUnitLevel() {
     Visualization visualization = new Visualization();
     visualization
-        .getColumns()
-        .add(
-            new BaseDimensionalObject(
-                DimensionalObject.DATA_X_DIM_ID,
-                DimensionType.DATA_X,
-                Lists.newArrayList(deA, deB)));
+            .getColumns()
+            .add(
+                    new BaseDimensionalObject(
+                            DimensionalObject.DATA_X_DIM_ID,
+                            DimensionType.DATA_X,
+                            Lists.newArrayList(deA, deB)));
     visualization
-        .getRows()
-        .add(
-            new BaseDimensionalObject(
-                DimensionalObject.ORGUNIT_DIM_ID,
-                DimensionType.ORGANISATION_UNIT,
-                Lists.newArrayList(ouLevel2, ouA)));
+            .getRows()
+            .add(
+                    new BaseDimensionalObject(
+                            DimensionalObject.ORGUNIT_DIM_ID,
+                            DimensionType.ORGANISATION_UNIT,
+                            Lists.newArrayList(ouLevel2, ouA)));
     visualization
-        .getFilters()
-        .add(
-            new BaseDimensionalObject(
-                DimensionalObject.PERIOD_DIM_ID, DimensionType.PERIOD, Lists.newArrayList(peA)));
+            .getFilters()
+            .add(
+                    new BaseDimensionalObject(
+                            DimensionalObject.PERIOD_DIM_ID, DimensionType.PERIOD, Lists.newArrayList(peA)));
     dimensionService.mergeAnalyticalObject(visualization);
     assertEquals(2, visualization.getDataDimensionItems().size());
     assertEquals(1, visualization.getPeriods().size());
@@ -575,24 +575,24 @@ class DimensionServiceTest extends TransactionalIntegrationTest {
     // Given
     EventVisualization eventVisualization = new EventVisualization("any");
     eventVisualization
-        .getColumns()
-        .add(
-            new BaseDimensionalObject(
-                DimensionalObject.DATA_X_DIM_ID,
-                DimensionType.DATA_X,
-                Lists.newArrayList(deA, deB)));
+            .getColumns()
+            .add(
+                    new BaseDimensionalObject(
+                            DimensionalObject.DATA_X_DIM_ID,
+                            DimensionType.DATA_X,
+                            Lists.newArrayList(deA, deB)));
     eventVisualization
-        .getRows()
-        .add(
-            new BaseDimensionalObject(
-                DimensionalObject.ORGUNIT_DIM_ID,
-                DimensionType.ORGANISATION_UNIT,
-                Lists.newArrayList(ouLevel2, ouA)));
+            .getRows()
+            .add(
+                    new BaseDimensionalObject(
+                            DimensionalObject.ORGUNIT_DIM_ID,
+                            DimensionType.ORGANISATION_UNIT,
+                            Lists.newArrayList(ouLevel2, ouA)));
     eventVisualization
-        .getFilters()
-        .add(
-            new BaseDimensionalObject(
-                DimensionalObject.PERIOD_DIM_ID, DimensionType.PERIOD, Lists.newArrayList(peA)));
+            .getFilters()
+            .add(
+                    new BaseDimensionalObject(
+                            DimensionalObject.PERIOD_DIM_ID, DimensionType.PERIOD, Lists.newArrayList(peA)));
     // When
     dimensionService.mergeAnalyticalObject(eventVisualization);
     // Then
@@ -606,26 +606,26 @@ class DimensionServiceTest extends TransactionalIntegrationTest {
   void testMergeAnalyticalObjectRelativePeriods() {
     Visualization visualization = new Visualization();
     visualization
-        .getColumns()
-        .add(
-            new BaseDimensionalObject(
-                DimensionalObject.DATA_X_DIM_ID,
-                DimensionType.DATA_X,
-                Lists.newArrayList(deA, deB)));
+            .getColumns()
+            .add(
+                    new BaseDimensionalObject(
+                            DimensionalObject.DATA_X_DIM_ID,
+                            DimensionType.DATA_X,
+                            Lists.newArrayList(deA, deB)));
     visualization
-        .getRows()
-        .add(
-            new BaseDimensionalObject(
-                DimensionalObject.ORGUNIT_DIM_ID,
-                DimensionType.ORGANISATION_UNIT,
-                Lists.newArrayList(ouA, ouB, ouC, ouD, ouE)));
+            .getRows()
+            .add(
+                    new BaseDimensionalObject(
+                            DimensionalObject.ORGUNIT_DIM_ID,
+                            DimensionType.ORGANISATION_UNIT,
+                            Lists.newArrayList(ouA, ouB, ouC, ouD, ouE)));
     visualization
-        .getFilters()
-        .add(
-            new BaseDimensionalObject(
-                DimensionalObject.PERIOD_DIM_ID,
-                DimensionType.PERIOD,
-                Lists.newArrayList(peLast12Months)));
+            .getFilters()
+            .add(
+                    new BaseDimensionalObject(
+                            DimensionalObject.PERIOD_DIM_ID,
+                            DimensionType.PERIOD,
+                            Lists.newArrayList(peLast12Months)));
     dimensionService.mergeAnalyticalObject(visualization);
     assertEquals(2, visualization.getDataDimensionItems().size());
     assertEquals(0, visualization.getPeriods().size());
@@ -638,26 +638,26 @@ class DimensionServiceTest extends TransactionalIntegrationTest {
     // Given
     EventVisualization eventVisualization = new EventVisualization("any");
     eventVisualization
-        .getColumns()
-        .add(
-            new BaseDimensionalObject(
-                DimensionalObject.DATA_X_DIM_ID,
-                DimensionType.DATA_X,
-                Lists.newArrayList(deA, deB)));
+            .getColumns()
+            .add(
+                    new BaseDimensionalObject(
+                            DimensionalObject.DATA_X_DIM_ID,
+                            DimensionType.DATA_X,
+                            Lists.newArrayList(deA, deB)));
     eventVisualization
-        .getRows()
-        .add(
-            new BaseDimensionalObject(
-                DimensionalObject.ORGUNIT_DIM_ID,
-                DimensionType.ORGANISATION_UNIT,
-                Lists.newArrayList(ouA, ouB, ouC, ouD, ouE)));
+            .getRows()
+            .add(
+                    new BaseDimensionalObject(
+                            DimensionalObject.ORGUNIT_DIM_ID,
+                            DimensionType.ORGANISATION_UNIT,
+                            Lists.newArrayList(ouA, ouB, ouC, ouD, ouE)));
     eventVisualization
-        .getFilters()
-        .add(
-            new BaseDimensionalObject(
-                DimensionalObject.PERIOD_DIM_ID,
-                DimensionType.PERIOD,
-                Lists.newArrayList(peLast12Months)));
+            .getFilters()
+            .add(
+                    new BaseDimensionalObject(
+                            DimensionalObject.PERIOD_DIM_ID,
+                            DimensionType.PERIOD,
+                            Lists.newArrayList(peLast12Months)));
     // When
     dimensionService.mergeAnalyticalObject(eventVisualization);
     // Then
@@ -671,20 +671,20 @@ class DimensionServiceTest extends TransactionalIntegrationTest {
   void testMergeAnalyticalObjectOrgUnitGroupSet() {
     Visualization visualization = new Visualization();
     visualization
-        .getColumns()
-        .add(
-            new BaseDimensionalObject(
-                DimensionalObject.DATA_X_DIM_ID,
-                DimensionType.DATA_X,
-                Lists.newArrayList(deA, deB)));
+            .getColumns()
+            .add(
+                    new BaseDimensionalObject(
+                            DimensionalObject.DATA_X_DIM_ID,
+                            DimensionType.DATA_X,
+                            Lists.newArrayList(deA, deB)));
     visualization.getRows().add(ouGroupSetA);
     visualization
-        .getFilters()
-        .add(
-            new BaseDimensionalObject(
-                DimensionalObject.PERIOD_DIM_ID,
-                DimensionType.PERIOD,
-                Lists.newArrayList(peA, peB)));
+            .getFilters()
+            .add(
+                    new BaseDimensionalObject(
+                            DimensionalObject.PERIOD_DIM_ID,
+                            DimensionType.PERIOD,
+                            Lists.newArrayList(peA, peB)));
     dimensionService.mergeAnalyticalObject(visualization);
     assertEquals(2, visualization.getDataDimensionItems().size());
     assertEquals(2, visualization.getPeriods().size());
@@ -697,20 +697,20 @@ class DimensionServiceTest extends TransactionalIntegrationTest {
     // Given
     EventVisualization eventVisualization = new EventVisualization("any");
     eventVisualization
-        .getColumns()
-        .add(
-            new BaseDimensionalObject(
-                DimensionalObject.DATA_X_DIM_ID,
-                DimensionType.DATA_X,
-                Lists.newArrayList(deA, deB)));
+            .getColumns()
+            .add(
+                    new BaseDimensionalObject(
+                            DimensionalObject.DATA_X_DIM_ID,
+                            DimensionType.DATA_X,
+                            Lists.newArrayList(deA, deB)));
     eventVisualization.getRows().add(ouGroupSetA);
     eventVisualization
-        .getFilters()
-        .add(
-            new BaseDimensionalObject(
-                DimensionalObject.PERIOD_DIM_ID,
-                DimensionType.PERIOD,
-                Lists.newArrayList(peA, peB)));
+            .getFilters()
+            .add(
+                    new BaseDimensionalObject(
+                            DimensionalObject.PERIOD_DIM_ID,
+                            DimensionType.PERIOD,
+                            Lists.newArrayList(peA, peB)));
     // When
     dimensionService.mergeAnalyticalObject(eventVisualization);
     // Then
@@ -718,27 +718,27 @@ class DimensionServiceTest extends TransactionalIntegrationTest {
     assertEquals(2, eventVisualization.getPeriods().size());
     assertEquals(1, eventVisualization.getOrganisationUnitGroupSetDimensions().size());
     assertEquals(
-        3, eventVisualization.getOrganisationUnitGroupSetDimensions().get(0).getItems().size());
+            3, eventVisualization.getOrganisationUnitGroupSetDimensions().get(0).getItems().size());
   }
 
   @Test
   void testMergeAnalyticalObjectDataElementGroupSet() {
     Visualization visualization = new Visualization();
     visualization
-        .getColumns()
-        .add(
-            new BaseDimensionalObject(
-                DimensionalObject.DATA_X_DIM_ID,
-                DimensionType.DATA_X,
-                Lists.newArrayList(deA, deB)));
+            .getColumns()
+            .add(
+                    new BaseDimensionalObject(
+                            DimensionalObject.DATA_X_DIM_ID,
+                            DimensionType.DATA_X,
+                            Lists.newArrayList(deA, deB)));
     visualization.getRows().add(deGroupSetA);
     visualization
-        .getFilters()
-        .add(
-            new BaseDimensionalObject(
-                DimensionalObject.PERIOD_DIM_ID,
-                DimensionType.PERIOD,
-                Lists.newArrayList(peA, peB)));
+            .getFilters()
+            .add(
+                    new BaseDimensionalObject(
+                            DimensionalObject.PERIOD_DIM_ID,
+                            DimensionType.PERIOD,
+                            Lists.newArrayList(peA, peB)));
     dimensionService.mergeAnalyticalObject(visualization);
     assertEquals(2, visualization.getDataDimensionItems().size());
     assertEquals(2, visualization.getPeriods().size());
@@ -751,20 +751,20 @@ class DimensionServiceTest extends TransactionalIntegrationTest {
     // Given
     EventVisualization eventVisualization = new EventVisualization("any");
     eventVisualization
-        .getColumns()
-        .add(
-            new BaseDimensionalObject(
-                DimensionalObject.DATA_X_DIM_ID,
-                DimensionType.DATA_X,
-                Lists.newArrayList(deA, deB)));
+            .getColumns()
+            .add(
+                    new BaseDimensionalObject(
+                            DimensionalObject.DATA_X_DIM_ID,
+                            DimensionType.DATA_X,
+                            Lists.newArrayList(deA, deB)));
     eventVisualization.getRows().add(deGroupSetA);
     eventVisualization
-        .getFilters()
-        .add(
-            new BaseDimensionalObject(
-                DimensionalObject.PERIOD_DIM_ID,
-                DimensionType.PERIOD,
-                Lists.newArrayList(peA, peB)));
+            .getFilters()
+            .add(
+                    new BaseDimensionalObject(
+                            DimensionalObject.PERIOD_DIM_ID,
+                            DimensionType.PERIOD,
+                            Lists.newArrayList(peA, peB)));
     // When
     dimensionService.mergeAnalyticalObject(eventVisualization);
     // Then
@@ -780,37 +780,42 @@ class DimensionServiceTest extends TransactionalIntegrationTest {
     String idB = prA.getUid() + COMPOSITE_DIM_OBJECT_PLAIN_SEP + deA.getUid();
     String idC = prA.getUid() + COMPOSITE_DIM_OBJECT_PLAIN_SEP + teaA.getUid();
     String idD =
-        dsA.getUid() + COMPOSITE_DIM_OBJECT_PLAIN_SEP + ReportingRateMetric.REPORTING_RATE.name();
+            dsA.getUid() + COMPOSITE_DIM_OBJECT_PLAIN_SEP + ReportingRateMetric.REPORTING_RATE.name();
     String idE = dsA.getUid() + COMPOSITE_DIM_OBJECT_PLAIN_SEP + "UNKNOWN_METRIC";
     String idF = deA.getUid() + COMPOSITE_DIM_OBJECT_PLAIN_SEP + cocA.getUid();
     String idG = deA.getUid() + COMPOSITE_DIM_OBJECT_PLAIN_SEP + SYMBOL_WILDCARD;
     String idH = deA.getUid() + COMPOSITE_DIM_OBJECT_PLAIN_SEP + "UNKNOWN_SYMBOL";
     String idI =
-        deA.getUid()
-            + COMPOSITE_DIM_OBJECT_PLAIN_SEP
-            + cocA.getUid()
-            + COMPOSITE_DIM_OBJECT_PLAIN_SEP
-            + cocA.getUid();
+            deA.getUid()
+                    + COMPOSITE_DIM_OBJECT_PLAIN_SEP
+                    + cocA.getUid()
+                    + COMPOSITE_DIM_OBJECT_PLAIN_SEP
+                    + cocA.getUid();
     String idJ =
-        deA.getUid()
-            + COMPOSITE_DIM_OBJECT_PLAIN_SEP
-            + cocA.getUid()
-            + COMPOSITE_DIM_OBJECT_PLAIN_SEP
-            + SYMBOL_WILDCARD;
+            deA.getUid()
+                    + COMPOSITE_DIM_OBJECT_PLAIN_SEP
+                    + cocA.getUid()
+                    + COMPOSITE_DIM_OBJECT_PLAIN_SEP
+                    + SYMBOL_WILDCARD;
     String idK =
-        deA.getUid()
-            + COMPOSITE_DIM_OBJECT_PLAIN_SEP
-            + SYMBOL_WILDCARD
-            + COMPOSITE_DIM_OBJECT_PLAIN_SEP
-            + cocA.getUid();
+            deA.getUid()
+                    + COMPOSITE_DIM_OBJECT_PLAIN_SEP
+                    + SYMBOL_WILDCARD
+                    + COMPOSITE_DIM_OBJECT_PLAIN_SEP
+                    + cocA.getUid();
     ProgramDataElementDimensionItem pdeA = new ProgramDataElementDimensionItem(prA, deA);
     ProgramTrackedEntityAttributeDimensionItem ptaA =
-        new ProgramTrackedEntityAttributeDimensionItem(prA, teaA);
+            new ProgramTrackedEntityAttributeDimensionItem(prA, teaA);
     ReportingRate rrA = new ReportingRate(dsA, ReportingRateMetric.REPORTING_RATE);
-    DataElementOperand deoA = new DataElementOperand(deA, cocA);
+    DataElementOperand deoA = new org.hisp.dhis.dataelement.DataElementOperand(deA, cocA);
     DataElementOperand deoB = new DataElementOperand(deA, null);
     DataElementOperand deoC = new DataElementOperand(deA, cocA, cocA);
-    DataElementOperand deoD = new DataElementOperand(deA, cocA, null);
+
+    CategoryOptionCombo cocAnull =  null;
+
+    //DataElementOperand deoD = new DataElementOperand(deA, cocA, null);
+    DataElementOperand deoD = new DataElementOperand(deA, cocA, cocAnull);
+
     DataElementOperand deoE = new DataElementOperand(deA, null, cocA);
     assertNotNull(dimensionService.getDataDimensionalItemObject(idA));
     assertEquals(deA, dimensionService.getDataDimensionalItemObject(idA));
@@ -867,7 +872,7 @@ class DimensionServiceTest extends TransactionalIntegrationTest {
     dimensionalItemIds.add(itemIdB);
     dimensionalItemIds.add(itemIdC);
     Map<DimensionalItemId, DimensionalItemObject> dimensionalItemMap =
-        Map.of(itemIdA, deA, itemIdB, deB, itemIdC, deC);
+            Map.of(itemIdA, deA, itemIdB, deB, itemIdC, deC);
     // When
     result = dimensionService.getDataDimensionalItemObjectMap(dimensionalItemIds);
     // Then
@@ -893,28 +898,28 @@ class DimensionServiceTest extends TransactionalIntegrationTest {
     DataElement deBOffset2 = makeDataElementWithQueryModsFrom(deB, queryModsB);
     DataElement deCOffset2 = makeDataElementWithQueryModsFrom(deC, queryModsB);
     Set<DimensionalItemId> dimensionalItemIds =
-        Sets.newHashSet(
-            deAId,
-            deBId,
-            deCId,
-            deAOffset1Id,
-            deBOffset1Id,
-            deCOffset1Id,
-            deAOffset2Id,
-            deBOffset2Id,
-            deCOffset2Id);
+            Sets.newHashSet(
+                    deAId,
+                    deBId,
+                    deCId,
+                    deAOffset1Id,
+                    deBOffset1Id,
+                    deCOffset1Id,
+                    deAOffset2Id,
+                    deBOffset2Id,
+                    deCOffset2Id);
     ImmutableMap<DimensionalItemId, DimensionalItemObject> dimensionalItemMap =
-        ImmutableMap.<DimensionalItemId, DimensionalItemObject>builder()
-            .put(deAId, deA)
-            .put(deBId, deB)
-            .put(deCId, deC)
-            .put(deAOffset1Id, deAOffset1)
-            .put(deBOffset1Id, deBOffset1)
-            .put(deCOffset1Id, deCOffset1)
-            .put(deAOffset2Id, deAOffset2)
-            .put(deBOffset2Id, deBOffset2)
-            .put(deCOffset2Id, deCOffset2)
-            .build();
+            ImmutableMap.<DimensionalItemId, DimensionalItemObject>builder()
+                    .put(deAId, deA)
+                    .put(deBId, deB)
+                    .put(deCId, deC)
+                    .put(deAOffset1Id, deAOffset1)
+                    .put(deBOffset1Id, deBOffset1)
+                    .put(deCOffset1Id, deCOffset1)
+                    .put(deAOffset2Id, deAOffset2)
+                    .put(deBOffset2Id, deBOffset2)
+                    .put(deCOffset2Id, deCOffset2)
+                    .build();
     // When
     result = dimensionService.getDataDimensionalItemObjectMap(dimensionalItemIds);
     // Then
@@ -929,7 +934,7 @@ class DimensionServiceTest extends TransactionalIntegrationTest {
     LegendSet lsA = createLegendSet('A');
     ProgramStage psA = createProgramStage('A', 1);
     TrackedEntityDataElementDimension teDeDim =
-        new TrackedEntityDataElementDimension(deA, lsA, psA, "EQ:1");
+            new TrackedEntityDataElementDimension(deA, lsA, psA, "EQ:1");
     report.addTrackedEntityDataElementDimension(teDeDim);
     report.getOrganisationUnits().addAll(Lists.newArrayList(ouA, ouB, ouC));
     report.getColumnDimensions().add(deA.getUid());
@@ -947,7 +952,7 @@ class DimensionServiceTest extends TransactionalIntegrationTest {
   // -------------------------------------------------------------------------
   /** Make a DataElement with query modifiers based on another DataElement. */
   private DataElement makeDataElementWithQueryModsFrom(
-      DataElement dataElement, QueryModifiers queryMods) {
+          DataElement dataElement, QueryModifiers queryMods) {
     DataElement de = SerializationUtils.clone(dataElement);
     de.setQueryMods(queryMods);
     return de;

@@ -30,6 +30,7 @@ package org.hisp.dhis.user;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import org.hisp.dhis.cache.Cache;
 import org.hisp.dhis.cache.CacheProvider;
@@ -37,6 +38,11 @@ import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import org.springframework.security.core.session.SessionInformation;
+import org.springframework.security.core.session.SessionRegistry;
+
+
 
 /**
  * This interface defined methods for getting access to the currently logged in user and clearing
@@ -50,12 +56,15 @@ public class CurrentUserService {
   private final UserStore userStore;
 
   private final Cache<CurrentUserGroupInfo> currentUserGroupInfoCache;
+  private final SessionRegistry sessionRegistry;
 
-  public CurrentUserService(@Lazy UserStore userStore, CacheProvider cacheProvider) {
+  public CurrentUserService(
+          @Lazy UserStore userStore, CacheProvider cacheProvider, SessionRegistry sessionRegistry) {
     checkNotNull(userStore);
 
     this.userStore = userStore;
     this.currentUserGroupInfoCache = cacheProvider.createCurrentUserGroupInfoCache();
+    this.sessionRegistry = sessionRegistry;
   }
 
   /**
@@ -112,6 +121,22 @@ public class CurrentUserService {
       currentUserGroupInfoCache.invalidate(userUID);
     } catch (NullPointerException exception) {
       // Ignore if key doesn't exist
+    }
+  }
+
+  public CurrentUserDetailsImpl getCurrentUserPrincipal(String uid) {
+    return sessionRegistry.getAllPrincipals().stream()
+            .map(CurrentUserDetailsImpl.class::cast)
+            .filter(principal -> principal.getUid().equals(uid))
+            .findFirst()
+            .orElse(null);
+  }
+
+  public void invalidateUserSessions(String uid) {
+    CurrentUserDetailsImpl principal = getCurrentUserPrincipal(uid);
+    if (principal != null) {
+      List<SessionInformation> allSessions = sessionRegistry.getAllSessions(principal, false);
+      allSessions.forEach(SessionInformation::expireNow);
     }
   }
 

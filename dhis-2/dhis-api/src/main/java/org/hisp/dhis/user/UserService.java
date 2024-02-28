@@ -574,4 +574,5 @@ public interface UserService {
    * @param activeUsername the username of the user to set as active
    */
   void setActiveLinkedAccounts(@Nonnull User actingUser, @Nonnull String activeUsername);
+
 }
