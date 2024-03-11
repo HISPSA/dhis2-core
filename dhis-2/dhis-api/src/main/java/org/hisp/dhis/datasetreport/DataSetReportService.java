@@ -29,6 +29,7 @@ package org.hisp.dhis.datasetreport;
 
 import java.util.List;
 import java.util.Set;
+
 import org.hisp.dhis.common.Grid;
 import org.hisp.dhis.dataset.DataSet;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
@@ -38,23 +39,22 @@ import org.hisp.dhis.period.Period;
  * @author Abyot Asalefew
  * @author Lars Helge Overland
  */
-public interface DataSetReportService {
+public interface DataSetReportService
+{
   /**
    * Generates HTML code for a custom data set report.
    *
    * @param dataSet the data set.
    * @param periods the periods.
    * @param orgUnit the organisation unit.
-   * @param dimensions mapping between dimension identifiers and dimension option identifiers.
-   * @param selectedUnitOnly indicates whether to use captured or aggregated data.
+   * @param dimensions mapping between dimension identifiers and dimension
+   *        option identifiers.
+   * @param selectedUnitOnly indicates whether to use captured or aggregated
+   *        data.
    * @return the HTML code for the custom data set report.
    */
-  String getCustomDataSetReport(
-      DataSet dataSet,
-      List<Period> periods,
-      OrganisationUnit orgUnit,
-      Set<String> dimensions,
-      boolean selectedUnitOnly);
+  String getCustomDataSetReport( DataSet dataSet, List<Period> periods, OrganisationUnit orgUnit,
+                                 Set<String> dimensions, boolean selectedUnitOnly );
 
   /**
    * Generates a list of Grids based on the data set sections or custom form.
@@ -62,14 +62,28 @@ public interface DataSetReportService {
    * @param dataSet the data set.
    * @param periods the periods.
    * @param orgUnit the organisation unit.
-   * @param dimensions mapping between dimension identifiers and dimension option identifiers.
-   * @param selectedUnitOnly indicates whether to use captured or aggregated data.
+   * @param dimensions mapping between dimension identifiers and dimension
+   *        option identifiers.
+   * @param selectedUnitOnly indicates whether to use captured or aggregated
+   *        data.
    * @return a list of Grids.
    */
-  List<Grid> getDataSetReportAsGrid(
-      DataSet dataSet,
-      List<Period> periods,
-      OrganisationUnit orgUnit,
-      Set<String> dimensions,
-      boolean selectedUnitOnly);
+  List<Grid> getDataSetReportAsGrid( DataSet dataSet, List<Period> periods, OrganisationUnit orgUnit,
+                                     Set<String> dimensions, boolean selectedUnitOnly );
+
+  /**
+   * Generates a list of Grids representing a data set report. The data elements
+   * are grouped and sorted by their section in the data set.
+   *
+   * @param dataSet the data set.
+   * @param period the period.
+   * @param unit the organisation unit.
+   * @param dimensions mapping between dimension identifiers and dimension option identifiers.
+   * @param selectedUnitOnly indicators whether to use captured or aggregated data.
+   * @param format the i18n format.
+   * @param i18n the i18n object.
+   * @return a Grid.
+   */
+  //List<Grid> getSectionDataSetReport( DataSet dataSet, Period period, OrganisationUnit unit, Set<String> filters, boolean selectedUnitOnly );
+  List<Grid> getSectionDataSetReport( DataSet dataSet, List<Period> periods, OrganisationUnit unit, Set<String> filters, boolean selectedUnitOnly );
 }

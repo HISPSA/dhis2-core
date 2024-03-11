@@ -5,6 +5,11 @@ var currentAttributeOptionComboId = '$!{attributeOptionComboId}';
 var titleName = '$titleName';
 var approvalValidationMap = {};
 
+var i18n_approvalcheck = '$encoder.jsEscape( $i18n.getString( "approvalcheck" ), "'")';
+var i18n_cancel = "$i18n.getString( "cancel" )";
+var i18n_save = "$i18n.getString( "save" )";
+
+
 #set($apprVList=$approvalValidationMap)
 #set($apprVEntry="")
 
@@ -63,3 +68,6 @@ $( document ).ready( function() {
         </td>
     </tr>
 </table>
+
+<input type="button" id="approvalvalidationButton" value="$i18n.getString( 'approvalcheck' )" onclick="dhis2.appr.approvalValidation()" class="approveButton" style="width:145px">
+<div id="approvalValidationDiv" style="display: none;" class="page"></div>

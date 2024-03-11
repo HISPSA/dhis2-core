@@ -66,9 +66,9 @@ public class DefaultQueryValidator implements QueryValidator {
 
     if (error != null) {
       log.warn(
-          String.format(
-              "Analytics validation failed, code: '%s', message: '%s'",
-              error.getErrorCode(), error.getMessage()));
+              String.format(
+                      "Analytics validation failed, code: '%s', message: '%s'",
+                      error.getErrorCode(), error.getMessage()));
 
       throw new IllegalQueryException(error);
     }
@@ -83,17 +83,17 @@ public class DefaultQueryValidator implements QueryValidator {
     }
 
     List<DimensionalItemObject> dataElements =
-        Lists.newArrayList(params.getDataElementsOperandsProgramDataElements());
+            Lists.newArrayList(params.getDataElementsOperandsProgramDataElements());
     List<DataElement> nonAggDataElements =
-        FilterUtils.inverseFilter(
-            asTypedList(dataElements), AggregatableDataElementFilter.INSTANCE);
+            FilterUtils.inverseFilter(
+                    asTypedList(dataElements), AggregatableDataElementFilter.INSTANCE);
 
     if (!params.isSkipDataDimensionValidation()) {
       if (params.getDimensions().isEmpty()) {
         error = new ErrorMessage(ErrorCode.E7101);
       } else if (!params.isSkipData()
-          && params.getDataDimensionAndFilterOptions().isEmpty()
-          && params.getAllDataElementGroups().isEmpty()) {
+              && params.getDataDimensionAndFilterOptions().isEmpty()
+              && params.getAllDataElementGroups().isEmpty()) {
         error = new ErrorMessage(ErrorCode.E7102);
       } else if (!params.getDimensionsAsFilters().isEmpty()) {
         error = new ErrorMessage(ErrorCode.E7103, getDimensions(params.getDimensionsAsFilters()));
@@ -111,25 +111,25 @@ public class DefaultQueryValidator implements QueryValidator {
     } else if ((!params.getFilterIndicators().isEmpty()
             || !params.getFilterProgramIndicators().isEmpty()
             || !params.getFilterExpressionDimensionItems().isEmpty())
-        && params.getFilterOptions(DATA_X_DIM_ID).size() > 1) {
+            && params.getFilterOptions(DATA_X_DIM_ID).size() > 1) {
       error = new ErrorMessage(ErrorCode.E7108);
     } else if (!params.getFilterReportingRates().isEmpty()
-        && params.getFilterOptions(DATA_X_DIM_ID).size() > 1) {
+            && params.getFilterOptions(DATA_X_DIM_ID).size() > 1) {
       error = new ErrorMessage(ErrorCode.E7109);
     } else if (params
-        .getFilters()
-        .contains(new BaseDimensionalObject(CATEGORYOPTIONCOMBO_DIM_ID))) {
+            .getFilters()
+            .contains(new BaseDimensionalObject(CATEGORYOPTIONCOMBO_DIM_ID))) {
       error = new ErrorMessage(ErrorCode.E7110);
     } else if (!params.getDuplicateDimensions().isEmpty()) {
       error = new ErrorMessage(ErrorCode.E7111, getDimensions(params.getDuplicateDimensions()));
     } else if (!params.getAllReportingRates().isEmpty()
-        && !params.containsOnlyDimensionsAndFilters(COMPLETENESS_DIMENSION_TYPES)) {
+            && !params.containsOnlyDimensionsAndFilters(COMPLETENESS_DIMENSION_TYPES)) {
       error = new ErrorMessage(ErrorCode.E7112, COMPLETENESS_DIMENSION_TYPES);
     } else if (params.hasDimensionOrFilter(CATEGORYOPTIONCOMBO_DIM_ID)
-        && params.getAllDataElements().isEmpty()) {
+            && params.getAllDataElements().isEmpty()) {
       error = new ErrorMessage(ErrorCode.E7113);
     } else if (params.hasDimensionOrFilter(CATEGORYOPTIONCOMBO_DIM_ID)
-        && (params.getAllDataElements().size() != params.getAllDataDimensionItems().size())) {
+            && (params.getAllDataElements().size() != params.getAllDataDimensionItems().size())) {
       error = new ErrorMessage(ErrorCode.E7114);
     } else if (!nonAggDataElements.isEmpty()) {
       error = new ErrorMessage(ErrorCode.E7115, getUids(nonAggDataElements));
