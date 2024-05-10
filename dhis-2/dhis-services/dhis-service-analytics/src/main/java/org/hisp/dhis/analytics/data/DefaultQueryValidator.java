@@ -133,9 +133,14 @@ public class DefaultQueryValidator implements QueryValidator {
       error = new ErrorMessage(ErrorCode.E7114);
     } else if (!nonAggDataElements.isEmpty()) {
       error = new ErrorMessage(ErrorCode.E7115, getUids(nonAggDataElements));
-    } else if (!params.getSkipTotalDataElements().isEmpty()) {
+    }
+    /*
+    else if (!params.getSkipTotalDataElements().isEmpty()) {
       error = new ErrorMessage(ErrorCode.E7134);
-    } else if (params.isOutputFormat(OutputFormat.DATA_VALUE_SET)) {
+    }
+    */
+
+    else if (params.isOutputFormat(OutputFormat.DATA_VALUE_SET)) {
       if (!params.hasDimension(DATA_X_DIM_ID)) {
         error = new ErrorMessage(ErrorCode.E7117);
       } else if (!params.hasDimension(PERIOD_DIM_ID)) {
