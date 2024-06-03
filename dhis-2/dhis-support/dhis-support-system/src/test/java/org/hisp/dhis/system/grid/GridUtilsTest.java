@@ -50,8 +50,8 @@ class GridUtilsTest {
   @Test
   void testFromHtml() throws Exception {
     String html =
-        IOUtils.toString(
-            new ClassPathResource("customform.html").getInputStream(), StandardCharsets.UTF_8);
+            IOUtils.toString(
+                    new ClassPathResource("customform.html").getInputStream(), StandardCharsets.UTF_8);
     List<Grid> grids = GridUtils.fromHtml(html, "TitleA");
     assertNotNull(grids);
     assertEquals(6, grids.size());
