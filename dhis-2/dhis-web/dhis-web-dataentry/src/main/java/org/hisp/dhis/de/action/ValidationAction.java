@@ -212,12 +212,25 @@ public class ValidationAction implements Action {
     for (OrganisationUnit organisationUnit : organisationUnits) {
       List<DeflatedDataValue> values =
           new ArrayList<>(
+
+                  minMaxOutlierAnalysisService.analyse(
+                          organisationUnit,
+                          dataSet.getDataElements(),
+                          Sets.newHashSet(period),
+                          null,
+                          from));
+             /*
               minMaxOutlierAnalysisService.analyse(
                   Sets.newHashSet(organisationUnit),
                   dataSet.getDataElements(),
                   Sets.newHashSet(period),
                   null,
-                  from));
+                  from)
+
+    );*/
+
+
+
 
       if (!values.isEmpty()) {
         dataValues.put(organisationUnit.getUid(), values);
