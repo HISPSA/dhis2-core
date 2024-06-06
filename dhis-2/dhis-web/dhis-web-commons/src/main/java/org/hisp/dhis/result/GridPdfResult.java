@@ -30,31 +30,26 @@ package org.hisp.dhis.result;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 import static org.hisp.dhis.system.util.CodecUtils.filenameEncode;
 
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.Result;
 import java.io.OutputStream;
 import java.util.List;
-
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.struts2.ServletActionContext;
 import org.hisp.dhis.common.Grid;
 import org.hisp.dhis.system.grid.GridUtils;
+import org.hisp.dhis.user.CurrentUserUtil;
+import org.hisp.dhis.user.UserSettingKey;
 import org.hisp.dhis.util.ContextUtils;
 
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.Result;
-
 /**
- * Creates a PDF representation of the given Grid or list of Grids and writes it
- * to the servlet outputstream. One of the grid or grids arguments must be set.
+ * Creates a PDF representation of the given Grid or list of Grids and writes it to the servlet
+ * outputstream. One of the grid or grids arguments must be set.
  *
  * @author Lars Helge Overland
  */
-public class GridPdfResult
-    implements Result
-{
-    /**
-     * Determines if a de-serialized file is compatible with this class.
-     */
+public class GridPdfResult implements Result {
+    /** Determines if a de-serialized file is compatible with this class. */
     private static final long serialVersionUID = 6613101138470779866L;
 
     private static final String DEFAULT_NAME = "Grid";
@@ -65,30 +60,27 @@ public class GridPdfResult
 
     private Grid grid;
 
-    public void setGrid( Grid grid )
-    {
+    public void setGrid(Grid grid) {
         this.grid = grid;
     }
 
     private List<Grid> grids;
 
-    public void setGrids( List<Grid> grids )
-    {
+    public void setGrids(List<Grid> grids) {
         this.grids = grids;
     }
 
     private boolean attachment = true;
 
-    protected boolean isAttachment()
-    {
+    protected boolean isAttachment() {
         return attachment;
     }
-    
+
     private String selectedNoOfSignatures;
-    
+
     public void setSelectedNoOfSignatures(String selectedNoOfSignatures)
     {
-    	this.selectedNoOfSignatures = selectedNoOfSignatures;
+        this.selectedNoOfSignatures = selectedNoOfSignatures;
     }
 
     // -------------------------------------------------------------------------
@@ -96,30 +88,29 @@ public class GridPdfResult
     // -------------------------------------------------------------------------
 
     @Override
-    @SuppressWarnings( "unchecked" )
-    public void execute( ActionInvocation invocation )
-        throws Exception
-    {
+    @SuppressWarnings("unchecked")
+    public void execute(ActionInvocation invocation) throws Exception {
         // ---------------------------------------------------------------------
         // Get grid
         // ---------------------------------------------------------------------
 
-        Grid _grid = (Grid) invocation.getStack().findValue( "grid" );
+        Grid _grid = (Grid) invocation.getStack().findValue("grid");
 
         grid = _grid != null ? _grid : grid;
 
-        List<Grid> _grids = (List<Grid>) invocation.getStack().findValue( "grids" );
+        List<Grid> _grids = (List<Grid>) invocation.getStack().findValue("grids");
 
         grids = _grids != null ? _grids : grids;
-        
+
+
         String _selectedNoOfSignatures = (String) invocation.getStack().findValue( "selectedNoOfSignatures" );
 
         selectedNoOfSignatures = _selectedNoOfSignatures != null ? _selectedNoOfSignatures : selectedNoOfSignatures;
 
         int selectedNoOfSign = 0;
-        
+
         if(selectedNoOfSignatures != null){
-        	selectedNoOfSign = Integer.parseInt(selectedNoOfSignatures);
+            selectedNoOfSign = Integer.parseInt(selectedNoOfSignatures);
         }
 
         // ---------------------------------------------------------------------
@@ -130,24 +121,26 @@ public class GridPdfResult
 
         OutputStream out = response.getOutputStream();
 
-        String filename = filenameEncode(
-            defaultIfEmpty( grid != null ? grid.getTitle() : grids.iterator().next().getTitle(), DEFAULT_NAME ) )
-            + ".pdf";
+        String filename =
+                filenameEncode(
+                        defaultIfEmpty(
+                                grid != null ? grid.getTitle() : grids.iterator().next().getTitle(),
+                                DEFAULT_NAME))
+                        + ".pdf";
 
-        ContextUtils.configureResponse( response, ContextUtils.CONTENT_TYPE_PDF, true, filename, isAttachment() );
+        ContextUtils.configureResponse(
+                response, ContextUtils.CONTENT_TYPE_PDF, true, filename, isAttachment());
 
         // ---------------------------------------------------------------------
         // Write PDF to output stream
         // ---------------------------------------------------------------------
 
-        if ( grid != null )
-        {
-            GridUtils.toPdf( grid, out );
-        }
-        else
-        {
-//            GridUtils.toPdf( grids, out );
+        if (grid != null) {
+            GridUtils.toPdf(CurrentUserUtil.getUserSetting(UserSettingKey.DB_LOCALE), grid, out);
+        } else {
+            GridUtils.toPdf(CurrentUserUtil.getUserSetting(UserSettingKey.DB_LOCALE), grids, out);
             GridUtils.toPdfCustom( grids, out,selectedNoOfSign );
+
         }
     }
 }
