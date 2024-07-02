@@ -35,7 +35,6 @@ import static org.hisp.dhis.dataentryform.DataEntryFormService.INPUT_PATTERN;
 import static org.hisp.dhis.datasetreport.DataSetReportStore.SEPARATOR;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -88,6 +87,7 @@ public class DefaultDataSetReportService
 
     private static final String TOTAL_HEADER = "Total";
 
+
     private static final String SPACE = " ";
 
     private static final String MONTH_TOTAL_HEADER = "MonthTotal";
@@ -113,7 +113,7 @@ public class DefaultDataSetReportService
     private final DataSetService dataSetService;
 
     public DefaultDataSetReportService( DataValueService dataValueService, DataSetReportStore dataSetReportStore,
-                                        I18nManager i18nManager, CategoryService categoryService, DataSetService dataSetService )
+                                        I18nManager i18nManager, CategoryService categoryService, DataSetService dataSetService  )
     {
 
         checkNotNull( dataSetReportStore );
@@ -157,7 +157,7 @@ public class DefaultDataSetReportService
 
         if ( formType.isCustom() )
         {
-            //grids = getCustomDataSetReportAsGrid( dataSet, periods, orgUnit, filters, selectedUnitOnly );
+//            grids = getCustomDataSetReportAsGrid( dataSet, periods, orgUnit, filters, selectedUnitOnly );
             grids = getSectionDataSetReport( dataSet, periods, orgUnit, filters, selectedUnitOnly );
         }
         else if ( formType.isSection() )
@@ -179,18 +179,11 @@ public class DefaultDataSetReportService
     private List<Grid> getCustomDataSetReportAsGrid( DataSet dataSet, List<Period> periods, OrganisationUnit unit,
                                                      Set<String> filters, boolean selectedUnitOnly )
     {
-        I18nFormat format = i18nManager.getI18nFormat();
-
         String html = getCustomDataSetReport( dataSet, periods, unit, filters, selectedUnitOnly );
-
-
-
-        //String html = getCustomDataSetReport( dataSet, period, unit, filters, selectedUnitOnly );
 
         try
         {
-//            return GridUtils.fromHtml( html, dataSet.getName() );
-            return GridUtils.fromHtml( html, dataSet.getName(), periods, unit, format );
+            return GridUtils.fromHtml( html, dataSet.getName() );
         }
         catch ( Exception ex )
         {
@@ -220,10 +213,6 @@ public class DefaultDataSetReportService
 
         List<DataElement> dataElementsAll = new ArrayList<>();
 
-//        String[] values = {"Source","Database","Source Post","Database Post","Files Assessed","Files Correlated"};
-        String[] values = {"Source","Database","Source Post","Database Post","Files Audited","Files Correlated"};
-        boolean contains = false;
-
         for ( DataSet dataSt : dataSets )
         {
             dataElementsAll.addAll( dataSt.getDataElements() );
@@ -240,6 +229,9 @@ public class DefaultDataSetReportService
         {
             for ( CategoryCombo categoryCombo : section.getCategoryCombos() )
             {
+//                 Grid grid = new ListGrid().setTitle( section.getName() + SPACE + categoryCombo.getName() )
+//                     .setSubtitle( unit.getName() + SPACE + formatPeriods( periods, format ) );
+
                 String sectionName = "";
                 if(section.getName().equals( "DaysInMonth" )) {
                     sectionName = dataSet.getName();
@@ -250,30 +242,21 @@ public class DefaultDataSetReportService
                 Grid grid = new ListGrid().setTitle( sectionName + SPACE + categoryCombo.getName() )
                         .setSubtitle( unit.getName() + SPACE + formatPeriods( periods, format ) );
 
+//                 Grid grid = new ListGrid().setTitle( sectionName + SPACE + categoryCombo.getName() )
+//                     .setSubtitle( unit.getName() + SPACE + format.formatPeriods( periods ) );
                 // -----------------------------------------------------------------
                 // Grid headers
                 // -----------------------------------------------------------------
 
                 grid.addHeader( new GridHeader( i18n.getString( "dataelement" ), false, true ) );
 
-//                List<CategoryOptionCombo> optionCombos = categoryCombo.getSortedOptionCombos();
                 List<CategoryOptionCombo> optionCombos = categoryCombo.getSortedOptionCombos();
 
                 for ( CategoryOptionCombo optionCombo : optionCombos )
                 {
-//                    grid.addHeader( new GridHeader( optionCombo.isDefault() ? DEFAULT_HEADER : optionCombo.getName(),
-//                        false, false ) );
-                    contains = Arrays.stream(values).anyMatch(optionCombo.getName().trim()::equals);
-
-                    if(contains)
-                    {
-                        grid.addHeader( new GridHeader( optionCombo.isDefault() ? DEFAULT_HEADER : optionCombo.getName(),
-                                false, false ) );
-                    }
+                    grid.addHeader( new GridHeader( optionCombo.isDefault() ? DEFAULT_HEADER : optionCombo.getName(),
+                            false, false ) );
                 }
-
-                //Reconciliation header
-                grid.addHeader( new GridHeader( "Reconciliation", false, false ) );
 
                 if ( categoryCombo.doSubTotals() && !selectedUnitOnly ) // Sub-total
                 {
@@ -298,7 +281,6 @@ public class DefaultDataSetReportService
                     grid.addHeader( new GridHeader( GRAND_TOTAL_HEADER, false, false ) );
                 }
 
-
                 // -----------------------------------------------------------------
                 // Grid values
                 // -----------------------------------------------------------------
@@ -316,140 +298,51 @@ public class DefaultDataSetReportService
                     // name
 
                     int totalOptionCoValue = 0;
-                    String dxSourceVal = "";
-                    String dxDHISVal = "";
-                    String dxSourcePostVal = "";
-                    String dxDHISPostVal = "";
-                    boolean isNumSourceVal = false;
-                    boolean isNumDHISVal = false;
-                    boolean isNumSourcePostVal = false;
-                    boolean isNumDHISPostVal = false;
-
                     for ( CategoryOptionCombo optionCombo : optionCombos ) // Values
                     {
-//                        Map<Object, Object> attributes = new HashMap<>();
-//                        attributes.put( ATTR_DE, dataElement.getUid() );
-//                        attributes.put( ATTR_CO, optionCombo.getUid() );
-//
-//                        Object value;
-//
-//                        if ( selectedUnitOnly )
-//                        {
-//                            value = getSelectedUnitValue( dataElement, periods, unit, optionCombo );
-//                        }
-//                        else
-//                        {
-//                            value = valueMap.get( dataElement.getUid() + SEPARATOR + optionCombo.getUid() );
-//                        }
-//
-//                        grid.addValue( new GridValue( value, attributes ) );
+                        Map<Object, Object> attributes = new HashMap<>();
+                        attributes.put( ATTR_DE, dataElement.getUid() );
+                        attributes.put( ATTR_CO, optionCombo.getUid() );
 
-                        contains = Arrays.stream(values).anyMatch(optionCombo.getName().trim()::equals);
+                        //Object value;
 
-                        if(contains)
+                        Object value = null;
+
+                        if ( selectedUnitOnly )
                         {
-                            Map<Object, Object> attributes = new HashMap<>();
-                            attributes.put( ATTR_DE, dataElement.getUid() );
-                            attributes.put( ATTR_CO, optionCombo.getUid() );
-
-                            Object value = null;
-
-                            if ( selectedUnitOnly )
-                            {
-//                                DataValue dataValue = dataValueService.getDataValue( dataElement, periods, unit, optionCombo );
-//                                DataValue dataValue = getSelectedUnitValue( dataElement, periods, unit, optionCombo );
-//                                value = dataValue != null && dataValue.getValue() != null
-//                                    ? Double.parseDouble( dataValue.getValue() ) : null;
-                                value = getSelectedUnitValue( dataElement, periods, unit, optionCombo );
-                            }
-                            else
-                            {
-                                value = valueMap.get( dataElement.getUid() + SEPARATOR + optionCombo.getUid() );
-                            }
-
-                            //int val = value != null ? (int) Double.parseDouble( value.toString() ) : 0;
-                            String val = value != null ? value.toString() : "";
-                            boolean isVal = value != null ? true : false;
-
-                            if(!val.equals(""))
-                            {
-                                val = (int) Double.parseDouble( val ) + "";
-                            }
-
-                            if(optionCombo.getName().trim().equals("Source"))
-                            {
-                                dxSourceVal = val;
-                                isNumSourceVal = isVal;
-
-                            }
-                            else if(optionCombo.getName().trim().equals("Database"))
-                            {
-                                dxDHISVal = val;
-                                isNumDHISVal = isVal;
-                            }
-                            else if(optionCombo.getName().trim().equals("Source Post"))
-                            {
-                                dxSourcePostVal = val;
-                                isNumSourcePostVal = isVal;
-                            }
-                            else if(optionCombo.getName().trim().equals("Database Post"))
-                            {
-                                dxDHISPostVal = val;
-                                isNumDHISPostVal = isVal;
-                            }
-
-                            //totalOptionCoValue += val;
-                            value = val;
-                            grid.addValue( new GridValue( value, attributes ) );
+                            value = getSelectedUnitValue( dataElement, periods, unit, optionCombo );
+                        }
+                        else
+                        {
+                            value = valueMap.get( dataElement.getUid() + SEPARATOR + optionCombo.getUid() );
                         }
 
-                    }
 
-                    //Reconciliation value
-                    String reconciled = "False";
-                    if( dxSourceVal.equals("0") && dxDHISVal.equals("") )
-                    {
-                        reconciled = "True";
-                    }
-                    else if( dxSourcePostVal.equals("0") && dxDHISPostVal.equals("") )
-                    {
-                        reconciled = "True";
-                    }
-                    else if( ( isNumSourceVal &&  isNumDHISVal ) && ( dxSourceVal.equals(dxDHISVal) ) )
-                    {
-                        reconciled = "True";
-                    }
-                    else if ( ( isNumSourcePostVal &&  isNumDHISPostVal ) && ( dxSourcePostVal.equals(dxDHISPostVal) ) )
-                    {
-                        reconciled = "True";
-                    }
-                    else if ( (!isNumSourceVal &&  !isNumDHISVal) && (!isNumSourcePostVal &&  !isNumDHISPostVal) )
-                    {
-                        reconciled = "";
-                    }
+                        int val = value != null ? (int) Double.parseDouble( value.toString() ) : 0;
 
-                    grid.addValue( new GridValue( reconciled ) );
+                        totalOptionCoValue += val;
+
+                        grid.addValue( new GridValue( value, attributes ) );
+                    }
 
                     if ( categoryCombo.doSubTotals() && !selectedUnitOnly ) // Sub-total
                     {
                         for ( CategoryOption categoryOption : categoryCombo.getCategoryOptions() )
                         {
-//                            Object value = subTotalMap
-//                                .get( dataElement.getUid() + SEPARATOR + categoryOption.getUid() );
-//
-//                            grid.addValue( new GridValue( value ) );
+                            Object value = subTotalMap
+                                    .get( dataElement.getUid() + SEPARATOR + categoryOption.getUid() );
 
-                            grid.addValue( new GridValue( totalOptionCoValue ) );
+                            grid.addValue( new GridValue( value ) );
                         }
                     }
 
                     if ( categoryCombo.doTotal() && !selectedUnitOnly ) // Total
                     {
-                        Object value = totalMap.get( String.valueOf( dataElement.getUid() ) );
-
+//                         Object value = totalMap.get( String.valueOf( dataElement.getUid() ) );
+                        //
+//                         grid.addValue( new GridValue( value ) );
                         grid.addValue( new GridValue( totalOptionCoValue ) );
                     }
-
 
                     Object monthTotalValue = null;
                     if ( categoryCombo.doTotal() && !selectedUnitOnly ) // MonthTotal
@@ -498,7 +391,6 @@ public class DefaultDataSetReportService
 
                         grid.addValue( new GridValue( value ) );
                     }
-
                 }
 
                 grids.add( grid );
@@ -508,6 +400,7 @@ public class DefaultDataSetReportService
 
         return grids;
     }
+
 
     private List<Grid> getDefaultDataSetReport( DataSet dataSet, List<Period> periods, OrganisationUnit unit,
                                                 Set<String> filters, boolean selectedUnitOnly )
