@@ -1,12 +1,16 @@
 <!DOCTYPE HTML>
 <html class="loginPage" dir="ltr">
 <head>
-    <title>$!encoder.htmlEncode( ${applicationTitle} )</title>
+    <title>$!encoder.htmlEncode(${applicationTitle})</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="DHIS 2">
     <meta name="keywords" content="DHIS 2">
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="UTF-8">
     <link rel="shortcut icon" href="../../favicon.ico"/>
-    <script type="text/javascript" src="../javascripts/jQuery/jquery-3.6.3.min.js"></script>
+    <link rel="stylesheet" href="../css/widgets.css">
+    <link rel="stylesheet" href="../css/login.css">
+    <link rel="stylesheet" href="../../api/files/style/external"/>
+    <script src="../javascripts/jQuery/jquery-3.6.3.min.js"></script>
     <script nonce="$cspNonce">
         $.ajaxSetup( {
             beforeSend: function(xhr) {
@@ -21,29 +25,28 @@
             }
         } );
     </script>
-    <script type="text/javascript" src="../javascripts/login.js"></script>
-    <link type="text/css" rel="stylesheet" href="../css/widgets.css">
-    <link type="text/css" rel="stylesheet" href="../css/login.css">
-    <link type="text/css" rel="stylesheet" href="../../api/files/style/external"/>
+    <script src="../javascripts/login.js"></script>
     <style nonce="$cspNonce">
-        .displayNoneClass {
-            display: none;
-        }
-        .borderNoneClass {
-            border: none;
-        }
-        .paddingTenClass {
-            padding-bottom: 10px;
-        }
-        .whiteRedClass {
-            color: white;
-            background-color: red;
-        }
-        .marginLeftClass {
-            margin-left: 30px;
-        }
+    /* General Styles */
+    .displayNoneClass {
+        display: none;
+    }
+    .borderNoneClass {
+        border: none;
+    }
+    .paddingTenClass {
+        padding-bottom: 10px;
+    }
+    
+    .whiateRedClass {
+        color: white;
+        background-color: red;
+    }
+    .marginLeftClass {
+        margin-left: 30px;
+    }
 
-            #foreach( $provider in $oidcConfig.providers )
+     #foreach( $provider in $oidcConfig.providers )
             .oidc${provider.id}Class {
                 width: 269px;
                 height: 46px;
@@ -51,110 +54,128 @@
                 background: url($provider.icon) no-repeat scroll $provider.iconPadding, #fff;
             }
             #end
-    </style>
-</head>
 
+    
+</style>
+
+</head>
 <body class="loginPage">
-<h1 class="displayNoneClass">$!encoder.htmlEncode( ${applicationTitle} )</h1>
+<div id="headerArea">	
+		<table id = "logoTable">
+		<tr id = "ROW1">
+		<td id = "CELL1" align="left"><a href="doh_url"><img id ="logoArea" src="../flags/doh_logo.png"></td>
+		<td id = "CELL2" align="center" valign="top">
+       			#if ( $applicationTitle )
+            			<span id="titleArea">$!encoder.htmlEncode( ${applicationTitle} )</span>
+        		#end
+			</br>
+			#if ( $keyApplicationIntro )
+				<span id="introArea">$!{keyApplicationIntro}</span>
+			#end
+		</td>
+		<td id = "CELL3" align="right"><a href="gov_url"><img id="flagArea" src="../flags/$!{keyFlagImage}"></td>
+		</tr>
+		</table>
+</div>
+
+<!--
+<h1 class="displayNoneClass">$!encoder.htmlEncode(${applicationTitle})</h1>
 <div class="displayNoneClass">DHIS 2</div>
-<div>
+<div class="flagrea">
     #if ( $keyFlag )
-        <img id="flagArea" src="../flags/$!{keyFlagImage}">
-    #end
-    #if ( $applicationTitle )
-        <span id="titleArea">$!encoder.htmlEncode( ${applicationTitle} )</span>
-    #end
-    #if ( $keyApplicationIntro )
-        <span id="introArea">$!{keyApplicationIntro}</span>
+    <img id="flagArea" src="../flags/$!{keyFlagImage}" style="width:70px; height:40px;">
     #end
 </div>
-    #if ( $keyConfig.selfRegistrationAllowed() )
-    <div id="accountArea">
-        <a id="createAccountButton" class="greenButtonLink" href="account.action">$i18n.getString(
-            'create_an_account')</a>
-    </div>
-    #end
-<div id="loginField">
-    <div id="loginArea">
-        <div id="bannerArea">
-            <a href="https://www.dhis2.org"><img src="../../api/staticContent/logo_front" class="borderNoneClass"></a>
-        </div>
+-->
 
+#if ( $keyConfig.selfRegistrationAllowed() )
+<div id="accountArea">
+    <a id="createAccountButton" class="greenButtonLink" href="account.action">$i18n.getString('create_an_account')</a>
+</div>
+#end
+
+<div id="bannerArea" style="margin-top:20px;">
+    <a href="https://www.dhis2.org"><img src="../../api/staticContent/logo_front" class="borderNoneClass"></a>
+    <div style="margin-top:50px;">
+        <div id="privacylabe"><b>webDHIS – Data Protection and <a href="https://nextcloud.hisp.org/s/8bjPtTENczBB2Ep#pdfviewer"><u>Privacy Statement</u></a></b></div>
+        <div style="font-size:13px;">
+            <p> Health Information System Program South Africa (HISP-SA) operates the webDHIS (the operator) on behalf of the National Department of Health (the responsible party). HISP-SA is dedicated to safeguarding your privacy and ensuring the security of your personal information. More information is provided in the Privacy Statement describing how we gather, utilise, and protect the information you provide us when engaging with the webDHIS. Your trust is important to us, and we undertake to keep your personal information secure. By signing in, I agree to the <a href="https://nextcloud.hisp.org/s/8bjPtTENczBB2Ep#pdfviewer"><u>Privacy Statement</u></a>.
+        </div>
+    </div>
+</div>
+
+<div id="loginField" style="margin-top:20px;">
+    <div id="loginArea">
         <form id="loginForm" action="../../dhis-web-commons-security/login.action" method="post">
             <div>
-                <div id="signInLabel">Sign in</div>
+                <div id="signInLabel">Fill in your details to Sign in</div>
                 <div><input type="text" id="j_username" name="j_username" placeholder="Username" required></div>
-                <div><input type="password" id="j_password" name="j_password" autocomplete="off" placeholder="Password"
-                            required></div>
-                    #if( $twoFactor == true )
-                    <div>
-                    <input type="code" id="2fa_code" name="2fa_code"
-                               placeholder="$i18n.getString('two_factor_authentication_code')">
-                    </div>
-                    #end
-            </div>
-            <div id="submitDiv">
-                <input id="submit" class="button" type="submit" value="$i18n.getString('sign_in')">
+                <div><input type="password" id="j_password" name="j_password" autocomplete="off" placeholder="Password" required></div>
+                #if( $twoFactor == true )
+                <div>
+                    <input type="code" id="2fa_code" name="2fa_code" placeholder="$i18n.getString('two_factor_authentication_code')">
+                </div>
+                #end
             </div>
             #if( $keyAccountRecovery )
-                <div class="paddingTenClass">
-                    <a id="forgotPasswordLink" href="recovery.action">$i18n.getString('forgot_password')</a>
-                </div>
+            <div class="paddingTenClass">
+                <a id="forgotPasswordLink" href="recovery.action" style="padding-left:150px; font-size:13px">$i18n.getString('forgot_password')</a>
+            </div>
             #end
-            #if( $keyConfig.selfRegistrationAllowed() )
-                <div class="paddingTenClass">
-                    <a id="createAccountLink" href="account.action">$i18n.getString('create_an_account')</a>
-                </div>
-            #end
+            <div id="submitDiv" style="color: #929292;">
+                <input id="submit" class="button" type="submit" value="$i18n.getString('sign_in')">
+            </div>
         </form>
 
         #foreach( $provider in $oidcConfig.providers )
-            <form id="oidcProvider_$provider.id" action="../../oauth2/authorization/$provider.id" method="get">
-                <div id="submitDiv">
-                    <input id="submit" class="button oidc${provider.id}Class" type="submit"
-                           value="$i18n.getString( $provider.loginText )">
-                </div>
-            </form>
+        <form id="oidcProvider_$provider.id" action="../../oauth2/authorization/$provider.id" method="get">
+            <div id="submitDiv">
+                <input id="submit" class="button oidc${provider.id}Class" type="submit" value="$i18n.getString($provider.loginText)">
+            </div>
+        </form>
         #end
 
         #if( $failed == true )
-            <div id="loginMessage">
-                $!{request.getSession().getAttribute("LOGIN_FAILED_MESSAGE")}
-            </div>
-            <div id="lockedMessage" style="display: none">
-                $!{request.getSession().getAttribute("LOGIN_FAILED_MESSAGE")}
-            </div>
+        <div id="loginMessage">
+            $!{request.getSession().getAttribute("LOGIN_FAILED_MESSAGE")}
+        </div>
+        <div id="lockedMessage" style="display: none">
+            $!{request.getSession().getAttribute("LOGIN_FAILED_MESSAGE")}
+        </div>
         #end
         #if( $oidcFailure == true )
-            <div id="loginMessage">
-                $i18n.getString('oidc_login_failed')
-            </div>
+        <div id="loginMessage">
+            $i18n.getString('oidc_login_failed')
+        </div>
         #end
-        #if ( $keyApplicationNotification )
-            <div id="notificationArea">
-                $!{keyApplicationNotification}
-            </div>
-        #end
-        <!--[if lte IE 8]>
-            <div id="notificationArea" class="whiteRedClass">$i18n.getString(
-            "unsupported_browser" )</div>
-            <![endif]-->
     </div>
 </div>
+
+<div>
+    #if ( $keyApplicationNotification )
+    <div id="notificationArea">
+        $!{keyApplicationNotification}
+    </div>
+    #end
+    <!--[if lte IE 8]>
+    <div id="notificationArea" class="whiteRedClass">$i18n.getString("unsupported_browser")</div>
+    <![endif]-->
+</div>
+
 <div id="footerArea">
     <div id="leftFooterArea" class="innerFooterArea">
-        <span id="poweredByLabel">Powered by </span><a href="https://www.dhis2.org">DHIS 2</a>&nbsp; <span
-            id="applicationFooter">$!{keyApplicationFooter}</span>
+        <span id="poweredByLabel">Powered by </span><a href="https://www.health.gov.za/">National Department of Health </a>&nbsp; 
+    <br>
+      
+       <span id="hisp">In Partnership With</span><a href="https://www.hisp.org/"> HISP South Africa </a>&nbsp; 
     </div>
     <div id="rightFooterArea" class="innerFooterArea">
-        <span id="applicationRightFooter">$!{keyApplicationRightFooter}</span>
-        <select id="localeSelect" class="marginLeftClass">
-            <option value="">[ $i18n.getString( "change_language" ) ]</option>
-            #foreach( $locale in $availableLocales )
-                <option value="${locale.language}">${locale.displayName}</option>
-            #end
-        </select>
+        
+        <span id="help-desk">Assistance:</span><a href="mailto:zammad.hisp.org">Online Helpdesk</a>&nbsp; 
+        <br>
+         <span id="email">email:</span><a href="mailto:zammad.hisp.org"> zammad.hisp.org</a>&nbsp; 
     </div>
 </div>
 </body>
 </html>
+
