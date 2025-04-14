@@ -7,7 +7,7 @@
 
 html,body
 {
-  background-color: #1d5288;  
+  background-color: #467e4a;  
   color: white;
   font-size: 15px;
 }
@@ -24,41 +24,54 @@ a:hover
   text-decoration: underline;
 }
 
+#headerArea
+{
+  text-align: center;
+  vertical-align: top;
+  max-height: 120px;
+}
+
+#logoArea
+{
+  max-height: 80px;
+}
+
 #flagArea
 {
-  position: absolute;
-  top: 22px;
-  left: 52px;
-  border: 1px solid #d5d5d5;
-  border-radius: 2px;
-  max-width: 105px;
-  margin-bottom: 5%;
+  max-height: 80px;
 }
 
 #titleArea
 {
-  position: absolute;
-  top: 24px;
-  left: 177px;
-  font-size: 19px;
+  position: relative;
+  top: 12px;
+  font-size: 26px;
+  color: #7e480a;
+  word-wrap: break-word;
+  font-weight: bold;
+  text-align: center;
+  vertical-align: top;
 }
 
 #introArea
 {
-  width: 250px;
-  position: absolute;
-  top: 53px;
-  left: 177px;
-  font-size: 17px;
-  color: #bfd9f2;
+  position: relative;
+  top: 12px;
+  font-size: 18px;
+  color: #7e480a;
+  word-wrap: break-word;
+  font-weight: bold;
+  text-align: center;
+  vertical-align: top;
 }
 
 #bannerArea
-{
-  margin-bottom: 21px;
+{  
+  margin-bottom: 2px;
   border: none;
-  text-align: center;
+  text-align: center;   
 }
+
 
 #accountArea
 {
@@ -80,12 +93,16 @@ a:hover
 {
   padding: 5px 0 1px 0;
   font-size: 13px;
+  text-align: center;
 }
 
 #submitDiv
 {
   padding: 3px 0 20px 0;
+  text-align: center;
+  margin: 5px 0 0 0 ;
 }
+
 
 #loginField input[type=text],input[type=password],input[type=code]
 {
@@ -95,7 +112,7 @@ a:hover
   padding: 6px 6px;
   margin: 4px 0;
   border-radius: 3px;
-  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.14);
+  box-sh#bannerAreaadow: inset 0 1px 1px rgba(0, 0, 0, 0.14);
 }
 
 #loginMessage
@@ -116,10 +133,17 @@ a:hover
 {
   background-color: #DAEAFA;
   color: #333;
-  margin-top: 15px;
-  padding: 15px;
+
+  padding: 1px;
   border-radius: 3px;
+  max-width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+display:block;
+
 }
+
 
 #notificationArea:empty
 {
@@ -141,6 +165,7 @@ a:hover
   border-top: 1px solid #416f9d;
   color: #6b90b8;
   width: 100%;
+display:block;
 }
 
 .innerFooterArea
@@ -230,4 +255,29 @@ a:hover
          url('../fonts/LiberationSans-Bold-webfont.svg#webfontHyWb8e07') format('svg');
     font-weight: normal;
     font-style: normal;
+}
+
+table#logoTable {
+  border: none;
+  width: 100%;
+  padding: 0px;
+  border-spacing: 0px;
+  max-height: 100px;
+}
+
+table td#CELL1 {
+    width:25%;
+    border:solid 1px #ffffff;
+    padding: 0px 0px 0px 6px;
+}
+
+table td#CELL2 {
+    width:50%;
+    text-align:centre;
+}
+table td#CELL3 {
+    width:25%;
+}
+table tr#ROW1  {
+    background-color:white; 
 }

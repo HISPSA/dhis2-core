@@ -26,6 +26,8 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.hisp.dhis.system.grid;
+import static com.lowagie.text.Element.ALIGN_CENTER;
+import static com.lowagie.text.Element.ALIGN_LEFT;
 
 import static org.hisp.dhis.common.DimensionalObject.DIMENSION_SEP;
 import static org.hisp.dhis.common.adapter.OutputFormatter.maybeFormat;
@@ -40,10 +42,26 @@ import static org.hisp.dhis.system.util.PDFUtils.getTitleCell;
 import static org.hisp.dhis.system.util.PDFUtils.openDocument;
 import static org.hisp.dhis.system.util.PDFUtils.resetPaddings;
 
+import static org.hisp.dhis.system.util.PDFUtils.getHeaderWidth;
+import static org.hisp.dhis.system.util.PDFUtils.getTextCellMonthlyCustom;
+
 import com.csvreader.CsvWriter;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.lowagie.text.Document;
 import com.lowagie.text.pdf.PdfPTable;
+
+import com.lowagie.text.Element;
+import com.lowagie.text.Phrase;
+import com.lowagie.text.pdf.PdfPCell;
+
+import org.hisp.dhis.i18n.I18nFormat;
+import org.hisp.dhis.organisationunit.OrganisationUnit;
+import org.hisp.dhis.period.Period;
+import org.hisp.dhis.system.util.CodecUtils;
+import org.hisp.dhis.system.util.MathUtils;
+import org.hisp.dhis.system.velocity.VelocityManager;
+
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.StringWriter;
@@ -119,7 +137,7 @@ public class GridUtils {
   private static final String FONT_ARIAL = "Arial";
 
   private static final NodeFilter HTML_ROW_FILTER =
-      new OrFilter(new TagNameFilter("td"), new TagNameFilter("th"));
+          new OrFilter(new TagNameFilter("td"), new TagNameFilter("th"));
 
   private static final Encoder ENCODER = new Encoder();
 
@@ -171,7 +189,20 @@ public class GridUtils {
 
   private static final String ATTR_FIELD = "field";
 
-  private static final String DECIMAL_DIGITS_MASK = "#.##########";
+  //private static final String DECIMAL_DIGITS_MASK = "#.##########";
+
+  //private static final String DECIMAL_DIGITS_MASK = "#.##########";
+
+  private static final String DECIMAL_DIGITS_MASK = "0.0";
+
+  private static final String INTEGER_DIGITS_MASK = "0";
+
+  private static final String SPACE = " ";
+
+  private static final String SIGNOFF_DAILY = "\nSigned of by\nName (PRINT):\t_______________________________________________\t\t\t\tSignature:\t_______________________________________________\t\t\t\tPosition:\t_______________________________________________\t\t\t\tDate:\t_________________________";
+
+  private static final String SIGNOFF_MONTHLY = "\nSigned of by\nName (PRINT):\t__________________________\t\t\t\tSignature:\t__________________________\t\t\t\tPosition:\t__________________________\t\t\t\tDate:\t____________";
+
 
   // 3 comes from org.apache.poi.ss.usermodel.BuiltinFormats and corresponds to the format: #,##0
   private static final short POI_BUILTIN_FORMAT_INDEX_FOR_INTEGER_TYPES = 3;
@@ -208,6 +239,42 @@ public class GridUtils {
     }
   }
 
+
+  /**
+   * Writes a PDF representation of the given list of Grids to the given
+   * OutputStream.
+   */
+  public static void toPdfCustom(List<Grid> grids, OutputStream out, int selectedNoOfSignatures) {
+    Locale DEFAULT_LOCALE = Locale.ENGLISH;
+    if (hasNonEmptyGrid(grids)) {
+      boolean gridsReport = false;
+
+      for (Grid grid : grids) {
+        System.out.println(grid.getWidth());
+
+        if (grid.getWidth() > 2) {
+          gridsReport = true;
+          break;
+        }
+      }
+
+      Document document = openDocument(out, gridsReport);
+
+      for (Grid grid : grids) {
+        if (gridsReport) {
+          toPdfInternalDaily(grid, document, DEFAULT_LOCALE,40F);
+        } else {
+          toPdfInternalMontlhy(grid, document,DEFAULT_LOCALE, 40F);
+        }
+
+      }
+
+      addPdfTimestampCustom(document, false, selectedNoOfSignatures, gridsReport,DEFAULT_LOCALE);
+
+      closeDocument(document);
+    }
+  }
+
   private static void toPdfInternal(Grid grid, Document document, Locale locale, float spacing) {
     if (grid == null || grid.getVisibleWidth() == 0) {
       return;
@@ -221,7 +288,7 @@ public class GridUtils {
     table.setSpacingAfter(spacing);
 
     table.addCell(
-        resetPaddings(getTitleCell(locale, grid.getTitle(), grid.getVisibleWidth()), 0, 30, 0, 0));
+            resetPaddings(getTitleCell(locale, grid.getTitle(), grid.getVisibleWidth()), 0, 30, 0, 0));
 
     if (StringUtils.isNotEmpty(grid.getSubtitle())) {
       table.addCell(getSubtitleCell(locale, grid.getSubtitle(), grid.getVisibleWidth()));
@@ -243,10 +310,150 @@ public class GridUtils {
     addTableToDocument(document, table);
   }
 
+  private static void toPdfInternalMontlhy(Grid grid, Document document,Locale locale,  float spacing) {
+    if (grid == null || grid.getVisibleWidth() == 0) {
+      return;
+    }
+    try {
+
+      PdfPTable table = new PdfPTable(grid.getVisibleWidth());
+
+      int headerwidths[] = getHeaderWidth(grid.getVisibleWidth());
+      table.setHeaderRows(4);
+      table.setKeepTogether(false);
+      table.setWidths(headerwidths);
+      table.setWidthPercentage(100);
+      table.getDefaultCell().setPadding(3);
+      table.getDefaultCell().setBorderWidth(2);
+      table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
+
+      table.addCell(resetPaddings(getTitleCell(locale,grid.getTitle(), grid.getVisibleWidth()), 0, 30, 0, 0));
+
+      if (StringUtils.isNotEmpty(grid.getSubtitle())) {
+        table.addCell(getSubtitleCell(locale,grid.getSubtitle(), grid.getVisibleWidth()));
+        table.addCell(getEmptyCell(grid.getVisibleWidth(), 30));
+      }
+
+      for (GridHeader header : grid.getVisibleHeaders()) {
+        table.addCell(header.getName());
+      }
+
+      int i = 1;
+      for (List<Object> row : grid.getVisibleRows()) {
+        if (i % 2 == 1) {
+          table.getDefaultCell().setGrayFill(0.9f);
+        }
+        for (Object col : row) {
+          String text = col != null ? String.valueOf(col) : EMPTY;
+          table.addCell(text);
+        }
+        if (i % 2 == 1) {
+          table.getDefaultCell().setGrayFill(1);
+        }
+
+        i++;
+      }
+
+      addTableToDocument(document, table);
+    } catch (Exception de) {
+      de.printStackTrace();
+    }
+  }
+
+  private static void toPdfInternalDaily(Grid grid, Document document,Locale locale, float spacing) {
+
+    if (grid == null || grid.getVisibleWidth() == 0) {
+      return;
+    }
+    try {
+
+      PdfPTable table = new PdfPTable(grid.getVisibleWidth());
+
+      int headerwidths[] = getHeaderWidth(grid.getVisibleWidth());
+      table.setSpacingBefore(15f);
+      table.setSpacingAfter(15f);
+      table.setHeaderRows(4);
+      table.setKeepTogether(false);
+      table.setWidths(headerwidths);
+      table.setWidthPercentage(100);
+      table.getDefaultCell().setPadding(3);
+      table.getDefaultCell().setBorderWidth(2);
+      table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
+
+      table.addCell(resetPaddings(getTitleCell(locale,grid.getTitle(), grid.getVisibleWidth()), 0, 30, 0, 0));
+
+      if (StringUtils.isNotEmpty(grid.getSubtitle())) {
+        table.addCell(getSubtitleCell(locale,grid.getSubtitle(), grid.getVisibleWidth()));
+        table.addCell(getEmptyCell(grid.getVisibleWidth(), 30));
+      }
+
+      for (GridHeader header : grid.getVisibleHeaders()) {
+        if (header.getName().startsWith("input")) {
+          table.addCell("Data element");
+        } else {
+          table.addCell(header.getName());
+        }
+      }
+
+      int i = 1;
+
+      for (List<Object> row : grid.getVisibleRows()) {
+        if (i % 2 == 1) {
+          table.getDefaultCell().setGrayFill(0.9f);
+        }
+
+        int j = 1;
+        for (Object col : row) {
+          String text = col != null ? String.valueOf(col) : EMPTY;
+
+          if (j == 1) {
+            table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
+            table.addCell(text);
+
+          } else {
+            table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
+            table.addCell(text);
+          }
+
+          j++;
+        }
+        if (i % 2 == 1) {
+          table.getDefaultCell().setGrayFill(1);
+        }
+
+        i++;
+      }
+
+      addTableToDocument(document, table);
+
+    } catch (Exception de) {
+      de.printStackTrace();
+    }
+  }
+
+
   private static void addPdfTimestamp(Locale locale, Document document, boolean paddingTop) {
     PdfPTable table = new PdfPTable(1);
     table.addCell(getEmptyCell(1, (paddingTop ? 30 : 0)));
     table.addCell(getTextCell(locale, getGeneratedString()));
+    addTableToDocument(document, table);
+  }
+
+  private static void addPdfTimestampCustom(Document document, boolean paddingTop, int selectedNoOfSignatures,
+                                            boolean dailyReport, Locale locale) {
+    PdfPTable table = new PdfPTable(1);
+    table.addCell(getEmptyCell(1, (paddingTop ? 30 : 0)));
+    table.addCell(getTextCell(locale,getGeneratedString()));
+
+    if (selectedNoOfSignatures >= 1) {
+      for (int i = 0; i < selectedNoOfSignatures; i++) {
+        if (dailyReport) {
+          table.addCell(getTextCell(locale,SIGNOFF_DAILY));
+        } else {
+          table.addCell(getTextCellMonthlyCustom(locale,SIGNOFF_MONTHLY));
+        }
+      }
+    }
     addTableToDocument(document, table);
   }
 
@@ -284,17 +491,18 @@ public class GridUtils {
         filenameEncode(StringUtils.defaultIfEmpty(grid.getTitle(), XLS_SHEET_PREFIX + 1));
 
     toXlsInternal(
-        grid,
-        workbook.createSheet(sheetName),
-        createHeaderCellStyle(workbook),
-        createCellStyle(workbook));
+            grid,
+            workbook.createSheet(sheetName),
+            createHeaderCellStyle(workbook),
+            createCellStyle(workbook));
 
     workbook.write(out);
     workbook.close();
   }
 
+  /*
   private static void toXlsInternal(
-      Grid grid, Sheet sheet, CellStyle headerCellStyle, CellStyle cellStyle) {
+          Grid grid, Sheet sheet, CellStyle headerCellStyle, CellStyle cellStyle) {
     if (grid == null) {
       return;
     }
@@ -303,10 +511,10 @@ public class GridUtils {
 
     if (cols > JXL_MAX_COLS) {
       log.warn(
-          "Grid will be truncated, no of columns is greater than JXL max limit: "
-              + cols
-              + "/"
-              + JXL_MAX_COLS);
+              "Grid will be truncated, no of columns is greater than JXL max limit: "
+                      + cols
+                      + "/"
+                      + JXL_MAX_COLS);
     }
 
     int rowNumber = 0;
@@ -359,13 +567,164 @@ public class GridUtils {
           cell.setCellValue(((Number) column).doubleValue());
         } else {
           xlsRow
-              .createCell(columnIndex++, CellType.STRING)
-              .setCellValue(column != null ? String.valueOf(column) : EMPTY);
+                  .createCell(columnIndex++, CellType.STRING)
+                  .setCellValue(column != null ? String.valueOf(column) : EMPTY);
         }
       }
 
       rowNumber++;
     }
+  }
+
+  */
+
+  private static void toXlsInternal(Grid grid, Sheet sheet, CellStyle headerCellStyle, CellStyle cellStyle) {
+    if (grid == null) {
+      return;
+    }
+
+    int cols = grid.getVisibleHeaders().size();
+
+    if (cols > JXL_MAX_COLS) {
+      log.warn("Grid will be truncated, no of columns is greater than JXL max limit: " + cols + "/"
+              + JXL_MAX_COLS);
+    }
+
+    int rowNumber = 0;
+
+    int columnIndex = 0;
+
+    if (StringUtils.isNotEmpty(grid.getTitle())) {
+      Cell cell = sheet.createRow(rowNumber).createCell(columnIndex, CellType.STRING);
+      cell.setCellValue(grid.getTitle());
+      cell.setCellStyle(headerCellStyle);
+
+      rowNumber++;
+    }
+
+    if (StringUtils.isNotEmpty(grid.getSubtitle())) {
+      Cell cell = sheet.createRow(++rowNumber).createCell(columnIndex, CellType.STRING);
+      cell.setCellValue(grid.getSubtitle());
+      cell.setCellStyle(headerCellStyle);
+      rowNumber++;
+    }
+
+    List<GridHeader> headers = ListUtils.subList(grid.getVisibleHeaders(), 0, JXL_MAX_COLS);
+    Row headerRow = sheet.createRow(++rowNumber);
+    for (GridHeader header : headers) {
+      Cell cell = headerRow.createCell(columnIndex++, CellType.STRING);
+      cell.setCellStyle(headerCellStyle);
+      cell.setCellValue(header.getColumn());
+    }
+
+    rowNumber++;
+
+    CellStyle numberCellStyle = getNumberCellStyle(sheet);
+    CellStyle integerCellStyle = getIntegerNumberCellStyle(sheet);
+
+    for (List<Object> row : grid.getVisibleRows()) {
+      Row xlsRow = sheet.createRow(rowNumber);
+      xlsRow.setRowStyle(cellStyle);
+      columnIndex = 0;
+
+      List<Object> columns = ListUtils.subList(row, 0, JXL_MAX_COLS);
+
+      for (Object column : columns) {
+        if (column != null && Number.class.isAssignableFrom(column.getClass())) {
+          Cell cell = xlsRow.createCell(columnIndex++, CellType.NUMERIC);
+          String textColm = column.toString();
+          if (isStringInt(textColm)) {
+            cell.setCellStyle(integerCellStyle);
+            cell.setCellValue(((Number) column).doubleValue());
+//						System.out.println(textColm + ": is Integer data type");
+          } else {
+            cell.setCellStyle(numberCellStyle);
+            cell.setCellValue(((Number) column).doubleValue());
+            // System.out.println(textColm + ": is Double data type");
+          }
+
+        } else {
+          if (column != null) {
+            Cell cell = xlsRow.createCell(columnIndex++, CellType.NUMERIC);
+            if (column instanceof String) { // if value is a string
+              String textColm = column.toString();
+              if (isStringInt(textColm)) {
+                cell.setCellStyle(integerCellStyle);
+                Double dbrst=Double.valueOf(textColm);
+                cell.setCellValue(dbrst);
+//								cell.setCellValue(((Number) column).doubleValue());
+                //System.out.println(textColm + ":  set cell value as string-----> is Integer data type");
+              }else if (isStringDouble(textColm)) {
+                cell.setCellStyle(numberCellStyle);
+                Double dbrst=Double.valueOf(textColm);
+                cell.setCellValue(dbrst);
+//								cell.setCellValue(((Number) column).doubleValue());
+                System.out.println(textColm + ":  set cell value as string-----> is Double data type");
+              }
+              else {
+                cell.setCellValue((String) column); // set cell value as string
+                //System.out.println(cell.getStringCellValue() + ": set cell value as string");
+              }
+
+            } else if (column instanceof Number) { // if value is a number
+              cell.setCellValue(((Number) column).doubleValue()); // set cell value as number
+              //System.out.println(cell.getNumericCellValue() + ": set cell value as number");
+            } else { // if value is neither string nor number
+              cell.setCellValue(column.toString()); // set cell value as string representation of the
+              // object
+              //	System.out.println(cell.getNumericCellValue() + ": set cell value as string representation of the object");
+            }
+          } else {
+            xlsRow.createCell(columnIndex++, CellType.STRING)
+                    .setCellValue(column != null ? String.valueOf(column) : EMPTY);
+            //System.out.println(": is Integer data type vaalue isStringInt all else :");
+          }
+
+        }
+      }
+
+      rowNumber++;
+    }
+  }
+
+  private static String formatPeriods(List<Period> periods, I18nFormat format) {
+    return periods.stream().sorted().map(format::formatPeriod).collect(Collectors.joining(", "));
+  }
+
+  private static boolean isStringInt(String colm) {
+    try {
+      Integer.parseInt(colm);
+    } catch (Exception e) {
+      return false;
+    }
+    return true;
+  }
+
+  private static boolean isStringDouble(String colm) {
+    try {
+      Double.parseDouble(colm);
+    } catch (Exception e) {
+      return false;
+    }
+    return true;
+  }
+
+
+
+  /**
+   * Returns a {@CellStyle} object with a default number format/mask.
+   *
+   * @param sheet the {@link Sheet}
+   * @return the cell style object
+   */
+  private static CellStyle getIntegerNumberCellStyle(Sheet sheet) {
+    Workbook wb = sheet.getWorkbook();
+    DataFormat format = wb.createDataFormat();
+
+    CellStyle cs = wb.createCellStyle();
+    cs.setDataFormat(format.getFormat(INTEGER_DIGITS_MASK));
+
+    return cs;
   }
 
   /**
@@ -439,7 +798,7 @@ public class GridUtils {
 
   /** Writes a Jasper Reports representation of the given Grid to the given OutputStream. */
   public static void toJasperReport(Grid grid, Map<String, Object> params, OutputStream out)
-      throws Exception {
+          throws Exception {
     if (grid == null) {
       return;
     }
@@ -451,7 +810,7 @@ public class GridUtils {
     String report = writer.toString();
 
     JasperReport jasperReport =
-        JasperCompileManager.compileReport(IOUtils.toInputStream(report, StandardCharsets.UTF_8));
+            JasperCompileManager.compileReport(IOUtils.toInputStream(report, StandardCharsets.UTF_8));
 
     JasperPrint print = JasperFillManager.fillReport(jasperReport, params, grid);
 
@@ -519,32 +878,32 @@ public class GridUtils {
   /** Writes an XML representation of the given Grid to the given OutputStream. */
   private static void toXml(Grid grid, XMLWriter writer, String gridRootTag) {
     writer.openElement(
-        gridRootTag,
-        ATTR_TITLE,
-        grid.getTitle(),
-        ATTR_SUBTITLE,
-        grid.getSubtitle(),
-        ATTR_WIDTH,
-        String.valueOf(grid.getWidth()),
-        ATTR_HEIGHT,
-        String.valueOf(grid.getHeight()));
+            gridRootTag,
+            ATTR_TITLE,
+            grid.getTitle(),
+            ATTR_SUBTITLE,
+            grid.getSubtitle(),
+            ATTR_WIDTH,
+            String.valueOf(grid.getWidth()),
+            ATTR_HEIGHT,
+            String.valueOf(grid.getHeight()));
 
     writer.openElement(ATTR_HEADERS);
 
     for (GridHeader header : grid.getHeaders()) {
       writer.writeElement(
-          ATTR_HEADER,
-          null,
-          ATTR_NAME,
-          header.getName(),
-          ATTR_COLUMN,
-          header.getColumn(),
-          ATTR_TYPE,
-          header.getType(),
-          ATTR_HIDDEN,
-          String.valueOf(header.isHidden()),
-          ATTR_META,
-          String.valueOf(header.isMeta()));
+              ATTR_HEADER,
+              null,
+              ATTR_NAME,
+              header.getName(),
+              ATTR_COLUMN,
+              header.getColumn(),
+              ATTR_TYPE,
+              header.getType(),
+              ATTR_HIDDEN,
+              String.valueOf(header.isHidden()),
+              ATTR_META,
+              String.valueOf(header.isMeta()));
     }
 
     // headers
@@ -556,22 +915,22 @@ public class GridUtils {
       writer.openElement(ATTR_REFS);
 
       grid.getRefs()
-          .forEach(
-              ref -> {
-                writer.openElement(ATTR_REF);
+              .forEach(
+                      ref -> {
+                        writer.openElement(ATTR_REF);
 
-                writer.writeElement("uuid", ref.getUuid());
+                        writer.writeElement("uuid", ref.getUuid());
 
-                XmlMapper xmlMapper = new XmlMapper();
+                        XmlMapper xmlMapper = new XmlMapper();
 
-                try {
-                  xmlMapper.writeValue(writer.getXmlStreamWriter(), ref.getNode());
-                } catch (IOException e) {
-                  log.warn("Grid will be truncated, some references not applicable");
-                }
-                // ref
-                writer.closeElement();
-              });
+                        try {
+                          xmlMapper.writeValue(writer.getXmlStreamWriter(), ref.getNode());
+                        } catch (IOException e) {
+                          log.warn("Grid will be truncated, some references not applicable");
+                        }
+                        // ref
+                        writer.closeElement();
+                      });
       // refs
       writer.closeElement();
     }
@@ -615,10 +974,10 @@ public class GridUtils {
    * @return the positional index matching one of the DimensionalItemObject identifiers
    */
   public static int getGridIndexByDimensionItem(
-      List<Object> row, List<DimensionalItemObject> items, int defaultIndex) {
+          List<Object> row, List<DimensionalItemObject> items, int defaultIndex) {
     // accumulate the DimensionalItemObject identifiers into a List
     List<String> valid =
-        items.stream().map(DimensionalItemObject::getDimensionItem).collect(Collectors.toList());
+            items.stream().map(DimensionalItemObject::getDimensionItem).collect(Collectors.toList());
 
     // skip the last index, since it is always the row value
     for (int i = 0; i < row.size() - 1; i++) {
@@ -689,11 +1048,11 @@ public class GridUtils {
           if (firstColumnCount != getColumnCount(row)) // Ignore
           {
             log.warn(
-                "Ignoring row which has "
-                    + row.getColumnCount()
-                    + " columns since table has "
-                    + firstColumnCount
-                    + " columns");
+                    "Ignoring row which has "
+                            + row.getColumnCount()
+                            + " columns since table has "
+                            + firstColumnCount
+                            + " columns");
             continue;
           }
 
@@ -777,7 +1136,7 @@ public class GridUtils {
       List<Object> metaDataRowItems = ListUtils.getAtIndexes(row, metaIndexes);
 
       String key =
-          TextUtils.join(metaDataRowItems, DIMENSION_SEP, DimensionalObjectUtils.NULL_REPLACEMENT);
+              TextUtils.join(metaDataRowItems, DIMENSION_SEP, DimensionalObjectUtils.NULL_REPLACEMENT);
 
       map.put(key, row.get(valueIndex));
     }

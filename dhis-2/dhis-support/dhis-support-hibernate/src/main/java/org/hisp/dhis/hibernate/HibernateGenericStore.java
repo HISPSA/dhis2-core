@@ -87,11 +87,11 @@ public class HibernateGenericStore<T> implements GenericStore<T> {
   protected boolean cacheable;
 
   public HibernateGenericStore(
-      SessionFactory sessionFactory,
-      JdbcTemplate jdbcTemplate,
-      ApplicationEventPublisher publisher,
-      Class<T> clazz,
-      boolean cacheable) {
+          SessionFactory sessionFactory,
+          JdbcTemplate jdbcTemplate,
+          ApplicationEventPublisher publisher,
+          Class<T> clazz,
+          boolean cacheable) {
     checkNotNull(sessionFactory);
     checkNotNull(jdbcTemplate);
     checkNotNull(publisher);
@@ -147,16 +147,16 @@ public class HibernateGenericStore<T> implements GenericStore<T> {
   @SuppressWarnings("unchecked")
   protected final Query<T> getQuery(String hql) {
     return getSession()
-        .createQuery(hql)
-        .setCacheable(cacheable)
-        .setHint(QueryHints.CACHEABLE, cacheable);
+            .createQuery(hql)
+            .setCacheable(cacheable)
+            .setHint(QueryHints.CACHEABLE, cacheable);
   }
 
   protected final <C> Query<C> getQuery(String hql, Class<C> customClass) {
     return getSession()
-        .createQuery(hql, customClass)
-        .setCacheable(cacheable)
-        .setHint(QueryHints.CACHEABLE, cacheable);
+            .createQuery(hql, customClass)
+            .setCacheable(cacheable)
+            .setHint(QueryHints.CACHEABLE, cacheable);
   }
 
   /**
@@ -168,9 +168,9 @@ public class HibernateGenericStore<T> implements GenericStore<T> {
   @SuppressWarnings("unchecked")
   protected final <V> Query<V> getTypedQuery(String hql) {
     return getSession()
-        .createQuery(hql)
-        .setCacheable(cacheable)
-        .setHint(QueryHints.CACHEABLE, cacheable);
+            .createQuery(hql)
+            .setCacheable(cacheable)
+            .setHint(QueryHints.CACHEABLE, cacheable);
   }
 
   /**
@@ -211,14 +211,14 @@ public class HibernateGenericStore<T> implements GenericStore<T> {
    */
   private TypedQuery<T> getExecutableTypedQuery(CriteriaQuery<T> criteriaQuery) {
     return getSession()
-        .createQuery(criteriaQuery)
-        .setCacheable(cacheable)
-        .setHint(QueryHints.CACHEABLE, cacheable);
+            .createQuery(criteriaQuery)
+            .setCacheable(cacheable)
+            .setHint(QueryHints.CACHEABLE, cacheable);
   }
 
   /** Method for adding additional Predicates into where clause */
   protected void preProcessPredicates(
-      CriteriaBuilder builder, List<Function<Root<T>, Predicate>> predicates) {}
+          CriteriaBuilder builder, List<Function<Root<T>, Predicate>> predicates) {}
 
   /**
    * Get single result from executable typedQuery
@@ -266,10 +266,10 @@ public class HibernateGenericStore<T> implements GenericStore<T> {
   }
 
   protected final <V> List<T> getListFromPartitions(
-      CriteriaBuilder builder,
-      Collection<V> values,
-      int partitionSize,
-      Function<Collection<V>, JpaQueryParameters<T>> createPartitionParams) {
+          CriteriaBuilder builder,
+          Collection<V> values,
+          int partitionSize,
+          Function<Collection<V>, JpaQueryParameters<T>> createPartitionParams) {
     if (values == null || values.isEmpty()) {
       return new ArrayList<>(0);
     }
@@ -292,7 +292,7 @@ public class HibernateGenericStore<T> implements GenericStore<T> {
    * @return executable TypedQuery
    */
   protected final TypedQuery<T> getTypedQuery(
-      CriteriaBuilder builder, JpaQueryParameters<T> parameters) {
+          CriteriaBuilder builder, JpaQueryParameters<T> parameters) {
     List<Function<Root<T>, Predicate>> predicateProviders = parameters.getPredicates();
     List<Function<Root<T>, Order>> orderProviders = parameters.getOrders();
     preProcessPredicates(builder, predicateProviders);
@@ -303,13 +303,13 @@ public class HibernateGenericStore<T> implements GenericStore<T> {
 
     if (!predicateProviders.isEmpty()) {
       List<Predicate> predicates =
-          predicateProviders.stream().map(t -> t.apply(root)).collect(Collectors.toList());
+              predicateProviders.stream().map(t -> t.apply(root)).collect(Collectors.toList());
       query.where(predicates.toArray(new Predicate[0]));
     }
 
     if (!orderProviders.isEmpty()) {
       List<Order> orders =
-          orderProviders.stream().map(o -> o.apply(root)).collect(Collectors.toList());
+              orderProviders.stream().map(o -> o.apply(root)).collect(Collectors.toList());
       query.orderBy(orders);
     }
 
@@ -344,7 +344,7 @@ public class HibernateGenericStore<T> implements GenericStore<T> {
     if (!countExpressions.isEmpty()) {
       if (countExpressions.size() > 1) {
         query.multiselect(
-            countExpressions.stream().map(c -> c.apply(root)).collect(Collectors.toList()));
+                countExpressions.stream().map(c -> c.apply(root)).collect(Collectors.toList()));
       } else {
         query.select(countExpressions.get(0).apply(root));
       }
@@ -354,14 +354,14 @@ public class HibernateGenericStore<T> implements GenericStore<T> {
 
     if (!predicateProviders.isEmpty()) {
       List<Predicate> predicates =
-          predicateProviders.stream().map(t -> t.apply(root)).collect(Collectors.toList());
+              predicateProviders.stream().map(t -> t.apply(root)).collect(Collectors.toList());
       query.where(predicates.toArray(new Predicate[0]));
     }
 
     return getSession()
-        .createQuery(query)
-        .setHint(QueryHints.CACHEABLE, parameters.isCacheable(cacheable))
-        .getSingleResult();
+            .createQuery(query)
+            .setHint(QueryHints.CACHEABLE, parameters.isCacheable(cacheable))
+            .getSingleResult();
   }
 
   /**
@@ -386,9 +386,9 @@ public class HibernateGenericStore<T> implements GenericStore<T> {
   @SuppressWarnings("unchecked")
   protected final NativeQuery<T> getSqlQuery(String sql) {
     return getSession()
-        .createNativeQuery(sql)
-        .setCacheable(cacheable)
-        .setHint(QueryHints.CACHEABLE, cacheable);
+            .createNativeQuery(sql)
+            .setCacheable(cacheable)
+            .setHint(QueryHints.CACHEABLE, cacheable);
   }
 
   /**
@@ -399,9 +399,9 @@ public class HibernateGenericStore<T> implements GenericStore<T> {
    */
   protected final NativeQuery<?> getUntypedSqlQuery(String sql) {
     return getSession()
-        .createNativeQuery(sql)
-        .setCacheable(cacheable)
-        .setHint(QueryHints.CACHEABLE, cacheable);
+            .createNativeQuery(sql)
+            .setCacheable(cacheable)
+            .setHint(QueryHints.CACHEABLE, cacheable);
   }
 
   // -------------------------------------------------------------------------
@@ -465,16 +465,16 @@ public class HibernateGenericStore<T> implements GenericStore<T> {
     query.select(root).distinct(true);
 
     List<Predicate> predicates =
-        attributes.stream()
-            .map(
-                attribute ->
-                    builder.isNotNull(
-                        builder.function(
-                            FUNCTION_JSONB_EXTRACT_PATH,
-                            String.class,
-                            root.get("attributeValues"),
-                            builder.literal(attribute.getUid()))))
-            .collect(Collectors.toList());
+            attributes.stream()
+                    .map(
+                            attribute ->
+                                    builder.isNotNull(
+                                            builder.function(
+                                                    FUNCTION_JSONB_EXTRACT_PATH,
+                                                    String.class,
+                                                    root.get("attributeValues"),
+                                                    builder.literal(attribute.getUid()))))
+                    .collect(Collectors.toList());
 
     query.where(builder.or(predicates.toArray(new Predicate[predicates.size()])));
 
@@ -490,35 +490,35 @@ public class HibernateGenericStore<T> implements GenericStore<T> {
 
     CriteriaBuilder.Coalesce<String> coalesce = builder.coalesce();
     attributes.stream()
-        .forEach(
-            attribute ->
-                coalesce.value(
-                    builder.function(
-                        FUNCTION_JSONB_EXTRACT_PATH,
-                        String.class,
-                        root.get("attributeValues"),
-                        builder.literal(attribute.getUid()))));
+            .forEach(
+                    attribute ->
+                            coalesce.value(
+                                    builder.function(
+                                            FUNCTION_JSONB_EXTRACT_PATH,
+                                            String.class,
+                                            root.get("attributeValues"),
+                                            builder.literal(attribute.getUid()))));
 
     query.select(coalesce);
 
     List<Predicate> predicates =
-        attributes.stream()
-            .map(
-                attribute ->
-                    builder.isNotNull(
-                        builder.function(
-                            FUNCTION_JSONB_EXTRACT_PATH,
-                            String.class,
-                            root.get("attributeValues"),
-                            builder.literal(attribute.getUid()))))
-            .collect(Collectors.toList());
+            attributes.stream()
+                    .map(
+                            attribute ->
+                                    builder.isNotNull(
+                                            builder.function(
+                                                    FUNCTION_JSONB_EXTRACT_PATH,
+                                                    String.class,
+                                                    root.get("attributeValues"),
+                                                    builder.literal(attribute.getUid()))))
+                    .collect(Collectors.toList());
 
     query.where(builder.or(predicates.toArray(new Predicate[predicates.size()])));
 
     List<String> result = getSession().createQuery(query).list();
 
     return convertListJsonToListObject(
-        JsonAttributeValueBinaryType.MAPPER, result, AttributeValue.class);
+            JsonAttributeValueBinaryType.MAPPER, result, AttributeValue.class);
   }
 
   @Override
@@ -530,16 +530,16 @@ public class HibernateGenericStore<T> implements GenericStore<T> {
     query.select(builder.countDistinct(root));
 
     List<Predicate> predicates =
-        attributes.stream()
-            .map(
-                attribute ->
-                    builder.isNotNull(
-                        builder.function(
-                            FUNCTION_JSONB_EXTRACT_PATH,
-                            String.class,
-                            root.get("attributeValues"),
-                            builder.literal(attribute.getUid()))))
-            .collect(Collectors.toList());
+            attributes.stream()
+                    .map(
+                            attribute ->
+                                    builder.isNotNull(
+                                            builder.function(
+                                                    FUNCTION_JSONB_EXTRACT_PATH,
+                                                    String.class,
+                                                    root.get("attributeValues"),
+                                                    builder.literal(attribute.getUid()))))
+                    .collect(Collectors.toList());
 
     query.where(builder.or(predicates.toArray(new Predicate[predicates.size()])));
 
@@ -557,7 +557,7 @@ public class HibernateGenericStore<T> implements GenericStore<T> {
 
     return getCount(
             builder, newJpaParameters().count(root -> builder.countDistinct(root.get("id"))))
-        .intValue();
+            .intValue();
   }
 
   @Override
@@ -569,13 +569,13 @@ public class HibernateGenericStore<T> implements GenericStore<T> {
 
     query.select(root);
     query.where(
-        builder
-            .function(
-                FUNCTION_JSONB_EXTRACT_PATH,
-                String.class,
-                root.get("attributeValues"),
-                builder.literal(attribute.getUid()))
-            .isNotNull());
+            builder
+                    .function(
+                            FUNCTION_JSONB_EXTRACT_PATH,
+                            String.class,
+                            root.get("attributeValues"),
+                            builder.literal(attribute.getUid()))
+                    .isNotNull());
 
     return getSession().createQuery(query).list();
   }
@@ -588,46 +588,46 @@ public class HibernateGenericStore<T> implements GenericStore<T> {
     Root<T> root = query.from(getClazz());
     query.select(root);
     query.where(
-        builder.equal(
-            builder.function(
-                FUNCTION_JSONB_EXTRACT_PATH_TEXT,
-                String.class,
-                root.get("attributeValues"),
-                builder.literal(attribute.getUid()),
-                builder.literal("value")),
-            value));
+            builder.equal(
+                    builder.function(
+                            FUNCTION_JSONB_EXTRACT_PATH_TEXT,
+                            String.class,
+                            root.get("attributeValues"),
+                            builder.literal(attribute.getUid()),
+                            builder.literal("value")),
+                    value));
     return getSession().createQuery(query).list();
   }
 
   @Override
   public List<AttributeValue> getAttributeValueByAttributeAndValue(
-      Attribute attribute, String value) {
+          Attribute attribute, String value) {
     CriteriaBuilder builder = getCriteriaBuilder();
 
     CriteriaQuery<String> query = builder.createQuery(String.class);
     Root<T> root = query.from(getClazz());
 
     query.select(
-        builder.function(
-            FUNCTION_JSONB_EXTRACT_PATH,
-            String.class,
-            root.get("attributeValues"),
-            builder.literal(attribute.getUid())));
+            builder.function(
+                    FUNCTION_JSONB_EXTRACT_PATH,
+                    String.class,
+                    root.get("attributeValues"),
+                    builder.literal(attribute.getUid())));
 
     query.where(
-        builder.equal(
-            builder.function(
-                FUNCTION_JSONB_EXTRACT_PATH_TEXT,
-                String.class,
-                root.get("attributeValues"),
-                builder.literal(attribute.getUid()),
-                builder.literal("value")),
-            value));
+            builder.equal(
+                    builder.function(
+                            FUNCTION_JSONB_EXTRACT_PATH_TEXT,
+                            String.class,
+                            root.get("attributeValues"),
+                            builder.literal(attribute.getUid()),
+                            builder.literal("value")),
+                    value));
 
     List<String> result = getSession().createQuery(query).list();
 
     return convertListJsonToListObject(
-        JsonAttributeValueBinaryType.MAPPER, result, AttributeValue.class);
+            JsonAttributeValueBinaryType.MAPPER, result, AttributeValue.class);
   }
 
   @Override
@@ -638,14 +638,14 @@ public class HibernateGenericStore<T> implements GenericStore<T> {
     Root<T> root = query.from(getClazz());
     query.select(root);
     query.where(
-        builder.equal(
-            builder.function(
-                FUNCTION_JSONB_EXTRACT_PATH_TEXT,
-                String.class,
-                root.get("attributeValues"),
-                builder.literal(attributeValue.getAttribute().getUid()),
-                builder.literal("value")),
-            attributeValue.getValue()));
+            builder.equal(
+                    builder.function(
+                            FUNCTION_JSONB_EXTRACT_PATH_TEXT,
+                            String.class,
+                            root.get("attributeValues"),
+                            builder.literal(attributeValue.getAttribute().getUid()),
+                            builder.literal("value")),
+                    attributeValue.getValue()));
     return getSession().createQuery(query).list();
   }
 
@@ -653,14 +653,14 @@ public class HibernateGenericStore<T> implements GenericStore<T> {
   public boolean isAttributeValueUnique(T object, AttributeValue attributeValue) {
     List<T> objects = getByAttributeValue(attributeValue);
     return objects.isEmpty()
-        || (object != null && objects.size() == 1 && object.equals(objects.get(0)));
+            || (object != null && objects.size() == 1 && object.equals(objects.get(0)));
   }
 
   @Override
   public boolean isAttributeValueUnique(T object, Attribute attribute, String value) {
     List<T> objects = getByAttributeAndValue(attribute, value);
     return objects.isEmpty()
-        || (object != null && objects.size() == 1 && object.equals(objects.get(0)));
+            || (object != null && objects.size() == 1 && object.equals(objects.get(0)));
   }
 
   @Override
@@ -671,14 +671,14 @@ public class HibernateGenericStore<T> implements GenericStore<T> {
     Root<T> root = query.from(getClazz());
     query.select(root);
     query.where(
-        builder
-            .function(
-                FUNCTION_JSONB_EXTRACT_PATH_TEXT,
-                String.class,
-                root.get("attributeValues"),
-                builder.literal(attribute.getUid()),
-                builder.literal("value"))
-            .in(values));
+            builder
+                    .function(
+                            FUNCTION_JSONB_EXTRACT_PATH_TEXT,
+                            String.class,
+                            root.get("attributeValues"),
+                            builder.literal(attribute.getUid()),
+                            builder.literal("value"))
+                    .in(values));
 
     return getSession().createQuery(query).list();
   }
@@ -686,13 +686,13 @@ public class HibernateGenericStore<T> implements GenericStore<T> {
   @Override
   public int updateAllAttributeValues(Attribute attribute, String newValue, boolean createMissing) {
     String template =
-        "update %s set attributevalues = jsonb_strip_nulls("
-            + "jsonb_set(cast(attributevalues as jsonb), '{%s}', cast(:value as jsonb), :createMissing))";
+            "update %s set attributevalues = jsonb_strip_nulls("
+                    + "jsonb_set(cast(attributevalues as jsonb), '{%s}', cast(:value as jsonb), :createMissing))";
     return getSession()
-        .createSQLQuery(format(template, getClazz().getSimpleName(), attribute.getUid()))
-        .setParameter("value", newValue)
-        .setParameter("createMissing", createMissing)
-        .executeUpdate();
+            .createSQLQuery(format(template, getClazz().getSimpleName(), attribute.getUid()))
+            .setParameter("value", newValue)
+            .setParameter("createMissing", createMissing)
+            .executeUpdate();
   }
 
   /**
@@ -714,16 +714,16 @@ public class HibernateGenericStore<T> implements GenericStore<T> {
    * @return List of converted Object
    */
   public static <T> List<T> convertListJsonToListObject(
-      ObjectMapper mapper, List<String> content, Class<T> klass) {
+          ObjectMapper mapper, List<String> content, Class<T> klass) {
     return content.stream()
-        .map(
-            json -> {
-              try {
-                return mapper.readValue(json, klass);
-              } catch (IOException e) {
-                throw new RuntimeException(e);
-              }
-            })
-        .collect(Collectors.toList());
+            .map(
+                    json -> {
+                      try {
+                        return mapper.readValue(json, klass);
+                      } catch (IOException e) {
+                        throw new RuntimeException(e);
+                      }
+                    })
+            .collect(Collectors.toList());
   }
 }

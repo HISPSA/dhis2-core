@@ -38,6 +38,11 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import org.springframework.security.core.session.SessionInformation;
+import org.springframework.security.core.session.SessionRegistry;
+
+
+
 /**
  * This interface defined methods for getting access to the currently logged in user and clearing
  * the logged in state. If no user is logged in or the auto access admin is active, all user access
@@ -99,6 +104,7 @@ public class CurrentUserService {
 
     return user == null ? null : getCurrentUserGroupsInfo(user.getUid());
   }
+
 
   @Transactional(readOnly = true)
   public CurrentUserGroupInfo getCurrentUserGroupsInfo(String userUID) {

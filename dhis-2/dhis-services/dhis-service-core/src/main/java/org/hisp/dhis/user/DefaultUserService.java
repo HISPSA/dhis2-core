@@ -171,14 +171,14 @@ public class DefaultUserService implements UserService {
     userStore.update(user);
 
     AuditLogUtil.infoWrapper(
-        log, currentUserService.getCurrentUsername(), user, AuditLogUtil.ACTION_UPDATE);
+            log, currentUserService.getCurrentUsername(), user, AuditLogUtil.ACTION_UPDATE);
   }
 
   @Override
   @Transactional
   public void deleteUser(User user) {
     AuditLogUtil.infoWrapper(
-        log, currentUserService.getCurrentUsername(), user, AuditLogUtil.ACTION_DELETE);
+            log, currentUserService.getCurrentUsername(), user, AuditLogUtil.ACTION_DELETE);
 
     userStore.delete(user);
   }
@@ -294,8 +294,8 @@ public class DefaultUserService implements UserService {
 
   private void handleUserQueryParams(UserQueryParams params) {
     boolean canSeeOwnRoles =
-        params.isCanSeeOwnRoles()
-            || systemSettingManager.getBoolSetting(SettingKey.CAN_GRANT_OWN_USER_ROLES);
+            params.isCanSeeOwnRoles()
+                    || systemSettingManager.getBoolSetting(SettingKey.CAN_GRANT_OWN_USER_ROLES);
     params.setDisjointRoles(!canSeeOwnRoles);
 
     if (!params.hasUser()) {
@@ -329,7 +329,7 @@ public class DefaultUserService implements UserService {
 
   private boolean validateUserQueryParams(UserQueryParams params) {
     if (params.isCanManage()
-        && (params.getUser() == null || !params.getUser().hasManagedGroups())) {
+            && (params.getUser() == null || !params.getUser().hasManagedGroups())) {
       log.warn("Cannot get managed users as user does not have any managed groups");
       return false;
     }
@@ -340,7 +340,7 @@ public class DefaultUserService implements UserService {
     }
 
     if (params.isDisjointRoles()
-        && (params.getUser() == null || !params.getUser().hasUserRoles())) {
+            && (params.getUser() == null || !params.getUser().hasUserRoles())) {
       log.warn("Cannot get users with disjoint roles as user does not have any user roles");
       return false;
     }
@@ -490,7 +490,7 @@ public class DefaultUserService implements UserService {
     User user = currentUserService.getCurrentUser();
 
     boolean canGrantOwnUserRoles =
-        systemSettingManager.getBoolSetting(SettingKey.CAN_GRANT_OWN_USER_ROLES);
+            systemSettingManager.getBoolSetting(SettingKey.CAN_GRANT_OWN_USER_ROLES);
 
     FilterUtils.filter(userRoles, new UserRoleCanIssueFilter(user, canGrantOwnUserRoles));
   }
@@ -517,8 +517,8 @@ public class DefaultUserService implements UserService {
     }
 
     boolean isNewPassword =
-        StringUtils.isBlank(user.getPassword())
-            || !passwordManager.matches(rawPassword, user.getPassword());
+            StringUtils.isBlank(user.getPassword())
+                    || !passwordManager.matches(rawPassword, user.getPassword());
 
     if (isNewPassword) {
       user.setPasswordLastUpdated(new Date());
@@ -651,16 +651,16 @@ public class DefaultUserService implements UserService {
   }
 
   private void checkIsInOrgUnitHierarchy(
-      Set<OrganisationUnit> organisationUnits, User currentUser, List<ErrorReport> errors) {
+          Set<OrganisationUnit> organisationUnits, User currentUser, List<ErrorReport> errors) {
     for (OrganisationUnit orgUnit : organisationUnits) {
       boolean inUserHierarchy = organisationUnitService.isInUserHierarchy(currentUser, orgUnit);
       if (!inUserHierarchy) {
         errors.add(
-            new ErrorReport(
-                OrganisationUnit.class,
-                ErrorCode.E7617,
-                orgUnit.getUid(),
-                currentUser.getUsername()));
+                new ErrorReport(
+                        OrganisationUnit.class,
+                        ErrorCode.E7617,
+                        orgUnit.getUid(),
+                        currentUser.getUsername()));
       }
     }
   }
@@ -679,37 +679,37 @@ public class DefaultUserService implements UserService {
     }
 
     user.getGroups()
-        .forEach(
-            ug -> {
-              if (!(currentUser.canManage(ug)
-                  || userGroupService.canAddOrRemoveMember(ug.getUid()))) {
-                errors.add(new ErrorReport(UserGroup.class, ErrorCode.E3005, currentUser, ug));
-              }
-            });
+            .forEach(
+                    ug -> {
+                      if (!(currentUser.canManage(ug)
+                              || userGroupService.canAddOrRemoveMember(ug.getUid()))) {
+                        errors.add(new ErrorReport(UserGroup.class, ErrorCode.E3005, currentUser, ug));
+                      }
+                    });
   }
 
   private void checkHasAccessToUserRoles(User user, User currentUser, List<ErrorReport> errors) {
     Set<UserRole> userRoles = user.getUserRoles();
 
     boolean canGrantOwnUserRoles =
-        systemSettingManager.getBoolSetting(SettingKey.CAN_GRANT_OWN_USER_ROLES);
+            systemSettingManager.getBoolSetting(SettingKey.CAN_GRANT_OWN_USER_ROLES);
 
     if (userRoles != null) {
       List<UserRole> roles =
-          userRoleStore.getByUid(
-              userRoles.stream().map(BaseIdentifiableObject::getUid).collect(Collectors.toList()));
+              userRoleStore.getByUid(
+                      userRoles.stream().map(BaseIdentifiableObject::getUid).collect(Collectors.toList()));
 
       roles.forEach(
-          ur -> {
-            if (ur == null) {
-              errors.add(new ErrorReport(UserRole.class, ErrorCode.E3032, user.getUsername()));
+              ur -> {
+                if (ur == null) {
+                  errors.add(new ErrorReport(UserRole.class, ErrorCode.E3032, user.getUsername()));
 
-            } else if (!currentUser.canIssueUserRole(ur, canGrantOwnUserRoles)) {
-              errors.add(
-                  new ErrorReport(
-                      UserRole.class, ErrorCode.E3003, currentUser.getUsername(), ur.getName()));
-            }
-          });
+                } else if (!currentUser.canIssueUserRole(ur, canGrantOwnUserRoles)) {
+                  errors.add(
+                          new ErrorReport(
+                                  UserRole.class, ErrorCode.E3003, currentUser.getUsername(), ur.getName()));
+                }
+              });
     }
   }
 
@@ -752,12 +752,12 @@ public class DefaultUserService implements UserService {
   public void enableTwoFa(User user, String code) {
     if (user.getSecret() == null) {
       throw new IllegalStateException(
-          "User has not asked for a QR code yet, call the /qr endpoint first");
+              "User has not asked for a QR code yet, call the /qr endpoint first");
     }
 
     if (!UserService.hasTwoFactorSecretForApproval(user)) {
       throw new IllegalStateException(
-          "QR already approved, you must call /disable and then call /qr before you can enable");
+              "QR already approved, you must call /disable and then call /qr before you can enable");
     }
 
     if (!TwoFactoryAuthenticationUtils.verify(code, user.getSecret())) {
@@ -808,14 +808,14 @@ public class DefaultUserService implements UserService {
   @Override
   @Transactional
   public void privilegedTwoFactorDisable(
-      User currentUser, String userUid, Consumer<ErrorReport> errors) {
+          User currentUser, String userUid, Consumer<ErrorReport> errors) {
     User user = getUser(userUid);
     if (user == null) {
       throw new IllegalArgumentException("User not found");
     }
 
     if (currentUser.getUid().equals(user.getUid())
-        || !canCurrentUserCanModify(currentUser, user, errors)) {
+            || !canCurrentUserCanModify(currentUser, user, errors)) {
       throw new UpdateAccessDeniedException(ErrorCode.E3021.getMessage());
     }
 
@@ -831,8 +831,8 @@ public class DefaultUserService implements UserService {
   @Transactional
   public int disableUsersInactiveSince(Date inactiveSince) {
     if (ZonedDateTime.ofInstant(inactiveSince.toInstant(), systemDefault())
-        .plusMonths(1)
-        .isAfter(now())) {
+            .plusMonths(1)
+            .isAfter(now())) {
       // we never disable users that have been active during last month
       return 0;
     }
@@ -848,7 +848,7 @@ public class DefaultUserService implements UserService {
   @Override
   @Transactional(readOnly = true)
   public Map<String, Optional<Locale>> findNotifiableUsersWithPasswordLastUpdatedBetween(
-      Date from, Date to) {
+          Date from, Date to) {
     return userStore.findNotifiableUsersWithPasswordLastUpdatedBetween(from, to);
   }
 
@@ -874,11 +874,11 @@ public class DefaultUserService implements UserService {
     boolean accountNonExpired = !isAccountExpired(user);
 
     if (ObjectUtils.anyIsFalse(
-        enabled, credentialsNonExpired, accountNonLocked, accountNonExpired)) {
+            enabled, credentialsNonExpired, accountNonLocked, accountNonExpired)) {
       log.info(
-          String.format(
-              "Login attempt for disabled/locked user: '%s', enabled: %b, account non-expired: %b, user non-expired: %b, account non-locked: %b",
-              username, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked));
+              String.format(
+                      "Login attempt for disabled/locked user: '%s', enabled: %b, account non-expired: %b, user non-expired: %b, account non-locked: %b",
+                      username, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked));
     }
 
     return createUserDetails(user, accountNonLocked, credentialsNonExpired);
@@ -886,38 +886,38 @@ public class DefaultUserService implements UserService {
 
   @Override
   public CurrentUserDetailsImpl createUserDetails(
-      User user, boolean accountNonLocked, boolean credentialsNonExpired) {
+          User user, boolean accountNonLocked, boolean credentialsNonExpired) {
     return CurrentUserDetailsImpl.builder()
-        .uid(user.getUid())
-        .username(user.getUsername())
-        .password(user.getPassword())
-        .enabled(user.isEnabled())
-        .accountNonExpired(user.isAccountNonExpired())
-        .accountNonLocked(accountNonLocked)
-        .credentialsNonExpired(credentialsNonExpired)
-        .authorities(user.getAuthorities())
-        .userSettings(new HashMap<>())
-        .userGroupIds(
-            user.getUid() == null
-                ? Set.of()
-                : currentUserService.getCurrentUserGroupsInfo(user.getUid()).getUserGroupUIDs())
-        .isSuper(user.isSuper())
-        .build();
+            .uid(user.getUid())
+            .username(user.getUsername())
+            .password(user.getPassword())
+            .enabled(user.isEnabled())
+            .accountNonExpired(user.isAccountNonExpired())
+            .accountNonLocked(accountNonLocked)
+            .credentialsNonExpired(credentialsNonExpired)
+            .authorities(user.getAuthorities())
+            .userSettings(new HashMap<>())
+            .userGroupIds(
+                    user.getUid() == null
+                            ? Set.of()
+                            : currentUserService.getCurrentUserGroupsInfo(user.getUid()).getUserGroupUIDs())
+            .isSuper(user.isSuper())
+            .build();
   }
 
   @Override
   @Transactional(readOnly = true)
   public boolean canCurrentUserCanModify(
-      User currentUser, User userToModify, Consumer<ErrorReport> errors) {
+          User currentUser, User userToModify, Consumer<ErrorReport> errors) {
     if (!aclService.canUpdate(currentUser, userToModify)) {
       errors.accept(
-          new ErrorReport(
-              UserRole.class, ErrorCode.E3001, currentUser.getUsername(), userToModify.getName()));
+              new ErrorReport(
+                      UserRole.class, ErrorCode.E3001, currentUser.getUsername(), userToModify.getName()));
       return false;
     }
 
     if (!canAddOrUpdateUser(getUids(userToModify.getGroups()), currentUser)
-        || !currentUser.canModifyUser(userToModify)) {
+            || !currentUser.canModifyUser(userToModify)) {
       errors.accept(new ErrorReport(UserRole.class, ErrorCode.E3020, userToModify.getName()));
       return false;
     }
@@ -956,7 +956,7 @@ public class DefaultUserService implements UserService {
 
     if (!before) {
       throw new UpdateAccessDeniedException(
-          "You can not enable 2FA with this API endpoint, only disable.");
+              "You can not enable 2FA with this API endpoint, only disable.");
     }
 
     CurrentUserDetails currentUserDetails = CurrentUserUtil.getCurrentUserDetails();
@@ -974,15 +974,15 @@ public class DefaultUserService implements UserService {
     User currentUser = getUser(currentUserDetails.getUid());
     if (!aclService.canUpdate(currentUser, userToModify)) {
       throw new UpdateAccessDeniedException(
-          String.format(
-              "User `%s` is not allowed to update object `%s`.",
-              currentUser.getUsername(), userToModify));
+              String.format(
+                      "User `%s` is not allowed to update object `%s`.",
+                      currentUser.getUsername(), userToModify));
     }
 
     if (!canAddOrUpdateUser(getUids(userToModify.getGroups()), currentUser)
-        || !currentUser.canModifyUser(userToModify)) {
+            || !currentUser.canModifyUser(userToModify)) {
       throw new UpdateAccessDeniedException(
-          "You don't have the proper permissions to update this user.");
+              "You don't have the proper permissions to update this user.");
     }
   }
 

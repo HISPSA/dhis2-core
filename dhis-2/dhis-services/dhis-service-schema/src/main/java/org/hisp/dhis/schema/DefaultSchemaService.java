@@ -210,6 +210,10 @@ public class DefaultSchemaService implements SchemaService {
     register(new ItemConfigSchemaDescriptor());
     register(new LayoutSchemaDescriptor());
     register(new RouteSchemaDescriptor());
+
+    register( new ApprovalValidationRuleSchemaDescriptor() );
+    register( new ApprovalValidationSchemaDescriptor() );
+
   }
 
   private final Map<Class<?>, Schema> classSchemaMap = new HashMap<>();
