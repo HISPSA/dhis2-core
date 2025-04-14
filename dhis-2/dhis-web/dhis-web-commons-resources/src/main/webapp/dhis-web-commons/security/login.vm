@@ -45,6 +45,51 @@
     .marginLeftClass {
         margin-left: 30px;
     }
+   body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+
+      
+        #headerArea {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 0;
+           
+            
+        }
+         #bannerArea {
+            margin-top: 120px; 
+            
+           
+        }
+
+       
+        #logoTable {
+            width: 100%;
+            border-collapse: collapse; /* Prevents spacing between table cells */
+            margin: 0;
+            padding: 0;
+        }
+
+       
+        td {
+            padding: 0;
+            margin: 0;
+        }
+
+        
+        #CELL1, #CELL2, #CELL3 {
+            padding: 10px; 
+        }
+
+        #titleArea, #introArea {
+            font-size: 16px; 
+        }
 
      #foreach( $provider in $oidcConfig.providers )
             .oidc${provider.id}Class {
@@ -81,6 +126,8 @@
 <!--
 <h1 class="displayNoneClass">$!encoder.htmlEncode(${applicationTitle})</h1>
 <div class="displayNoneClass">DHIS 2</div>
+
+
 <div class="flagrea">
     #if ( $keyFlag )
     <img id="flagArea" src="../flags/$!{keyFlagImage}" style="width:70px; height:40px;">
@@ -88,15 +135,16 @@
 </div>
 -->
 
+
 #if ( $keyConfig.selfRegistrationAllowed() )
 <div id="accountArea">
     <a id="createAccountButton" class="greenButtonLink" href="account.action">$i18n.getString('create_an_account')</a>
 </div>
 #end
 
-<div id="bannerArea" style="margin-top:20px;">
+<div id="bannerArea">
     <a href="https://www.dhis2.org"><img src="../../api/staticContent/logo_front" class="borderNoneClass"></a>
-    <div style="margin-top:50px;">
+    <div style="margin-top:20px;">
         <div id="privacylabe"><b>webDHIS – Data Protection and <a href="https://nextcloud.hisp.org/s/8bjPtTENczBB2Ep#pdfviewer"><u>Privacy Statement</u></a></b></div>
         <div style="font-size:13px;">
             <p> Health Information System Program South Africa (HISP-SA) operates the webDHIS (the operator) on behalf of the National Department of Health (the responsible party). HISP-SA is dedicated to safeguarding your privacy and ensuring the security of your personal information. More information is provided in the Privacy Statement describing how we gather, utilise, and protect the information you provide us when engaging with the webDHIS. Your trust is important to us, and we undertake to keep your personal information secure. By signing in, I agree to the <a href="https://nextcloud.hisp.org/s/8bjPtTENczBB2Ep#pdfviewer"><u>Privacy Statement</u></a>.

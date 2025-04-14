@@ -133,15 +133,17 @@ a:hover
 {
   background-color: #DAEAFA;
   color: #333;
+
   padding: 1px;
   border-radius: 3px;
   max-width: fit-content;
   margin-left: auto;
   margin-right: auto;
   width: 100%;
-  display:block;
+display:block;
 
 }
+
 
 #notificationArea:empty
 {
@@ -163,7 +165,7 @@ a:hover
   border-top: 1px solid #416f9d;
   color: #6b90b8;
   width: 100%;
-  margin-top:70px;
+display:block;
 }
 
 .innerFooterArea
@@ -264,18 +266,18 @@ table#logoTable {
 }
 
 table td#CELL1 {
-  width:25%;
-  border:solid 1px #ffffff;
-  padding: 0px 0px 0px 6px;
+    width:25%;
+    border:solid 1px #ffffff;
+    padding: 0px 0px 0px 6px;
 }
 
 table td#CELL2 {
-  width:50%;
-  text-align:centre;
+    width:50%;
+    text-align:centre;
 }
 table td#CELL3 {
-  width:25%;
+    width:25%;
 }
 table tr#ROW1  {
-  background-color:white; 
+    background-color:white; 
 }
