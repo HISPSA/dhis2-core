@@ -60,118 +60,123 @@ import org.springframework.stereotype.Component;
 @Component("org.hisp.dhis.analytics.QueryValidator")
 @RequiredArgsConstructor
 public class DefaultQueryValidator implements QueryValidator {
-  @Override
-  public void validate(DataQueryParams params) throws IllegalQueryException {
-    ErrorMessage error = validateForErrorMessage(params);
+    @Override
+    public void validate(DataQueryParams params) throws IllegalQueryException {
+        ErrorMessage error = validateForErrorMessage(params);
 
-    if (error != null) {
-      log.warn(
-          String.format(
-              "Analytics validation failed, code: '%s', message: '%s'",
-              error.getErrorCode(), error.getMessage()));
+        if (error != null) {
+            log.warn(
+                    String.format(
+                            "Analytics validation failed, code: '%s', message: '%s'",
+                            error.getErrorCode(), error.getMessage()));
 
-      throw new IllegalQueryException(error);
-    }
-  }
-
-  @Override
-  public ErrorMessage validateForErrorMessage(DataQueryParams params) {
-    ErrorMessage error = null;
-
-    if (params == null) {
-      throw new IllegalQueryException(ErrorCode.E7100);
+            throw new IllegalQueryException(error);
+        }
     }
 
-    List<DimensionalItemObject> dataElements =
-        Lists.newArrayList(params.getDataElementsOperandsProgramDataElements());
-    List<DataElement> nonAggDataElements =
-        FilterUtils.inverseFilter(
-            asTypedList(dataElements), AggregatableDataElementFilter.INSTANCE);
+    @Override
+    public ErrorMessage validateForErrorMessage(DataQueryParams params) {
+        ErrorMessage error = null;
 
-    if (!params.isSkipDataDimensionValidation()) {
-      if (params.getDimensions().isEmpty()) {
-        error = new ErrorMessage(ErrorCode.E7101);
-      } else if (!params.isSkipData()
-          && params.getDataDimensionAndFilterOptions().isEmpty()
-          && params.getAllDataElementGroups().isEmpty()) {
-        error = new ErrorMessage(ErrorCode.E7102);
-      } else if (!params.getDimensionsAsFilters().isEmpty()) {
-        error = new ErrorMessage(ErrorCode.E7103, getDimensions(params.getDimensionsAsFilters()));
-      }
-    }
+        if (params == null) {
+            throw new IllegalQueryException(ErrorCode.E7100);
+        }
 
-    if (!params.hasPeriods() && !params.isSkipPartitioning() && !params.hasStartEndDate()) {
-      error = new ErrorMessage(ErrorCode.E7104);
-    } else if (params.hasPeriods() && params.hasStartEndDate()) {
-      error = new ErrorMessage(ErrorCode.E7105);
-    } else if (params.hasStartEndDate() && params.startDateAfterEndDate()) {
-      error = new ErrorMessage(ErrorCode.E7106);
-    } else if (params.hasStartEndDate() && !params.getReportingRates().isEmpty()) {
-      error = new ErrorMessage(ErrorCode.E7107);
-    } else if ((!params.getFilterIndicators().isEmpty()
-            || !params.getFilterProgramIndicators().isEmpty()
-            || !params.getFilterExpressionDimensionItems().isEmpty())
-        && params.getFilterOptions(DATA_X_DIM_ID).size() > 1) {
-      error = new ErrorMessage(ErrorCode.E7108);
-    } else if (!params.getFilterReportingRates().isEmpty()
-        && params.getFilterOptions(DATA_X_DIM_ID).size() > 1) {
-      error = new ErrorMessage(ErrorCode.E7109);
-    } else if (params
-        .getFilters()
-        .contains(new BaseDimensionalObject(CATEGORYOPTIONCOMBO_DIM_ID))) {
-      error = new ErrorMessage(ErrorCode.E7110);
-    } else if (!params.getDuplicateDimensions().isEmpty()) {
-      error = new ErrorMessage(ErrorCode.E7111, getDimensions(params.getDuplicateDimensions()));
-    } else if (!params.getAllReportingRates().isEmpty()
-        && !params.containsOnlyDimensionsAndFilters(COMPLETENESS_DIMENSION_TYPES)) {
-      error = new ErrorMessage(ErrorCode.E7112, COMPLETENESS_DIMENSION_TYPES);
-    } else if (params.hasDimensionOrFilter(CATEGORYOPTIONCOMBO_DIM_ID)
-        && params.getAllDataElements().isEmpty()) {
-      error = new ErrorMessage(ErrorCode.E7113);
-    } else if (params.hasDimensionOrFilter(CATEGORYOPTIONCOMBO_DIM_ID)
-        && (params.getAllDataElements().size() != params.getAllDataDimensionItems().size())) {
-      error = new ErrorMessage(ErrorCode.E7114);
-    } else if (!nonAggDataElements.isEmpty()) {
-      error = new ErrorMessage(ErrorCode.E7115, getUids(nonAggDataElements));
-    } else if (!params.getSkipTotalDataElements().isEmpty()) {
+        List<DimensionalItemObject> dataElements =
+                Lists.newArrayList(params.getDataElementsOperandsProgramDataElements());
+        List<DataElement> nonAggDataElements =
+                FilterUtils.inverseFilter(
+                        asTypedList(dataElements), AggregatableDataElementFilter.INSTANCE);
+
+        if (!params.isSkipDataDimensionValidation()) {
+            if (params.getDimensions().isEmpty()) {
+                error = new ErrorMessage(ErrorCode.E7101);
+            } else if (!params.isSkipData()
+                    && params.getDataDimensionAndFilterOptions().isEmpty()
+                    && params.getAllDataElementGroups().isEmpty()) {
+                error = new ErrorMessage(ErrorCode.E7102);
+            } else if (!params.getDimensionsAsFilters().isEmpty()) {
+                error = new ErrorMessage(ErrorCode.E7103, getDimensions(params.getDimensionsAsFilters()));
+            }
+        }
+
+        if (!params.hasPeriods() && !params.isSkipPartitioning() && !params.hasStartEndDate()) {
+            error = new ErrorMessage(ErrorCode.E7104);
+        } else if (params.hasPeriods() && params.hasStartEndDate()) {
+            error = new ErrorMessage(ErrorCode.E7105);
+        } else if (params.hasStartEndDate() && params.startDateAfterEndDate()) {
+            error = new ErrorMessage(ErrorCode.E7106);
+        } else if (params.hasStartEndDate() && !params.getReportingRates().isEmpty()) {
+            error = new ErrorMessage(ErrorCode.E7107);
+        } else if ((!params.getFilterIndicators().isEmpty()
+                || !params.getFilterProgramIndicators().isEmpty()
+                || !params.getFilterExpressionDimensionItems().isEmpty())
+                && params.getFilterOptions(DATA_X_DIM_ID).size() > 1) {
+            error = new ErrorMessage(ErrorCode.E7108);
+        } else if (!params.getFilterReportingRates().isEmpty()
+                && params.getFilterOptions(DATA_X_DIM_ID).size() > 1) {
+            error = new ErrorMessage(ErrorCode.E7109);
+        } else if (params
+                .getFilters()
+                .contains(new BaseDimensionalObject(CATEGORYOPTIONCOMBO_DIM_ID))) {
+            error = new ErrorMessage(ErrorCode.E7110);
+        } else if (!params.getDuplicateDimensions().isEmpty()) {
+            error = new ErrorMessage(ErrorCode.E7111, getDimensions(params.getDuplicateDimensions()));
+        } else if (!params.getAllReportingRates().isEmpty()
+                && !params.containsOnlyDimensionsAndFilters(COMPLETENESS_DIMENSION_TYPES)) {
+            error = new ErrorMessage(ErrorCode.E7112, COMPLETENESS_DIMENSION_TYPES);
+        } else if (params.hasDimensionOrFilter(CATEGORYOPTIONCOMBO_DIM_ID)
+                && params.getAllDataElements().isEmpty()) {
+            error = new ErrorMessage(ErrorCode.E7113);
+        } else if (params.hasDimensionOrFilter(CATEGORYOPTIONCOMBO_DIM_ID)
+                && (params.getAllDataElements().size() != params.getAllDataDimensionItems().size())) {
+            error = new ErrorMessage(ErrorCode.E7114);
+        } else if (!nonAggDataElements.isEmpty()) {
+            error = new ErrorMessage(ErrorCode.E7115, getUids(nonAggDataElements));
+        }
+    /*
+    else if (!params.getSkipTotalDataElements().isEmpty()) {
       error = new ErrorMessage(ErrorCode.E7134);
-    } else if (params.isOutputFormat(OutputFormat.DATA_VALUE_SET)) {
-      if (!params.hasDimension(DATA_X_DIM_ID)) {
-        error = new ErrorMessage(ErrorCode.E7117);
-      } else if (!params.hasDimension(PERIOD_DIM_ID)) {
-        error = new ErrorMessage(ErrorCode.E7118);
-      } else if (!params.hasDimension(ORGUNIT_DIM_ID)) {
-        error = new ErrorMessage(ErrorCode.E7119);
-      }
     }
+    */
 
-    return error;
-  }
-
-  @Override
-  public void validateTableLayout(DataQueryParams params, List<String> columns, List<String> rows) {
-    ErrorMessage violation = null;
-
-    if (columns != null) {
-      for (String column : columns) {
-        if (!params.hasDimension(column)) {
-          violation = new ErrorMessage(ErrorCode.E7126, column);
+        else if (params.isOutputFormat(OutputFormat.DATA_VALUE_SET)) {
+            if (!params.hasDimension(DATA_X_DIM_ID)) {
+                error = new ErrorMessage(ErrorCode.E7117);
+            } else if (!params.hasDimension(PERIOD_DIM_ID)) {
+                error = new ErrorMessage(ErrorCode.E7118);
+            } else if (!params.hasDimension(ORGUNIT_DIM_ID)) {
+                error = new ErrorMessage(ErrorCode.E7119);
+            }
         }
-      }
+
+        return error;
     }
 
-    if (rows != null) {
-      for (String row : rows) {
-        if (!params.hasDimension(row)) {
-          violation = new ErrorMessage(ErrorCode.E7127, row);
+    @Override
+    public void validateTableLayout(DataQueryParams params, List<String> columns, List<String> rows) {
+        ErrorMessage violation = null;
+
+        if (columns != null) {
+            for (String column : columns) {
+                if (!params.hasDimension(column)) {
+                    violation = new ErrorMessage(ErrorCode.E7126, column);
+                }
+            }
         }
-      }
-    }
 
-    if (violation != null) {
-      log.warn(String.format("Validation failed: %s", violation));
+        if (rows != null) {
+            for (String row : rows) {
+                if (!params.hasDimension(row)) {
+                    violation = new ErrorMessage(ErrorCode.E7127, row);
+                }
+            }
+        }
 
-      throw new IllegalQueryException(violation);
+        if (violation != null) {
+            log.warn(String.format("Validation failed: %s", violation));
+
+            throw new IllegalQueryException(violation);
+        }
     }
-  }
 }

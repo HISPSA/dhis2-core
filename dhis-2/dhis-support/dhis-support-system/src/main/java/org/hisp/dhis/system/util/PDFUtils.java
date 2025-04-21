@@ -88,6 +88,25 @@ public class PDFUtils {
   }
 
   /**
+   * Creates a document.
+   *
+   * @param outputStream The output stream to write the document content.
+   * @return A Document.
+   */
+  public static Document openDocument( OutputStream outputStream, boolean dailyReport )
+  {
+    Rectangle pageSize = null;
+    if(dailyReport)
+    {
+      pageSize = PageSize.A2;
+    }else{
+      pageSize = PageSize.A4;
+    }
+
+    return openDocument( outputStream, pageSize );
+  }
+
+  /**
    * Starts a new page in the document.
    *
    * @param document The document to start a new page in.
@@ -201,12 +220,18 @@ public class PDFUtils {
     return getCell(text, 1, getFont(locale, 9), ALIGN_LEFT);
   }
 
+  //custom
+  public static PdfPCell getTextCellMonthlyCustom(Locale locale, String text )
+  {
+    return getCell( text, 1, getFont(locale, 6 ), ALIGN_LEFT );
+  }
+
   public static PdfPCell getItalicCell(Locale locale, String text) {
     return getCell(text, 1, getItalicFont(locale, 9), ALIGN_LEFT);
   }
 
   public static PdfPCell resetPaddings(
-      PdfPCell cell, float top, float bottom, float left, float right) {
+          PdfPCell cell, float top, float bottom, float left, float right) {
     cell.setPaddingTop(top);
     cell.setPaddingBottom(bottom);
     cell.setPaddingLeft(left);
@@ -244,12 +269,12 @@ public class PDFUtils {
   public static Font getBoldFont(Locale locale, float size) {
 
     return getFont(
-        ARABIC_FONT_CODE.equals(locale.getLanguage()) ? ARABIC_FONT : UBUNTU_BOLD_FONT, size);
+            ARABIC_FONT_CODE.equals(locale.getLanguage()) ? ARABIC_FONT : UBUNTU_BOLD_FONT, size);
   }
 
   public static Font getItalicFont(Locale locale, float size) {
     return getFont(
-        ARABIC_FONT_CODE.equals(locale.getLanguage()) ? ARABIC_FONT : UBUNTU_ITALIC_FONT, size);
+            ARABIC_FONT_CODE.equals(locale.getLanguage()) ? ARABIC_FONT : UBUNTU_ITALIC_FONT, size);
   }
 
   private static Font getFont(String fontPath, float size) {
@@ -260,4 +285,22 @@ public class PDFUtils {
       throw new RuntimeException("Error while creating base font", ex);
     }
   }
+
+  public static int[] getHeaderWidth(int width)
+  {
+    //int headerwidths[] = { 90, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20 };
+    int heading = 90;
+    int col = 20;
+    int[] headerwidths = new int[width];
+    for (int i = 0; i < width; i++) {
+      if(i == 0){
+        headerwidths[i] = heading;
+      }else{
+        headerwidths[i] = col;
+      }
+    }
+
+    return headerwidths;
+  }
+
 }
