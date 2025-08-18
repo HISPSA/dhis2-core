@@ -7,7 +7,7 @@
 
 html,body
 {
-  background-color: #1d5288;  
+  background-color: #B4A269;  
   color: white;
   font-size: 15px;
 }
@@ -24,40 +24,59 @@ a:hover
   text-decoration: underline;
 }
 
+#headerArea
+{
+  text-align: center;
+  vertical-align: top;
+  max-height: 120px;
+}
+
+#logoArea
+{
+  max-height: 80px;
+}
+
 #flagArea
 {
+  max-height: 80px;
+}
+
+#CreateAccountPosition
+{
   position: absolute;
-  top: 22px;
-  left: 52px;
-  border: 1px solid #d5d5d5;
-  border-radius: 2px;
-  max-width: 105px;
-  margin-bottom: 5%;
+  top: 170px;
+  right: 0px;
 }
 
 #titleArea
 {
-  position: absolute;
-  top: 24px;
-  left: 177px;
-  font-size: 19px;
+  position: relative;
+  top: 12px;
+  font-size: 26px;
+  color: #7e480a;
+  word-wrap: break-word;
+  font-weight: bold;
+  text-align: center;
+  vertical-align: top;
 }
 
 #introArea
 {
-  width: 250px;
-  position: absolute;
-  top: 53px;
-  left: 177px;
-  font-size: 17px;
-  color: #bfd9f2;
+  position: relative;
+  top: 12px;
+  font-size: 18px;
+  color: #7e480a;
+  word-wrap: break-word;
+  font-weight: bold;
+  text-align: center;
+  vertical-align: top;
 }
 
 #bannerArea
-{
-  margin-bottom: 21px;
+{  
+  margin-bottom: 2px;
   border: none;
-  text-align: center;
+  text-align: center;   
 }
 
 #accountArea
@@ -65,35 +84,39 @@ a:hover
   position: absolute;
   top: 22px;
   right: 17px;
-  padding: 18px 30px 18px 0;
-  font-size: 17px;
-}
-
-#loginField
-{
-  position: relative;
-  margin: 128px auto 0 auto;
-  width: 270px;
+  padding: 18px 30px 9px 0;
+  font-size: 14px;
 }
 
 #signInLabel
 {
   padding: 5px 0 1px 0;
   font-size: 13px;
+  text-align: center;
 }
 
 #submitDiv
 {
   padding: 3px 0 20px 0;
+  text-align: center;
+  margin: 5px 0 0 0 ;
 }
 
-#loginField input[type=text],input[type=password],input[type=code]
+#loginField
+{
+  position: relative;
+  margin: 2px auto 0 auto;
+  width: 550px;
+  top: 0px;  
+}
+
+#loginField input[type=text],input[type=password]
 {
   width: 255px;
   height: 22px;
   border: 1px solid #888;
   padding: 6px 6px;
-  margin: 4px 0;
+  margin: 10px 0 0 135px;
   border-radius: 3px;
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.14);
 }
@@ -119,16 +142,27 @@ a:hover
   margin-top: 15px;
   padding: 15px;
   border-radius: 3px;
-}
-
-#notificationArea:empty
-{
-  display: none;
+  width: auto;
+  font-size: 14px;
+  text-align: center;
 }
 
 #notificationArea a 
 {
   color: #2E527C;
+}
+
+#logoField
+{
+  position: sticky;
+  width: 220px;
+  height: 80px;
+  bottom: 0;
+  left: 0;
+  padding: 170px 0px 0px 0px;
+  font-size: 16px;
+  color: #dca63c;
+  ;
 }
 
 #footerArea
@@ -137,10 +171,21 @@ a:hover
   bottom: 0;
   left: 0;
   padding: 8px 0 7px 0;
-  font-size: 13px;
-  border-top: 1px solid #416f9d;
-  color: #6b90b8;
+  font-size: 16px;
+  border-top: 1px solid #000000;
+  color: #000000;
   width: 100%;
+  text-align: center;
+}
+
+#footerLogo
+{
+  position: relative;
+  top: 6px;
+  left: -35px;
+  border: 1px solid #d5d5d5;
+  border-radius: 2px;
+  max-width: 50px;
 }
 
 .innerFooterArea
@@ -154,19 +199,35 @@ a:hover
 {
   float: left;
   margin-left: 50px;
+  text-align: left;
+}
+
+#middleFooterArea
+{
+  text-align: center;
+  max-height: 60px;
+}
+
+#middleFooterLogo
+{
+  text-align: center;
+  height: 40px;
+  width: 220px;
+  padding: 0 60px 0  0;
 }
 
 #rightFooterArea
 {
   float: right;
   margin-right: 50px;
+  text-align: right;
 }
 
 #localeSelect
 {
   width: 160px;
 }
-	
+
 .greenButtonLink
 {
   padding: 6px 12px;
@@ -231,3 +292,31 @@ a:hover
     font-weight: normal;
     font-style: normal;
 }
+
+
+table#logoTable {
+    border: none;
+    width: 100%;
+    padding: 0px;
+    border-spacing: 0px;
+    max-height: 100px;
+}
+
+table td#CELL1 {
+    width:25%;
+    border:solid 1px #ffffff;
+    padding: 0px 0px 0px 6px;
+}
+
+table td#CELL2 {
+    width:50%;
+    text-align:centre;
+}
+table td#CELL3 {
+    width:25%;
+}
+table tr#ROW1  {
+    background-color:white; 
+}
+
+

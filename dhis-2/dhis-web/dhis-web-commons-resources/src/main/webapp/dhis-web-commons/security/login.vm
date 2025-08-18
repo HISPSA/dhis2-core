@@ -57,6 +57,22 @@
 <body class="loginPage">
 <h1 class="displayNoneClass">$!encoder.htmlEncode( ${applicationTitle} )</h1>
 <div class="displayNoneClass">DHIS 2</div>
+
+<div id="headerArea">	
+		<table id = "logoTable">
+		<tr id = "ROW1">
+		<td id = "CELL1" align="left"><a href="https://au.int/"><img id ="logoArea" src="../flags/african_union.png"></td>
+		<td id = "CELL2" align="center" valign="top">
+       			            			<span id="titleArea">Africa CDC EBS - Event Management System (EMS)</span>
+        					</br>
+							<span id="introArea">Production System</span>
+					</td>
+		<td id = "CELL3" align="right"><a href="https://africacdc.org/"><img id="flagArea" src="../flags/dhis2.png"></td>
+		</tr>
+		</table>
+</div>
+
+
 <div>
     #if ( $keyFlag )
         <img id="flagArea" src="../flags/$!{keyFlagImage}">
@@ -74,10 +90,13 @@
             'create_an_account')</a>
     </div>
     #end
+
+
+
 <div id="loginField">
     <div id="loginArea">
         <div id="bannerArea">
-            <a href="https://www.dhis2.org"><img src="../../api/staticContent/logo_front" class="borderNoneClass"></a>
+            <a href="AfricaCDC"><img src="../../api/staticContent/logo_front" style="border:none;width:120px;height:120px;"></a>
         </div>
 
         <form id="loginForm" action="../../dhis-web-commons-security/login.action" method="post">
@@ -141,14 +160,18 @@
             <![endif]-->
     </div>
 </div>
+
+
 <div id="footerArea">
     <div id="leftFooterArea" class="innerFooterArea">
         <span id="poweredByLabel">Powered by </span><a href="https://www.dhis2.org">DHIS 2</a>&nbsp; <span
             id="applicationFooter">$!{keyApplicationFooter}</span>
     </div>
+
+
     <div id="rightFooterArea" class="innerFooterArea">
         <span id="applicationRightFooter">$!{keyApplicationRightFooter}</span>
-        <select id="localeSelect" class="marginLeftClass">
+         <select id="localeSelect" class="marginLeftClass">
             <option value="">[ $i18n.getString( "change_language" ) ]</option>
             #foreach( $locale in $availableLocales )
                 <option value="${locale.language}">${locale.displayName}</option>
@@ -156,5 +179,7 @@
         </select>
     </div>
 </div>
+
+
 </body>
 </html>
