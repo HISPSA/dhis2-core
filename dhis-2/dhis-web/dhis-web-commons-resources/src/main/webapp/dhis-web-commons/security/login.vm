@@ -57,6 +57,29 @@
 <body class="loginPage">
 <h1 class="displayNoneClass">$!encoder.htmlEncode( ${applicationTitle} )</h1>
 <div class="displayNoneClass">DHIS 2</div>
+
+<div id="headerArea">	
+		<table id = "logoTable">
+		<tr id = "ROW1">
+		<td id = "CELL1" align="left"><a href="doh_url"><img id ="logoArea" src="../flags/AU.png"></td>
+		<td id = "CELL2" align="center" valign="top">
+       			#if ( $applicationTitle )
+            			<span id="titleArea">$!encoder.htmlEncode( ${applicationTitle} )</span>
+        		#end
+			</br>
+			#if ( $keyApplicationIntro )
+				<span id="introArea">$!{keyApplicationIntro}</span>
+			#end
+		</td>
+		<td id = "CELL3" align="right"><a href="gov_url"><img id="flagArea" src="../flags/$!{keyFlagImage}"></td>
+		</tr>
+		</table>
+</div>
+
+
+
+
+<!--
 <div>
     #if ( $keyFlag )
         <img id="flagArea" src="../flags/$!{keyFlagImage}">
@@ -67,18 +90,24 @@
     #if ( $keyApplicationIntro )
         <span id="introArea">$!{keyApplicationIntro}</span>
     #end
-</div>
+</div
+-->
+
     #if ( $keyConfig.selfRegistrationAllowed() )
     <div id="accountArea">
         <a id="createAccountButton" class="greenButtonLink" href="account.action">$i18n.getString(
             'create_an_account')</a>
     </div>
     #end
+
+
+
+
 <div id="loginField">
     <div id="loginArea">
-        <div id="bannerArea">
-            <a href="https://www.dhis2.org"><img src="../../api/staticContent/logo_front" class="borderNoneClass"></a>
-        </div>
+         <div id="bannerArea">
+	        	    <a href="AfricaCDC"><img src="../../api/staticContent/logo_front" style="border:none;width:120px;height:120px;"></a>
+         </div>
 
         <form id="loginForm" action="../../dhis-web-commons-security/login.action" method="post">
             <div>
@@ -130,20 +159,27 @@
                 $i18n.getString('oidc_login_failed')
             </div>
         #end
-        #if ( $keyApplicationNotification )
-            <div id="notificationArea">
-                $!{keyApplicationNotification}
-            </div>
-        #end
-        <!--[if lte IE 8]>
-            <div id="notificationArea" class="whiteRedClass">$i18n.getString(
-            "unsupported_browser" )</div>
-            <![endif]-->
+
+        <div>
+    #if ( $keyApplicationNotification )
+    <div id="notificationArea">
+        $!{keyApplicationNotification}
+    </div>
+    #end
+    <!--[if lte IE 8]>
+    <div id="notificationArea" class="whiteRedClass">$i18n.getString("unsupported_browser")</div>
+    <![endif]-->
+</div>
+
+
     </div>
 </div>
+
+
+
 <div id="footerArea">
     <div id="leftFooterArea" class="innerFooterArea">
-        <span id="poweredByLabel">Powered by </span><a href="https://www.dhis2.org">DHIS 2</a>&nbsp; <span
+         <span
             id="applicationFooter">$!{keyApplicationFooter}</span>
     </div>
     <div id="rightFooterArea" class="innerFooterArea">
