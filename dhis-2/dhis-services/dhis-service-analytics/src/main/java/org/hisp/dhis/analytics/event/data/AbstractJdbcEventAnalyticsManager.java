@@ -331,10 +331,17 @@ public abstract class AbstractJdbcEventAnalyticsManager {
    * @param columns the columns that may have aliases.
    * @return the columns without aliases.
    */
+   /*
+  bug fix - 20/03//2026
   List<String> removeAliases(List<String> columns) {
     return columns.stream().map(c -> substringBefore(c, " as ")).toList();
   }
-
+*/
+List<String> removeAliases(List<String> columns) {
+    return columns.stream()
+        .map(c -> c.replaceAll("\\s+as\\s+\"?([a-zA-Z0-9_]+)\"?+$", ""))
+       .toList();
+   }
   /**
    * Returns the dynamic select columns. Dimensions come first and query items second. Program
    * indicator expressions are converted to SQL expressions. In the case of non-default boundaries
